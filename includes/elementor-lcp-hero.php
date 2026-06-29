@@ -75,6 +75,20 @@ class LNC_Elementor_LCP_Hero {
 		);
 
 		$element->add_control(
+			'lnc_lcp_suppress_bg',
+			[
+				'label'        => esc_html__( 'Remove duplicate CSS background', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Yes', 'legal-nurse-core' ),
+				'label_off'    => esc_html__( 'No', 'legal-nurse-core' ),
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'description'  => esc_html__( 'Hides the container background-image so the image is not downloaded twice. The injected <img> replaces it visually.', 'legal-nurse-core' ),
+				'condition'    => [ 'lnc_lcp_enable' => 'yes' ],
+			]
+		);
+
+		$element->add_control(
 			'lnc_lcp_alt',
 			[
 				'label'       => esc_html__( 'Alt text', 'legal-nurse-core' ),
@@ -148,6 +162,11 @@ class LNC_Elementor_LCP_Hero {
 
 		// Tag the wrapper so our CSS can position the image.
 		$element->add_render_attribute( '_wrapper', 'class', 'lnc-lcp-hero' );
+
+		// Optionally suppress the duplicate CSS background image (default on).
+		if ( 'yes' === ( $settings['lnc_lcp_suppress_bg'] ?? 'yes' ) ) {
+			$element->add_render_attribute( '_wrapper', 'style', 'background-image:none !important;' );
+		}
 
 		$image['alt'] = sanitize_text_field( $settings['lnc_lcp_alt'] ?? '' );
 
