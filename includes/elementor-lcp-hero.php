@@ -247,6 +247,7 @@ function lnc_lcp_ob_end( $element ) {
 // ---------------------------------------------------------------------------
 
 /** @var string[] */
+global $lnc_lcp_preload_urls;
 $lnc_lcp_preload_urls = [];
 
 function lnc_lcp_register_preload( $url ) {
@@ -257,6 +258,10 @@ function lnc_lcp_register_preload( $url ) {
 add_action( 'wp_head', 'lnc_lcp_output_preload_links', 1 );
 function lnc_lcp_output_preload_links() {
 	global $lnc_lcp_preload_urls;
+
+	if ( empty( $lnc_lcp_preload_urls ) ) {
+		return;
+	}
 
 	foreach ( array_unique( $lnc_lcp_preload_urls ) as $url ) {
 		printf(
