@@ -2,13 +2,17 @@
 /**
  * Elementor LCP Hero Extension
  *
- * Extends the Elementor Container widget with a "LCP Hero Image" control group.
- * When enabled, an <img> element is injected inside the container so the browser
- * can discover the hero image in the initial HTML document and apply
- * fetchpriority="high", satisfying Core Web Vitals LCP requirements.
+ * Adds an "LCP Optimization" toggle to every Elementor Container. When enabled,
+ * the container's existing CSS background image is mirrored into a real <img>
+ * element injected inside the container. Because the <img> lives in the initial
+ * HTML it is discoverable by the browser's preload scanner, and it carries
+ * fetchpriority="high" + loading="eager" — satisfying the PageSpeed LCP audits:
  *
- * The <img> is absolutely positioned and sized to cover the container,
- * mirroring how Elementor renders CSS background images.
+ *   - "fetchpriority=high should be applied"
+ *   - "Request is discoverable in initial document"
+ *
+ * No second image upload is required: the toggle reuses the container's own
+ * Background > Image setting. An optional override image is available.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,22 +21,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class LNC_Elementor_LCP_Hero {
 
+	/** @var array<string,array> Pending injections keyed by element ID. */
+	private $pending = [];
+
 	public function __construct() {
+		// Register the controls on the container's Layout section.
 		add_action( 'elementor/element/container/section_layout/after_section_end', [ $this, 'register_controls' ], 10, 2 );
-		add_action( 'elementor/frontend/container/before_render', [ $this, 'before_render' ] );
-		add_action( 'elementor/frontend/container/after_render', [ $this, 'after_render' ] );
+
+		// Wrap container output to inject the <img>. Late priority so our buffer
+		// wraps the full element markup.
+		add_action( 'elementor/frontend/container/before_render', [ $this, 'before_render' ], 999 );
+		add_action( 'elementor/frontend/container/after_render', [ $this, 'after_render' ], 999 );
+
+		// Stacking CSS for the injected image.
+		add_action( 'wp_head', [ $this, 'print_styles' ], 5 );
 	}
 
 	/**
-	 * Add LCP Hero controls to the Container widget.
+	 * Add the LCP controls to the Container Layout tab.
 	 *
 	 * @param \Elementor\Element_Base $element
 	 */
 	public function register_controls( $element ) {
 		$element->start_controls_section(
-			'lnc_lcp_hero_section',
+			'lnc_lcp_section',
 			[
-				'label' => esc_html__( 'LCP Hero Image', 'legal-nurse-core' ),
+				'label' => esc_html__( 'LCP Optimization', 'legal-nurse-core' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_LAYOUT,
 			]
 		);
@@ -40,61 +54,34 @@ class LNC_Elementor_LCP_Hero {
 		$element->add_control(
 			'lnc_lcp_enable',
 			[
-				'label'        => esc_html__( 'Enable LCP Hero Image', 'legal-nurse-core' ),
+				'label'        => esc_html__( 'Optimize as LCP image', 'legal-nurse-core' ),
 				'type'         => \Elementor\Controls_Manager::SWITCHER,
-				'label_on'     => esc_html__( 'Yes', 'legal-nurse-core' ),
-				'label_off'    => esc_html__( 'No', 'legal-nurse-core' ),
+				'label_on'     => esc_html__( 'On', 'legal-nurse-core' ),
+				'label_off'    => esc_html__( 'Off', 'legal-nurse-core' ),
 				'return_value' => 'yes',
 				'default'      => '',
-				'description'  => esc_html__( 'Injects a discoverable <img> element for the hero background image, fixing LCP fetchpriority and discoverability issues.', 'legal-nurse-core' ),
+				'description'  => esc_html__( 'Turn on for the hero section. Outputs the background image as a real, high-priority <img> the browser can discover immediately.', 'legal-nurse-core' ),
 			]
 		);
 
 		$element->add_control(
-			'lnc_lcp_image',
+			'lnc_lcp_override_image',
 			[
-				'label'     => esc_html__( 'Hero Image', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::MEDIA,
-				'condition' => [ 'lnc_lcp_enable' => 'yes' ],
-			]
-		);
-
-		$element->add_control(
-			'lnc_lcp_image_size',
-			[
-				'label'     => esc_html__( 'Image Size', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::SELECT,
-				'default'   => 'full',
-				'options'   => lnc_get_image_size_options(),
-				'condition' => [ 'lnc_lcp_enable' => 'yes' ],
+				'label'       => esc_html__( 'Override image (optional)', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::MEDIA,
+				'description' => esc_html__( 'Leave empty to use this container\'s Background image automatically.', 'legal-nurse-core' ),
+				'condition'   => [ 'lnc_lcp_enable' => 'yes' ],
 			]
 		);
 
 		$element->add_control(
 			'lnc_lcp_alt',
 			[
-				'label'       => esc_html__( 'Alt Text', 'legal-nurse-core' ),
+				'label'       => esc_html__( 'Alt text', 'legal-nurse-core' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
 				'default'     => '',
-				'placeholder' => esc_html__( 'Describe the hero image for screen readers', 'legal-nurse-core' ),
+				'placeholder' => esc_html__( 'Describe the hero image', 'legal-nurse-core' ),
 				'condition'   => [ 'lnc_lcp_enable' => 'yes' ],
-			]
-		);
-
-		$element->add_control(
-			'lnc_lcp_object_position',
-			[
-				'label'     => esc_html__( 'Image Position', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::SELECT,
-				'default'   => 'center center',
-				'options'   => [
-					'center center' => esc_html__( 'Center Center', 'legal-nurse-core' ),
-					'center top'    => esc_html__( 'Center Top', 'legal-nurse-core' ),
-					'center bottom' => esc_html__( 'Center Bottom', 'legal-nurse-core' ),
-					'left center'   => esc_html__( 'Left Center', 'legal-nurse-core' ),
-					'right center'  => esc_html__( 'Right Center', 'legal-nurse-core' ),
-				],
-				'condition' => [ 'lnc_lcp_enable' => 'yes' ],
 			]
 		);
 
@@ -102,8 +89,48 @@ class LNC_Elementor_LCP_Hero {
 	}
 
 	/**
-	 * Collect containers flagged as LCP heroes so we can preload them in <head>.
-	 * Hooked early enough that it runs on every frontend render pass.
+	 * Resolve the image source for a flagged container.
+	 *
+	 * Priority: explicit override image, then the container's Background image.
+	 *
+	 * @param array $settings get_settings_for_display() output.
+	 * @return array{src:string,srcset:string,sizes:string}|null
+	 */
+	private function resolve_image( $settings ) {
+		$image_id  = 0;
+		$image_url = '';
+
+		// 1) Override image control.
+		if ( ! empty( $settings['lnc_lcp_override_image']['url'] ) ) {
+			$image_id  = (int) ( $settings['lnc_lcp_override_image']['id'] ?? 0 );
+			$image_url = $settings['lnc_lcp_override_image']['url'];
+		} elseif ( ! empty( $settings['background_image']['url'] ) ) {
+			// 2) Container's own background image.
+			$image_id  = (int) ( $settings['background_image']['id'] ?? 0 );
+			$image_url = $settings['background_image']['url'];
+		}
+
+		if ( ! $image_id && ! $image_url ) {
+			return null;
+		}
+
+		$src    = $image_id ? wp_get_attachment_image_url( $image_id, 'full' ) : $image_url;
+		$srcset = $image_id ? (string) wp_get_attachment_image_srcset( $image_id, 'full' ) : '';
+		$sizes  = $image_id ? (string) wp_get_attachment_image_sizes( $image_id, 'full' ) : '';
+
+		if ( ! $src ) {
+			return null;
+		}
+
+		return [
+			'src'    => $src,
+			'srcset' => $srcset,
+			'sizes'  => $sizes,
+		];
+	}
+
+	/**
+	 * Start buffering the container output if it is flagged for LCP.
 	 *
 	 * @param \Elementor\Element_Base $element
 	 */
@@ -114,188 +141,73 @@ class LNC_Elementor_LCP_Hero {
 			return;
 		}
 
-		$image_id  = $settings['lnc_lcp_image']['id'] ?? 0;
-		$image_url = $settings['lnc_lcp_image']['url'] ?? '';
-
-		if ( ! $image_id && ! $image_url ) {
+		$image = $this->resolve_image( $settings );
+		if ( null === $image ) {
 			return;
 		}
 
-		$size = $settings['lnc_lcp_image_size'] ?? 'full';
-		$src  = $image_id ? wp_get_attachment_image_url( $image_id, $size ) : esc_url( $image_url );
+		// Tag the wrapper so our CSS can position the image.
+		$element->add_render_attribute( '_wrapper', 'class', 'lnc-lcp-hero' );
 
-		if ( ! $src ) {
-			return;
-		}
+		$image['alt'] = sanitize_text_field( $settings['lnc_lcp_alt'] ?? '' );
 
-		// Store for preload output in wp_head (only if head hasn't printed yet).
-		if ( ! did_action( 'wp_head' ) ) {
-			lnc_lcp_register_preload( $src );
-		}
+		$this->pending[ $element->get_id() ] = $image;
+
+		ob_start();
 	}
 
 	/**
-	 * Inject the <img> after the container opening tag.
-	 *
-	 * Elementor calls before_render then renders the widget's HTML, so we use
-	 * after_render and move the injected markup with a brief output-buffer trick
-	 * via before_render instead. Because Elementor doesn't offer a clean
-	 * "inside opening tag" hook for containers, we use output buffering to
-	 * insert the <img> immediately after the container's opening <div>.
+	 * Flush the buffer, injecting the <img> after the container's opening tag.
 	 *
 	 * @param \Elementor\Element_Base $element
 	 */
 	public function after_render( $element ) {
-		// Intentionally empty — rendering handled in before_render via ob_start.
-	}
-}
+		$id = $element->get_id();
 
-// ---------------------------------------------------------------------------
-// Output-buffer injection
-// ---------------------------------------------------------------------------
+		if ( ! isset( $this->pending[ $id ] ) ) {
+			return;
+		}
 
-add_action( 'elementor/frontend/container/before_render', 'lnc_lcp_ob_start', 5 );
-add_action( 'elementor/frontend/container/after_render', 'lnc_lcp_ob_end', 5 );
+		$html  = ob_get_clean();
+		$image = $this->pending[ $id ];
+		unset( $this->pending[ $id ] );
 
-/** @var array<string,array> Keyed by element ID */
-$lnc_lcp_pending = [];
+		$srcset_attr = $image['srcset'] ? ' srcset="' . esc_attr( $image['srcset'] ) . '"' : '';
+		$sizes_attr  = $image['sizes'] ? ' sizes="' . esc_attr( $image['sizes'] ) . '"' : '';
 
-function lnc_lcp_ob_start( $element ) {
-	global $lnc_lcp_pending;
-
-	$settings = $element->get_settings_for_display();
-
-	if ( 'yes' !== ( $settings['lnc_lcp_enable'] ?? '' ) ) {
-		return;
-	}
-
-	$image_id  = $settings['lnc_lcp_image']['id'] ?? 0;
-	$image_url = $settings['lnc_lcp_image']['url'] ?? '';
-
-	if ( ! $image_id && ! $image_url ) {
-		return;
-	}
-
-	$size     = $settings['lnc_lcp_image_size'] ?? 'full';
-	$src      = $image_id ? wp_get_attachment_image_url( $image_id, $size ) : esc_url( $image_url );
-	$alt      = sanitize_text_field( $settings['lnc_lcp_alt'] ?? '' );
-	$position = sanitize_text_field( $settings['lnc_lcp_object_position'] ?? 'center center' );
-
-	if ( ! $src ) {
-		return;
-	}
-
-	// Build srcset/sizes if we have an attachment ID.
-	$srcset = '';
-	$sizes  = '';
-	if ( $image_id ) {
-		$srcset = wp_get_attachment_image_srcset( $image_id, $size );
-		$sizes  = wp_get_attachment_image_sizes( $image_id, $size );
-	}
-
-	$lnc_lcp_pending[ $element->get_id() ] = compact( 'src', 'srcset', 'sizes', 'alt', 'position' );
-
-	ob_start();
-}
-
-function lnc_lcp_ob_end( $element ) {
-	global $lnc_lcp_pending;
-
-	$id = $element->get_id();
-
-	if ( ! isset( $lnc_lcp_pending[ $id ] ) ) {
-		return;
-	}
-
-	$html = ob_get_clean();
-	$data = $lnc_lcp_pending[ $id ];
-	unset( $lnc_lcp_pending[ $id ] );
-
-	$style = implode( ';', [
-		'position:absolute',
-		'inset:0',
-		'width:100%',
-		'height:100%',
-		'object-fit:cover',
-		'object-position:' . esc_attr( $data['position'] ),
-		'pointer-events:none',
-		'z-index:0',
-	] );
-
-	$srcset_attr = $data['srcset'] ? ' srcset="' . esc_attr( $data['srcset'] ) . '"' : '';
-	$sizes_attr  = $data['sizes']  ? ' sizes="'  . esc_attr( $data['sizes'] )  . '"' : '';
-
-	$img = sprintf(
-		'<img src="%s"%s%s alt="%s" fetchpriority="high" loading="eager" decoding="sync" aria-hidden="%s" style="%s">',
-		esc_url( $data['src'] ),
-		$srcset_attr,
-		$sizes_attr,
-		esc_attr( $data['alt'] ),
-		$data['alt'] ? 'false' : 'true',
-		$style
-	);
-
-	// Insert <img> immediately after the first closing > of the container's root <div>.
-	$patched = preg_replace( '/(<div[^>]+>)/i', '$1' . $img, $html, 1 );
-
-	echo $patched ?? $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}
-
-// ---------------------------------------------------------------------------
-// Preload registry — collects URLs before wp_head fires
-// ---------------------------------------------------------------------------
-
-/** @var string[] */
-global $lnc_lcp_preload_urls;
-$lnc_lcp_preload_urls = [];
-
-function lnc_lcp_register_preload( $url ) {
-	global $lnc_lcp_preload_urls;
-	$lnc_lcp_preload_urls[] = $url;
-}
-
-add_action( 'wp_head', 'lnc_lcp_output_preload_links', 1 );
-function lnc_lcp_output_preload_links() {
-	global $lnc_lcp_preload_urls;
-
-	if ( empty( $lnc_lcp_preload_urls ) ) {
-		return;
-	}
-
-	foreach ( array_unique( $lnc_lcp_preload_urls ) as $url ) {
-		printf(
-			'<link rel="preload" as="image" href="%s" fetchpriority="high">' . "\n",
-			esc_url( $url )
+		$img = sprintf(
+			'<img class="lnc-lcp-hero__img" src="%s"%s%s alt="%s" fetchpriority="high" loading="eager" decoding="async" %s>',
+			esc_url( $image['src'] ),
+			$srcset_attr,
+			$sizes_attr,
+			esc_attr( $image['alt'] ),
+			$image['alt'] ? '' : 'aria-hidden="true"'
 		);
+
+		// Inject right after the wrapper's opening tag (matched by its data-id).
+		$pattern  = '/(<[a-zA-Z][^>]*\sdata-id="' . preg_quote( $id, '/' ) . '"[^>]*>)/';
+		$replaced = preg_replace( $pattern, '$1' . $img, $html, 1, $count );
+
+		if ( $count && null !== $replaced ) {
+			$html = $replaced;
+		} else {
+			// Fallback: inject after the first opening tag of the buffered markup.
+			$replaced = preg_replace( '/(<[a-zA-Z][^>]*>)/', '$1' . $img, $html, 1 );
+			$html     = ( null !== $replaced ) ? $replaced : $html;
+		}
+
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
-}
 
-// ---------------------------------------------------------------------------
-// Inline CSS — ensure the container has position:relative so the abs img fits
-// ---------------------------------------------------------------------------
-
-add_action( 'wp_head', 'lnc_lcp_hero_inline_style', 5 );
-function lnc_lcp_hero_inline_style() {
-	echo '<style id="lnc-lcp-hero">.lnc-lcp-hero{position:relative;overflow:hidden;}</style>' . "\n";
-}
-
-add_action( 'elementor/frontend/container/before_render', 'lnc_lcp_add_css_class' );
-function lnc_lcp_add_css_class( $element ) {
-	$settings = $element->get_settings_for_display();
-	if ( 'yes' === ( $settings['lnc_lcp_enable'] ?? '' ) ) {
-		$element->add_render_attribute( '_wrapper', 'class', 'lnc-lcp-hero' );
+	/**
+	 * Output the stacking CSS so the injected <img> sits behind the content,
+	 * filling the container exactly like a CSS background.
+	 */
+	public function print_styles() {
+		echo '<style id="lnc-lcp-hero-css">'
+			. '.lnc-lcp-hero{position:relative;overflow:hidden;}'
+			. '.lnc-lcp-hero>.lnc-lcp-hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;z-index:0;pointer-events:none;}'
+			. '.lnc-lcp-hero>.e-con-inner,.lnc-lcp-hero>:not(.lnc-lcp-hero__img){position:relative;z-index:1;}'
+			. '</style>' . "\n";
 	}
-}
-
-// ---------------------------------------------------------------------------
-// Helper
-// ---------------------------------------------------------------------------
-
-function lnc_get_image_size_options() {
-	$sizes   = get_intermediate_image_sizes();
-	$options = [ 'full' => esc_html__( 'Full', 'legal-nurse-core' ) ];
-	foreach ( $sizes as $size ) {
-		$options[ $size ] = ucwords( str_replace( [ '-', '_' ], ' ', $size ) );
-	}
-	return $options;
 }
