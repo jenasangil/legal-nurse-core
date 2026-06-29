@@ -21,7 +21,6 @@ class LNC_Elementor_LCP_Hero {
 		add_action( 'elementor/element/container/section_layout/after_section_end', [ $this, 'register_controls' ], 10, 2 );
 		add_action( 'elementor/frontend/container/before_render', [ $this, 'before_render' ] );
 		add_action( 'elementor/frontend/container/after_render', [ $this, 'after_render' ] );
-		add_action( 'wp_head', [ $this, 'output_preload_links' ], 1 );
 	}
 
 	/**
