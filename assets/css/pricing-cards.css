@@ -1,0 +1,91 @@
+/* Legal Nurse Core — Pricing Cards widget */
+
+.lnc-pcards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+}
+
+.lnc-pcard {
+	display: flex;
+	flex-direction: column;
+	border-radius: 16px;
+	padding: 28px;
+}
+
+.lnc-pcard__title {
+	margin: 0 0 12px;
+	font-size: 26px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.lnc-pcard__price {
+	margin-bottom: 16px;
+	font-size: 30px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.lnc-pcard__price-original {
+	font-size: 0.62em;
+	font-weight: 500;
+	text-decoration: line-through;
+	opacity: 0.6;
+}
+
+.lnc-pcard__note {
+	margin: 0 0 18px;
+	font-size: 15px;
+	line-height: 1.4;
+}
+
+.lnc-pcard__features {
+	list-style: none;
+	margin: 0 0 24px;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	flex: 1 1 auto;
+}
+
+.lnc-pcard__feature {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	font-size: 15px;
+	line-height: 1.4;
+}
+
+.lnc-pcard__check {
+	flex: 0 0 auto;
+	font-weight: 700;
+}
+
+.lnc-pcard__button {
+	align-self: flex-start;
+	display: inline-block;
+	padding: 12px 26px;
+	color: var(--lnc-accent, #1BA39C);
+	border: 1px solid var(--lnc-accent, #1BA39C);
+	border-radius: 999px;
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	background: transparent;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lnc-pcard__button:hover {
+	background: var(--lnc-accent, #1BA39C);
+	color: #fff;
+}
+
+@media (max-width: 1024px) {
+	.lnc-pcards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+	.lnc-pcards { grid-template-columns: 1fr; }
+}
