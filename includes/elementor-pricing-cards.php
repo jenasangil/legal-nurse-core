@@ -234,10 +234,43 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'show_check_icon',
 			[
-				'label'        => esc_html__( 'Show Check Icons', 'legal-nurse-core' ),
+				'label'        => esc_html__( 'Show Feature Icons', 'legal-nurse-core' ),
 				'type'         => \Elementor\Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'default'      => 'yes',
+			]
+		);
+
+		$this->add_control(
+			'feature_icon',
+			[
+				'label'       => esc_html__( 'Feature Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'description' => esc_html__( 'Choose an icon or upload your own SVG. Used before each feature.', 'legal-nurse-core' ),
+				'default'     => [
+					'value'   => 'fas fa-check',
+					'library' => 'fa-solid',
+				],
+				'condition'   => [ 'show_check_icon' => 'yes' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'feature_icon_size',
+			[
+				'label'      => esc_html__( 'Icon Size', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em' ],
+				'range'      => [
+					'px' => [ 'min' => 8, 'max' => 40 ],
+					'em' => [ 'min' => 0.5, 'max' => 3, 'step' => 0.1 ],
+				],
+				'default'    => [ 'size' => 1, 'unit' => 'em' ],
+				'selectors'  => [
+					'{{WRAPPER}} .lnc-pcard__check' => 'font-size:{{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .lnc-pcard__check svg' => 'width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};',
+				],
+				'condition'  => [ 'show_check_icon' => 'yes' ],
 			]
 		);
 
@@ -443,6 +476,62 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	}
 
 	/**
+	 * Read the pricing note for a product from ACF (pricing_note), falling
+	 * back to the plugin's own meta box value.
+	 *
+	 * @param int $id Product ID.
+	 * @return string
+	 */
+	private function get_product_note( $id ) {
+		if ( function_exists( 'get_field' ) ) {
+			$note = get_field( 'pricing_note', $id );
+			if ( is_string( $note ) && '' !== $note ) {
+				return $note;
+			}
+		}
+		return (string) get_post_meta( $id, LNC_META_PRICING_NOTE, true );
+	}
+
+	/**
+	 * Read the features list for a product from ACF (features repeater),
+	 * falling back to the plugin's own meta box value. Handles both a plain
+	 * array of strings and an ACF repeater (array of rows).
+	 *
+	 * @param int $id Product ID.
+	 * @return array<int,string>
+	 */
+	private function get_product_features( $id ) {
+		$features = [];
+
+		if ( function_exists( 'get_field' ) ) {
+			$rows = get_field( 'features', $id );
+			if ( is_array( $rows ) ) {
+				foreach ( $rows as $row ) {
+					if ( is_array( $row ) ) {
+						// ACF repeater row: prefer a "feature" sub-field, else first value.
+						$value = $row['feature'] ?? reset( $row );
+					} else {
+						$value = $row;
+					}
+					$value = is_string( $value ) ? trim( $value ) : '';
+					if ( '' !== $value ) {
+						$features[] = $value;
+					}
+				}
+			}
+		}
+
+		if ( empty( $features ) ) {
+			$meta = get_post_meta( $id, LNC_META_FEATURES, true );
+			if ( is_array( $meta ) ) {
+				$features = array_values( array_filter( array_map( 'trim', $meta ) ) );
+			}
+		}
+
+		return $features;
+	}
+
+	/**
 	 * Normalize both sources into a flat list of card data arrays.
 	 *
 	 * @param array $settings
@@ -465,9 +554,6 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					continue;
 				}
 
-				$features = get_post_meta( $id, LNC_META_FEATURES, true );
-				$features = is_array( $features ) ? $features : [];
-
 				$colors = get_post_meta( $id, LNC_META_COLORS, true );
 				$colors = is_array( $colors ) ? array_filter( $colors ) : [];
 
@@ -478,8 +564,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'title'          => $product->get_name(),
 					'price_original' => ( $regular && $regular !== $active ) ? wc_price( $regular ) : '',
 					'price'          => wc_price( $active ),
-					'note'           => (string) get_post_meta( $id, LNC_META_PRICING_NOTE, true ),
-					'features'       => $features,
+					'note'           => $this->get_product_note( $id ),
+					'features'       => $this->get_product_features( $id ),
 					'button_text'    => $button_text,
 					'button_url'     => $product->get_permalink(),
 					'button_target'  => '',
@@ -522,9 +608,10 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		$styles      = $settings['card_styles'] ?? [];
-		$style_count = count( $styles );
-		$show_check  = 'yes' === ( $settings['show_check_icon'] ?? 'yes' );
+		$styles       = $settings['card_styles'] ?? [];
+		$style_count  = count( $styles );
+		$show_check   = 'yes' === ( $settings['show_check_icon'] ?? 'yes' );
+		$feature_icon = $settings['feature_icon'] ?? [];
 
 		echo '<div class="lnc-pcards">';
 
@@ -585,7 +672,13 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				foreach ( $card['features'] as $feature ) {
 					echo '<li class="lnc-pcard__feature" style="color:' . esc_attr( $txt ) . '">';
 					if ( $show_check ) {
-						echo '<span class="lnc-pcard__check" style="color:' . esc_attr( $chk ) . '" aria-hidden="true">&#10003;</span> ';
+						echo '<span class="lnc-pcard__check" style="color:' . esc_attr( $chk ) . '" aria-hidden="true">';
+						if ( ! empty( $feature_icon['value'] ) ) {
+							\Elementor\Icons_Manager::render_icon( $feature_icon, [ 'aria-hidden' => 'true' ] );
+						} else {
+							echo '&#10003;';
+						}
+						echo '</span> ';
 					}
 					echo esc_html( $feature );
 					echo '</li>';

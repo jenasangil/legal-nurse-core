@@ -61,6 +61,15 @@
 .lnc-pcard__check {
 	flex: 0 0 auto;
 	font-weight: 700;
+	line-height: 1.4;
+	display: inline-flex;
+	align-items: center;
+}
+
+.lnc-pcard__check svg {
+	width: 1em;
+	height: 1em;
+	fill: currentColor;
 }
 
 .lnc-pcard__button {
