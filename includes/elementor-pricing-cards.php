@@ -650,7 +650,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				printf(
 					'<p class="lnc-pcard__note" style="color:%s"><span class="lnc-pcard__note-prefix">%s</span> %s</p>',
 					esc_attr( $txt ),
-					esc_html__( 'Free mentoring', 'legal-nurse-core' ),
+					esc_html__( 'Free mentoring:', 'legal-nurse-core' ),
 					wp_kses_post( $card['note'] )
 				);
 			}
