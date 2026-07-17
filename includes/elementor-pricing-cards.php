@@ -19,7 +19,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'Pricing Cards', 'legal-nurse-core' );
+		return esc_html__( 'LN - Pricing Cards', 'legal-nurse-core' );
 	}
 
 	public function get_icon() {
@@ -27,7 +27,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'general' ];
+		return [ 'legal-nurse' ];
 	}
 
 	public function get_keywords() {

@@ -34,6 +34,17 @@ add_action( 'elementor/init', function () {
 	new LNC_Elementor_LCP_Hero();
 } );
 
+// Register the "Legal Nurse" widget category.
+add_action( 'elementor/elements/categories_registered', function ( $elements_manager ) {
+	$elements_manager->add_category(
+		'legal-nurse',
+		[
+			'title' => esc_html__( 'Legal Nurse', 'legal-nurse-core' ),
+			'icon'  => 'fa fa-plug',
+		]
+	);
+} );
+
 // Register the Pricing Cards widget.
 add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-pricing-cards.php';
