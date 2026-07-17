@@ -41,11 +41,11 @@
 	margin: 0 0 18px;
 	font-size: 15px;
 	line-height: 1.4;
-	font-weight: 600;
+	font-weight: 600 !important;
 }
 
 .lnc-pcard__note-prefix {
-	font-weight: 400;
+	font-weight: 400 !important;
 }
 
 .lnc-pcard__features {
