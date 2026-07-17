@@ -15,6 +15,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 const LNC_META_PRICING_NOTE = '_lnc_pricing_note';
 const LNC_META_FEATURES     = '_lnc_features';
+const LNC_META_COLORS       = '_lnc_card_colors';
+
+/**
+ * Per-product card color fields: meta sub-key => label.
+ *
+ * @return array<string,string>
+ */
+function lnc_card_color_fields() {
+	return [
+		'bg_color'     => __( 'Background', 'legal-nurse-core' ),
+		'border_color' => __( 'Border Color', 'legal-nurse-core' ),
+		'title_color'  => __( 'Title Color', 'legal-nurse-core' ),
+		'price_color'  => __( 'Price Color', 'legal-nurse-core' ),
+		'text_color'   => __( 'Text Color', 'legal-nurse-core' ),
+		'check_color'  => __( 'Check Icon Color', 'legal-nurse-core' ),
+		'button_color' => __( 'Button Accent', 'legal-nurse-core' ),
+	];
+}
 
 /**
  * Register the meta box on the product edit screen.
@@ -41,6 +59,8 @@ function lnc_render_product_meta_box( $post ) {
 
 	$note     = get_post_meta( $post->ID, LNC_META_PRICING_NOTE, true );
 	$features = get_post_meta( $post->ID, LNC_META_FEATURES, true );
+	$colors   = get_post_meta( $post->ID, LNC_META_COLORS, true );
+	$colors   = is_array( $colors ) ? $colors : [];
 	$features = is_array( $features ) ? $features : [];
 	if ( empty( $features ) ) {
 		$features = [ '' ]; // Start with one empty row.
@@ -82,6 +102,43 @@ function lnc_render_product_meta_box( $post ) {
 			<?php esc_html_e( 'Add Row', 'legal-nurse-core' ); ?>
 		</button>
 	</p>
+
+	<hr>
+	<p><strong><?php esc_html_e( 'Card Colors', 'legal-nurse-core' ); ?></strong><br>
+		<span class="description"><?php esc_html_e( 'Optional. Overrides the widget\'s cycled palette for this product. Leave a field empty to use the widget default.', 'legal-nurse-core' ); ?></span>
+	</p>
+	<table class="widefat" style="max-width:800px;">
+		<tbody>
+			<?php foreach ( lnc_card_color_fields() as $key => $label ) : ?>
+				<tr>
+					<td style="width:220px;"><label for="lnc_color_<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></td>
+					<td>
+						<input type="text" id="lnc_color_<?php echo esc_attr( $key ); ?>"
+							name="lnc_card_colors[<?php echo esc_attr( $key ); ?>]"
+							value="<?php echo esc_attr( $colors[ $key ] ?? '' ); ?>"
+							class="lnc-color-field" placeholder="#RRGGBB"
+							style="width:120px;">
+						<input type="color"
+							value="<?php echo esc_attr( $colors[ $key ] ?? '#ffffff' ); ?>"
+							data-target="lnc_color_<?php echo esc_attr( $key ); ?>"
+							class="lnc-color-picker" style="vertical-align:middle;">
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+
+	<script>
+	( function () {
+		document.querySelectorAll( '.lnc-color-picker' ).forEach( function ( picker ) {
+			var text = document.getElementById( picker.getAttribute( 'data-target' ) );
+			picker.addEventListener( 'input', function () { text.value = picker.value; } );
+			text.addEventListener( 'input', function () {
+				if ( /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test( text.value ) ) { picker.value = text.value; }
+			} );
+		} );
+	} )();
+	</script>
 
 	<script>
 	( function () {
@@ -155,4 +212,16 @@ function lnc_save_product_meta( $post_id ) {
 		}
 	}
 	update_post_meta( $post_id, LNC_META_FEATURES, $features );
+
+	// Card colors — keep only valid hex values.
+	$colors = [];
+	if ( isset( $_POST['lnc_card_colors'] ) && is_array( $_POST['lnc_card_colors'] ) ) {
+		$allowed = array_keys( lnc_card_color_fields() );
+		foreach ( wp_unslash( $_POST['lnc_card_colors'] ) as $key => $value ) {
+			if ( in_array( $key, $allowed, true ) && preg_match( '/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', (string) $value ) ) {
+				$colors[ $key ] = strtolower( $value );
+			}
+		}
+	}
+	update_post_meta( $post_id, LNC_META_COLORS, $colors );
 }

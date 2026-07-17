@@ -468,6 +468,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				$features = get_post_meta( $id, LNC_META_FEATURES, true );
 				$features = is_array( $features ) ? $features : [];
 
+				$colors = get_post_meta( $id, LNC_META_COLORS, true );
+				$colors = is_array( $colors ) ? array_filter( $colors ) : [];
+
 				$regular = $product->get_regular_price();
 				$active  = $product->get_price();
 
@@ -480,6 +483,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'button_text'    => $button_text,
 					'button_url'     => $product->get_permalink(),
 					'button_target'  => '',
+					'color_override' => $colors,
 				];
 			}
 
@@ -525,8 +529,11 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		echo '<div class="lnc-pcards">';
 
 		foreach ( $cards as $index => $card ) {
-			// Cycle the palette by index.
+			// Cycle the palette by index, then let per-product colors override.
 			$style = $style_count ? $styles[ $index % $style_count ] : [];
+			if ( ! empty( $card['color_override'] ) ) {
+				$style = array_merge( $style, $card['color_override'] );
+			}
 
 			$bg     = $style['bg_color'] ?? '';
 			$bc     = $style['border_color'] ?? '';
