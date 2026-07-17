@@ -75,23 +75,115 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'wc_products',
-			[
-				'label'       => esc_html__( 'Select Products', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::SELECT2,
-				'multiple'    => true,
-				'label_block' => true,
-				'options'     => $this->get_product_options(),
-				'description' => esc_html__( 'Order of selection = display order. Title, price come from the product; note & features come from ACF (pricing_note, features).', 'legal-nurse-core' ),
-			]
-		);
-
-		$this->add_control(
 			'wc_button_text',
 			[
 				'label'   => esc_html__( 'Button Text', 'legal-nurse-core' ),
 				'type'    => \Elementor\Controls_Manager::TEXT,
 				'default' => esc_html__( 'Compare Details', 'legal-nurse-core' ),
+			]
+		);
+
+		// Per-item card list: each row selects a product and carries its own styling.
+		$item = new \Elementor\Repeater();
+
+		$item->add_control(
+			'product_id',
+			[
+				'label'       => esc_html__( 'Product', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SELECT2,
+				'label_block' => true,
+				'options'     => $this->get_product_options(),
+				'description' => esc_html__( 'Title & price come from the product; note & features from ACF (pricing_note, features).', 'legal-nurse-core' ),
+			]
+		);
+
+		$item->add_control(
+			'bg_color',
+			[
+				'label'   => esc_html__( 'Background', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#F1ECE1',
+			]
+		);
+
+		$item->add_control(
+			'border_color',
+			[
+				'label'   => esc_html__( 'Border Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => 'transparent',
+			]
+		);
+
+		$item->add_control(
+			'border_width',
+			[
+				'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 12 ] ],
+				'default'    => [ 'size' => 0, 'unit' => 'px' ],
+			]
+		);
+
+		$item->add_control(
+			'title_color',
+			[
+				'label'   => esc_html__( 'Title Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#2E4057',
+			]
+		);
+
+		$item->add_control(
+			'price_color',
+			[
+				'label'   => esc_html__( 'Price Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#2E4057',
+			]
+		);
+
+		$item->add_control(
+			'text_color',
+			[
+				'label'   => esc_html__( 'Text Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#4A4A4A',
+			]
+		);
+
+		$item->add_control(
+			'check_color',
+			[
+				'label'   => esc_html__( 'Check Icon Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#1BA39C',
+			]
+		);
+
+		$item->add_control(
+			'button_color',
+			[
+				'label'   => esc_html__( 'Button Text/Border', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#1BA39C',
+			]
+		);
+
+		$this->add_control(
+			'card_items',
+			[
+				'label'         => esc_html__( 'Cards', 'legal-nurse-core' ),
+				'type'          => \Elementor\Controls_Manager::REPEATER,
+				'fields'        => $item->get_controls(),
+				'prevent_empty' => false,
+				'title_field'   => '{{{ product_id }}}',
+				'default'       => [
+					[ 'bg_color' => '#F1ECE1', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#4A4A4A', 'check_color' => '#1BA39C', 'button_color' => '#1BA39C' ],
+					[ 'bg_color' => '#8FE3D0', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#2E4057', 'check_color' => '#2E4057', 'button_color' => '#2E4057' ],
+					[ 'bg_color' => '#6C63C7', 'title_color' => '#FFFFFF', 'price_color' => '#FFFFFF', 'text_color' => '#F0EEFF', 'check_color' => '#FFFFFF', 'button_color' => '#FFFFFF' ],
+				],
 			]
 		);
 
@@ -172,119 +264,6 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'{{WRAPPER}} .lnc-pcard__check svg' => 'width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};',
 				],
 				'condition'  => [ 'show_check_icon' => 'yes' ],
-			]
-		);
-
-		$this->end_controls_section();
-
-		// ---------------------------------------------------------------
-		// STYLE: Per-card palette (cycled by index)
-		// ---------------------------------------------------------------
-		$this->start_controls_section(
-			'section_card_styles',
-			[
-				'label' => esc_html__( 'Card Styles (cycled)', 'legal-nurse-core' ),
-				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
-			]
-		);
-
-		$this->add_control(
-			'card_styles_hint',
-			[
-				'type'            => \Elementor\Controls_Manager::RAW_HTML,
-				'raw'             => esc_html__( 'Each style below is applied to cards in order and cycles. E.g. 3 styles → card 1/2/3 use style 1/2/3, card 4 reuses style 1.', 'legal-nurse-core' ),
-				'content_classes' => 'elementor-descriptor',
-			]
-		);
-
-		$style_rep = new \Elementor\Repeater();
-
-		$style_rep->add_control(
-			'bg_color',
-			[
-				'label'   => esc_html__( 'Background', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => '#F1ECE1',
-			]
-		);
-
-		$style_rep->add_control(
-			'border_color',
-			[
-				'label'   => esc_html__( 'Border Color', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => 'transparent',
-			]
-		);
-
-		$style_rep->add_control(
-			'border_width',
-			[
-				'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
-				'type'       => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [ 'px' => [ 'min' => 0, 'max' => 12 ] ],
-				'default'    => [ 'size' => 0, 'unit' => 'px' ],
-			]
-		);
-
-		$style_rep->add_control(
-			'title_color',
-			[
-				'label'   => esc_html__( 'Title Color', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => '#2E4057',
-			]
-		);
-
-		$style_rep->add_control(
-			'price_color',
-			[
-				'label'   => esc_html__( 'Price Color', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => '#2E4057',
-			]
-		);
-
-		$style_rep->add_control(
-			'text_color',
-			[
-				'label'   => esc_html__( 'Text Color', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => '#4A4A4A',
-			]
-		);
-
-		$style_rep->add_control(
-			'check_color',
-			[
-				'label'   => esc_html__( 'Check Icon Color', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => '#1BA39C',
-			]
-		);
-
-		$style_rep->add_control(
-			'button_color',
-			[
-				'label'   => esc_html__( 'Button Text/Border', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::COLOR,
-				'default' => '#1BA39C',
-			]
-		);
-
-		$this->add_control(
-			'card_styles',
-			[
-				'label'       => esc_html__( 'Styles', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::REPEATER,
-				'fields'      => $style_rep->get_controls(),
-				'title_field' => '{{{ bg_color }}}',
-				'default'     => [
-					[ 'bg_color' => '#F1ECE1', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#4A4A4A', 'check_color' => '#1BA39C', 'button_color' => '#1BA39C' ],
-					[ 'bg_color' => '#8FE3D0', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#2E4057', 'check_color' => '#2E4057', 'button_color' => '#2E4057' ],
-					[ 'bg_color' => '#6C63C7', 'title_color' => '#FFFFFF', 'price_color' => '#FFFFFF', 'text_color' => '#F0EEFF', 'check_color' => '#FFFFFF', 'button_color' => '#FFFFFF' ],
-				],
 			]
 		);
 
@@ -441,21 +420,19 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	private function get_cards( $settings ) {
 		$cards = [];
 
-		$ids = $settings['wc_products'] ?? [];
-		if ( ! is_array( $ids ) || ! function_exists( 'wc_get_product' ) ) {
+		$items = $settings['card_items'] ?? [];
+		if ( ! is_array( $items ) || ! function_exists( 'wc_get_product' ) ) {
 			return $cards;
 		}
 
 		$button_text = $settings['wc_button_text'] ?? esc_html__( 'Compare Details', 'legal-nurse-core' );
 
-		foreach ( $ids as $id ) {
-			$product = wc_get_product( $id );
+		foreach ( $items as $item ) {
+			$id      = $item['product_id'] ?? 0;
+			$product = $id ? wc_get_product( $id ) : null;
 			if ( ! $product ) {
 				continue;
 			}
-
-			$colors = get_post_meta( $id, LNC_META_COLORS, true );
-			$colors = is_array( $colors ) ? array_filter( $colors ) : [];
 
 			$regular = $product->get_regular_price();
 			$active  = $product->get_price();
@@ -469,7 +446,16 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'button_text'    => $button_text,
 				'button_url'     => $product->get_permalink(),
 				'button_target'  => '',
-				'color_override' => $colors,
+				'style'          => [
+					'bg_color'     => $item['bg_color'] ?? '',
+					'border_color' => $item['border_color'] ?? '',
+					'border_width' => isset( $item['border_width']['size'] ) ? (float) $item['border_width']['size'] : 0,
+					'title_color'  => $item['title_color'] ?? '',
+					'price_color'  => $item['price_color'] ?? '',
+					'text_color'   => $item['text_color'] ?? '',
+					'check_color'  => $item['check_color'] ?? '',
+					'button_color' => $item['button_color'] ?? '',
+				],
 			];
 		}
 
@@ -489,23 +475,17 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		$styles       = $settings['card_styles'] ?? [];
-		$style_count  = count( $styles );
 		$show_check   = 'yes' === ( $settings['show_check_icon'] ?? 'yes' );
 		$feature_icon = $settings['feature_icon'] ?? [];
 
 		echo '<div class="lnc-pcards">';
 
-		foreach ( $cards as $index => $card ) {
-			// Cycle the palette by index, then let per-product colors override.
-			$style = $style_count ? $styles[ $index % $style_count ] : [];
-			if ( ! empty( $card['color_override'] ) ) {
-				$style = array_merge( $style, $card['color_override'] );
-			}
+		foreach ( $cards as $card ) {
+			$style = $card['style'];
 
 			$bg     = $style['bg_color'] ?? '';
 			$bc     = $style['border_color'] ?? '';
-			$bw     = isset( $style['border_width']['size'] ) ? (float) $style['border_width']['size'] : 0;
+			$bw     = (float) ( $style['border_width'] ?? 0 );
 			$t_col  = $style['title_color'] ?? '';
 			$p_col  = $style['price_color'] ?? '';
 			$txt    = $style['text_color'] ?? '';
