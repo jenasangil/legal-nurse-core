@@ -94,6 +94,88 @@ function lnc_site_var_shortcode( $atts ) {
 }
 
 /**
+ * Build a map of all site variables: key => value.
+ * Text values are strings; image values resolve to their URL.
+ * Cached per request.
+ *
+ * @return array<string,string>
+ */
+function lnc_get_site_vars_map() {
+	static $map = null;
+
+	if ( null !== $map ) {
+		return $map;
+	}
+
+	$map = [];
+
+	if ( ! function_exists( 'get_field' ) ) {
+		return $map;
+	}
+
+	$text = get_field( 'text_variables', 'option' );
+	if ( is_array( $text ) ) {
+		foreach ( $text as $row ) {
+			if ( isset( $row['key'], $row['value'] ) && ! is_array( $row['value'] ) ) {
+				$map[ $row['key'] ] = (string) $row['value'];
+			}
+		}
+	}
+
+	$images = get_field( 'image_variables', 'option' );
+	if ( is_array( $images ) ) {
+		foreach ( $images as $row ) {
+			if ( empty( $row['key'] ) ) {
+				continue;
+			}
+			$value = $row['value'] ?? null;
+			if ( is_array( $value ) ) {
+				$url = (string) ( $value['url'] ?? '' );
+			} elseif ( is_numeric( $value ) ) {
+				$url = (string) wp_get_attachment_image_url( (int) $value, 'full' );
+			} else {
+				$url = (string) $value;
+			}
+			if ( '' !== $url ) {
+				$map[ $row['key'] ] = $url;
+			}
+		}
+	}
+
+	return $map;
+}
+
+/**
+ * Replace {key} tokens in content with their Site Variable values.
+ * Only tokens matching a known key are replaced, so other braces are left alone.
+ *
+ * @param string $content
+ * @return string
+ */
+function lnc_replace_site_var_tokens( $content ) {
+	if ( ! is_string( $content ) || false === strpos( $content, '{' ) ) {
+		return $content;
+	}
+
+	$map = lnc_get_site_vars_map();
+	if ( empty( $map ) ) {
+		return $content;
+	}
+
+	return preg_replace_callback(
+		'/\{([a-z0-9_\-]+)\}/i',
+		function ( $matches ) use ( $map ) {
+			return array_key_exists( $matches[1], $map ) ? $map[ $matches[1] ] : $matches[0];
+		},
+		$content
+	);
+}
+
+add_filter( 'the_content', 'lnc_replace_site_var_tokens', 20 );
+add_filter( 'widget_text', 'lnc_replace_site_var_tokens', 20 );
+add_filter( 'elementor/frontend/the_content', 'lnc_replace_site_var_tokens', 20 );
+
+/**
  * Resolve an ACF image value (array | attachment ID | URL) into a URL or <img>.
  *
  * @param mixed $value
