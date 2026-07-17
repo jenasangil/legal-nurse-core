@@ -171,6 +171,63 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$item->add_control(
+			'button_hover_bg',
+			[
+				'label'   => esc_html__( 'Button Hover Background', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#1BA39C',
+			]
+		);
+
+		$item->add_control(
+			'button_hover_color',
+			[
+				'label'   => esc_html__( 'Button Hover Text', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#FFFFFF',
+			]
+		);
+
+		$item->add_control(
+			'hover_heading',
+			[
+				'label'     => esc_html__( 'Card Hover', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$item->add_control(
+			'hover_border_color',
+			[
+				'label'   => esc_html__( 'Hover Border Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '',
+			]
+		);
+
+		$item->add_control(
+			'hover_border_width',
+			[
+				'label'      => esc_html__( 'Hover Border Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 12 ] ],
+				'default'    => [ 'size' => 2, 'unit' => 'px' ],
+			]
+		);
+
+		$item->add_control(
+			'hover_padding',
+			[
+				'label'      => esc_html__( 'Hover Padding', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'description' => esc_html__( 'Leave empty to keep the base padding on hover.', 'legal-nurse-core' ),
+			]
+		);
+
 		$this->add_control(
 			'card_items',
 			[
@@ -438,19 +495,91 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'button_url'     => $product->get_permalink(),
 				'button_target'  => '',
 				'style'          => [
-					'bg_color'     => $item['bg_color'] ?? '',
-					'border_color' => $item['border_color'] ?? '',
-					'border_width' => isset( $item['border_width']['size'] ) ? (float) $item['border_width']['size'] : 0,
-					'title_color'  => $item['title_color'] ?? '',
-					'price_color'  => $item['price_color'] ?? '',
-					'text_color'   => $item['text_color'] ?? '',
-					'check_color'  => $item['check_color'] ?? '',
-					'button_color' => $item['button_color'] ?? '',
+					'bg_color'           => $item['bg_color'] ?? '',
+					'border_color'       => $item['border_color'] ?? '',
+					'border_width'       => isset( $item['border_width']['size'] ) ? (float) $item['border_width']['size'] : 0,
+					'title_color'        => $item['title_color'] ?? '',
+					'price_color'        => $item['price_color'] ?? '',
+					'text_color'         => $item['text_color'] ?? '',
+					'check_color'        => $item['check_color'] ?? '',
+					'button_color'       => $item['button_color'] ?? '',
+					'button_hover_bg'    => $item['button_hover_bg'] ?? '',
+					'button_hover_color' => $item['button_hover_color'] ?? '',
+					'hover_border_color' => $item['hover_border_color'] ?? '',
+					'hover_border_width' => isset( $item['hover_border_width']['size'] ) ? (float) $item['hover_border_width']['size'] : null,
+					'hover_padding'      => $item['hover_padding'] ?? [],
 				],
 			];
 		}
 
 		return $cards;
+	}
+
+	/**
+	 * Keep a value safe to drop inside a <style> block (no break-out chars).
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	private function css_safe( $value ) {
+		return trim( str_replace( [ '<', '>', '{', '}', ';', '"', "'", '\\' ], '', (string) $value ) );
+	}
+
+	/**
+	 * Build the scoped <style> for a card's hover states (card border/padding
+	 * and button hover background/text).
+	 *
+	 * @param string $uid   Unique per-card class.
+	 * @param array  $style Card style data.
+	 * @return string
+	 */
+	private function hover_style( $uid, $style ) {
+		$card_rules = [];
+
+		$hbw = $style['hover_border_width'];
+		$hbc = $this->css_safe( $style['hover_border_color'] ?? '' );
+		if ( null !== $hbw && '' !== $hbc ) {
+			$card_rules[] = sprintf( 'border:%dpx solid %s !important;', (int) $hbw, $hbc );
+		} elseif ( '' !== $hbc ) {
+			$card_rules[] = sprintf( 'border-color:%s !important;', $hbc );
+		}
+
+		$pad = $style['hover_padding'] ?? [];
+		if ( is_array( $pad ) && isset( $pad['top'] ) && '' !== $pad['top'] ) {
+			$unit = preg_replace( '/[^a-z%]/i', '', (string) ( $pad['unit'] ?? 'px' ) );
+			$card_rules[] = sprintf(
+				'padding:%s%5$s %s%5$s %s%5$s %s%5$s !important;',
+				(float) $pad['top'],
+				(float) ( $pad['right'] ?? 0 ),
+				(float) ( $pad['bottom'] ?? 0 ),
+				(float) ( $pad['left'] ?? 0 ),
+				$unit ? $unit : 'px'
+			);
+		}
+
+		$btn_rules = [];
+		$bh_bg = $this->css_safe( $style['button_hover_bg'] ?? '' );
+		$bh_c  = $this->css_safe( $style['button_hover_color'] ?? '' );
+		if ( '' !== $bh_bg ) {
+			$btn_rules[] = sprintf( 'background:%1$s !important;border-color:%1$s !important;', $bh_bg );
+		}
+		if ( '' !== $bh_c ) {
+			$btn_rules[] = sprintf( 'color:%s !important;', $bh_c );
+		}
+
+		$out = '';
+		if ( $card_rules ) {
+			$out .= sprintf( '.%1$s.lnc-pcard:hover{%2$s}', $uid, implode( '', $card_rules ) );
+		}
+		if ( $btn_rules ) {
+			$out .= sprintf(
+				'.%1$s .lnc-pcard__button:hover,.%1$s .lnc-pcard__button:focus{%2$s}',
+				$uid,
+				implode( '', $btn_rules )
+			);
+		}
+
+		return '' === $out ? '' : '<style>' . $out . '</style>';
 	}
 
 	protected function render() {
@@ -469,9 +598,11 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		$show_check   = 'yes' === ( $settings['show_check_icon'] ?? 'yes' );
 		$feature_icon = $settings['feature_icon'] ?? [];
 
+		$widget_id = $this->get_id();
+
 		echo '<div class="lnc-pcards">';
 
-		foreach ( $cards as $card ) {
+		foreach ( $cards as $index => $card ) {
 			$style = $card['style'];
 
 			$bg     = $style['bg_color'] ?? '';
@@ -483,6 +614,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			$chk    = $style['check_color'] ?? '';
 			$btn    = $style['button_color'] ?? '';
 
+			// Unique per-card class so hover states can be scoped via inline <style>.
+			$uid = 'lnc-pcard--' . $widget_id . '-' . $index;
+
 			$card_style = sprintf(
 				'background:%s;border:%dpx solid %s;',
 				esc_attr( $bg ),
@@ -490,7 +624,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				esc_attr( $bc )
 			);
 
-			echo '<div class="lnc-pcard" style="' . esc_attr( $card_style ) . '">';
+			echo $this->hover_style( $uid, $style ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
+			echo '<div class="lnc-pcard ' . esc_attr( $uid ) . '" style="' . esc_attr( $card_style ) . '">';
 
 			// Title.
 			if ( '' !== $card['title'] ) {
