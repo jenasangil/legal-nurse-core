@@ -75,6 +75,10 @@
 	fill: currentColor;
 }
 
+.lnc-pcard__check svg path {
+	stroke: currentColor;
+}
+
 .lnc-pcard__button {
 	align-self: flex-start;
 	display: inline-block;
