@@ -542,11 +542,14 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			if ( '' !== $card['button_text'] ) {
 				$target = $card['button_target'] ? ' target="' . esc_attr( $card['button_target'] ) . '"' : '';
 				$href   = $card['button_url'] ? esc_url( $card['button_url'] ) : '#';
+				$btn_style = $btn
+					? sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) )
+					: '';
 				printf(
-					'<a class="lnc-pcard__button" href="%s"%s style="--lnc-accent:%s">%s</a>',
+					'<a class="lnc-pcard__button" href="%s"%s style="%s">%s</a>',
 					$href,
 					$target,
-					esc_attr( $btn ),
+					$btn_style,
 					esc_html( $card['button_text'] )
 				);
 			}

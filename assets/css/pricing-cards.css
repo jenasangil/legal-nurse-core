@@ -21,6 +21,9 @@
 }
 
 .lnc-pcard__price {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	margin-bottom: 16px;
 	font-size: 30px;
 	font-weight: 700;
@@ -31,7 +34,6 @@
 	font-size: 0.62em;
 	font-weight: 500;
 	text-decoration: line-through;
-	opacity: 0.6;
 }
 
 .lnc-pcard__note {
@@ -81,14 +83,16 @@
 	border-radius: 999px;
 	font-size: 15px;
 	font-weight: 600;
-	text-decoration: none;
+	text-decoration: none !important;
 	background: transparent;
 	transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.lnc-pcard__button:hover {
+.lnc-pcard__button:hover,
+.lnc-pcard__button:focus {
 	background: var(--lnc-accent, #1BA39C);
 	color: #fff;
+	text-decoration: none !important;
 }
 
 @media (max-width: 1024px) {
