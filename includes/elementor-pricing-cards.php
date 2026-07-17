@@ -3,7 +3,8 @@
  * Elementor Pricing Cards Widget
  *
  * Renders a row of pricing/plan cards (Basic / Executive / VIP style).
- * Source can be WooCommerce products or manually entered cards.
+ * Cards are built from selected WooCommerce products (title + price from the
+ * product; note + features from ACF fields pricing_note / features).
  * Each card supports its own background, border, and text styling via a
  * cycled style palette (index-based), so every card can look different.
  */
@@ -74,19 +75,6 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'source',
-			[
-				'label'   => esc_html__( 'Data Source', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::SELECT,
-				'default' => 'manual',
-				'options' => [
-					'manual'      => esc_html__( 'Manual', 'legal-nurse-core' ),
-					'woocommerce' => esc_html__( 'WooCommerce Products', 'legal-nurse-core' ),
-				],
-			]
-		);
-
-		$this->add_control(
 			'wc_products',
 			[
 				'label'       => esc_html__( 'Select Products', 'legal-nurse-core' ),
@@ -94,103 +82,16 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'multiple'    => true,
 				'label_block' => true,
 				'options'     => $this->get_product_options(),
-				'description' => esc_html__( 'Order of selection = display order. Uses the Product Meta box for note/features.', 'legal-nurse-core' ),
-				'condition'   => [ 'source' => 'woocommerce' ],
+				'description' => esc_html__( 'Order of selection = display order. Title, price come from the product; note & features come from ACF (pricing_note, features).', 'legal-nurse-core' ),
 			]
 		);
 
 		$this->add_control(
 			'wc_button_text',
 			[
-				'label'     => esc_html__( 'Button Text', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::TEXT,
-				'default'   => esc_html__( 'Compare Details', 'legal-nurse-core' ),
-				'condition' => [ 'source' => 'woocommerce' ],
-			]
-		);
-
-		// Manual cards repeater.
-		$repeater = new \Elementor\Repeater();
-
-		$repeater->add_control(
-			'title',
-			[
-				'label'   => esc_html__( 'Title', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => esc_html__( 'Basic', 'legal-nurse-core' ),
-			]
-		);
-
-		$repeater->add_control(
-			'price_original',
-			[
-				'label'       => esc_html__( 'Original Price', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::TEXT,
-				'default'     => '$4,997',
-				'description' => esc_html__( 'Shown with a strikethrough. Leave empty to hide.', 'legal-nurse-core' ),
-			]
-		);
-
-		$repeater->add_control(
-			'price',
-			[
-				'label'   => esc_html__( 'Price', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => '$3,497',
-			]
-		);
-
-		$repeater->add_control(
-			'note',
-			[
-				'label'   => esc_html__( 'Pricing Note', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => esc_html__( 'Free mentoring: once a month', 'legal-nurse-core' ),
-			]
-		);
-
-		$repeater->add_control(
-			'features',
-			[
-				'label'       => esc_html__( 'Features', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::TEXTAREA,
-				'rows'        => 5,
-				'default'     => "CLNC® Certification Program + exam\nCore Curriculum textbook\nFree NACLNC® directory listing",
-				'description' => esc_html__( 'One feature per line.', 'legal-nurse-core' ),
-			]
-		);
-
-		$repeater->add_control(
-			'button_text',
-			[
 				'label'   => esc_html__( 'Button Text', 'legal-nurse-core' ),
 				'type'    => \Elementor\Controls_Manager::TEXT,
 				'default' => esc_html__( 'Compare Details', 'legal-nurse-core' ),
-			]
-		);
-
-		$repeater->add_control(
-			'button_link',
-			[
-				'label'       => esc_html__( 'Button Link', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::URL,
-				'placeholder' => 'https://your-link.com',
-			]
-		);
-
-		$this->add_control(
-			'manual_cards',
-			[
-				'label'       => esc_html__( 'Cards', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::REPEATER,
-				'fields'      => $repeater->get_controls(),
-				'title_field' => '{{{ title }}}',
-				'condition'   => [ 'source' => 'manual' ],
-				'default'     => [
-					[ 'title' => 'Basic', 'price_original' => '$4,997', 'price' => '$3,497' ],
-					[ 'title' => 'Executive', 'price_original' => '$8,997', 'price' => '$6,197' ],
-					[ 'title' => 'VIP', 'price_original' => '$12,997', 'price' => '$8,197' ],
-				],
 			]
 		);
 
@@ -532,7 +433,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	}
 
 	/**
-	 * Normalize both sources into a flat list of card data arrays.
+	 * Build the list of card data arrays from the selected WooCommerce products.
 	 *
 	 * @param array $settings
 	 * @return array<int,array>
@@ -540,55 +441,35 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	private function get_cards( $settings ) {
 		$cards = [];
 
-		if ( 'woocommerce' === $settings['source'] ) {
-			$ids = $settings['wc_products'] ?? [];
-			if ( ! is_array( $ids ) || ! function_exists( 'wc_get_product' ) ) {
-				return $cards;
-			}
-
-			$button_text = $settings['wc_button_text'] ?? esc_html__( 'Compare Details', 'legal-nurse-core' );
-
-			foreach ( $ids as $id ) {
-				$product = wc_get_product( $id );
-				if ( ! $product ) {
-					continue;
-				}
-
-				$colors = get_post_meta( $id, LNC_META_COLORS, true );
-				$colors = is_array( $colors ) ? array_filter( $colors ) : [];
-
-				$regular = $product->get_regular_price();
-				$active  = $product->get_price();
-
-				$cards[] = [
-					'title'          => $product->get_name(),
-					'price_original' => ( $regular && $regular !== $active ) ? wc_price( $regular ) : '',
-					'price'          => wc_price( $active ),
-					'note'           => $this->get_product_note( $id ),
-					'features'       => $this->get_product_features( $id ),
-					'button_text'    => $button_text,
-					'button_url'     => $product->get_permalink(),
-					'button_target'  => '',
-					'color_override' => $colors,
-				];
-			}
-
+		$ids = $settings['wc_products'] ?? [];
+		if ( ! is_array( $ids ) || ! function_exists( 'wc_get_product' ) ) {
 			return $cards;
 		}
 
-		// Manual.
-		foreach ( (array) ( $settings['manual_cards'] ?? [] ) as $item ) {
-			$features = array_filter( array_map( 'trim', explode( "\n", (string) ( $item['features'] ?? '' ) ) ) );
+		$button_text = $settings['wc_button_text'] ?? esc_html__( 'Compare Details', 'legal-nurse-core' );
+
+		foreach ( $ids as $id ) {
+			$product = wc_get_product( $id );
+			if ( ! $product ) {
+				continue;
+			}
+
+			$colors = get_post_meta( $id, LNC_META_COLORS, true );
+			$colors = is_array( $colors ) ? array_filter( $colors ) : [];
+
+			$regular = $product->get_regular_price();
+			$active  = $product->get_price();
 
 			$cards[] = [
-				'title'          => $item['title'] ?? '',
-				'price_original' => $item['price_original'] ?? '',
-				'price'          => $item['price'] ?? '',
-				'note'           => $item['note'] ?? '',
-				'features'       => array_values( $features ),
-				'button_text'    => $item['button_text'] ?? '',
-				'button_url'     => $item['button_link']['url'] ?? '',
-				'button_target'  => ! empty( $item['button_link']['is_external'] ) ? '_blank' : '',
+				'title'          => $product->get_name(),
+				'price_original' => ( $regular && $regular !== $active ) ? wc_price( $regular ) : '',
+				'price'          => wc_price( $active ),
+				'note'           => $this->get_product_note( $id ),
+				'features'       => $this->get_product_features( $id ),
+				'button_text'    => $button_text,
+				'button_url'     => $product->get_permalink(),
+				'button_target'  => '',
+				'color_override' => $colors,
 			];
 		}
 
@@ -602,7 +483,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		if ( empty( $cards ) ) {
 			if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 				echo '<div class="elementor-alert elementor-alert-info">'
-					. esc_html__( 'Pricing Cards: select a data source and add cards.', 'legal-nurse-core' )
+					. esc_html__( 'Pricing Cards: select one or more WooCommerce products.', 'legal-nurse-core' )
 					. '</div>';
 			}
 			return;
