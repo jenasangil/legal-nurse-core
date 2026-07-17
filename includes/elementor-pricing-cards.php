@@ -356,8 +356,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	}
 
 	/**
-	 * Read the pricing note for a product from ACF (pricing_note), falling
-	 * back to the plugin's own meta box value.
+	 * Read the pricing note for a product from the ACF field "pricing_note".
 	 *
 	 * @param int $id Product ID.
 	 * @return string
@@ -365,17 +364,16 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	private function get_product_note( $id ) {
 		if ( function_exists( 'get_field' ) ) {
 			$note = get_field( 'pricing_note', $id );
-			if ( is_string( $note ) && '' !== $note ) {
+			if ( is_string( $note ) ) {
 				return $note;
 			}
 		}
-		return (string) get_post_meta( $id, LNC_META_PRICING_NOTE, true );
+		return '';
 	}
 
 	/**
-	 * Read the features list for a product from ACF (features repeater),
-	 * falling back to the plugin's own meta box value. Handles both a plain
-	 * array of strings and an ACF repeater (array of rows).
+	 * Read the features list for a product from the ACF field "features".
+	 * Handles both a plain array of strings and an ACF repeater (array of rows).
 	 *
 	 * @param int $id Product ID.
 	 * @return array<int,string>
@@ -398,13 +396,6 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 						$features[] = $value;
 					}
 				}
-			}
-		}
-
-		if ( empty( $features ) ) {
-			$meta = get_post_meta( $id, LNC_META_FEATURES, true );
-			if ( is_array( $meta ) ) {
-				$features = array_values( array_filter( array_map( 'trim', $meta ) ) );
 			}
 		}
 

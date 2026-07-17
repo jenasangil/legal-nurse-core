@@ -21,13 +21,6 @@ define( 'LNC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once LNC_PLUGIN_DIR . 'includes/svg-support.php';
 
-// WooCommerce product meta (Pricing Note + Features) — only when WooCommerce is active.
-add_action( 'plugins_loaded', function () {
-	if ( class_exists( 'WooCommerce' ) ) {
-		require_once LNC_PLUGIN_DIR . 'includes/woocommerce-product-meta.php';
-	}
-} );
-
 // Load Elementor extensions only after Elementor is ready.
 add_action( 'elementor/init', function () {
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-lcp-hero.php';
