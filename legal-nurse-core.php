@@ -20,6 +20,7 @@ define( 'LNC_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LNC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once LNC_PLUGIN_DIR . 'includes/svg-support.php';
+require_once LNC_PLUGIN_DIR . 'includes/shortcodes.php';
 
 // Load Elementor extensions only after Elementor is ready.
 add_action( 'elementor/init', function () {
