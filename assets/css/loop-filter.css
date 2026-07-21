@@ -1,0 +1,79 @@
+/* Legal Nurse Core — Loop Filter */
+
+.lnc-loop-filter__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.lnc-loop-filter__bar {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	flex-wrap: wrap;
+}
+
+.lnc-loop-filter__btn {
+	appearance: none;
+	background: transparent;
+	border: 0;
+	padding: 6px 4px;
+	cursor: pointer;
+	color: #4A4A4A;
+	font: inherit;
+	line-height: 1.4;
+	transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lnc-loop-filter__btn.is-active {
+	color: #1BA39C;
+	box-shadow: inset 0 -2px 0 0 #1BA39C;
+}
+
+.lnc-loop-filter__select {
+	appearance: auto;
+	font: inherit;
+	padding: 10px 14px;
+	border: 1px solid #d9d9d9;
+	border-radius: 6px;
+	background: #fff;
+	cursor: pointer;
+}
+
+/* The mobile category select is hidden on desktop; the bar is hidden on mobile. */
+.lnc-loop-filter__categories {
+	display: none;
+}
+
+.lnc-loop-filter.is-loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.elementor-loop-container.lnc-loading {
+	opacity: 0.5;
+	transition: opacity 0.2s ease;
+}
+
+.lnc-loop-empty {
+	padding: 40px 0;
+	text-align: center;
+	color: #777;
+}
+
+@media (max-width: 767px) {
+	.lnc-loop-filter__bar {
+		display: none;
+	}
+
+	.lnc-loop-filter__categories {
+		display: block;
+		flex: 1 1 auto;
+	}
+
+	.lnc-loop-filter__inner {
+		gap: 12px;
+	}
+}

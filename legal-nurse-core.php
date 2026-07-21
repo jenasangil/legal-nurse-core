@@ -21,6 +21,7 @@ define( 'LNC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once LNC_PLUGIN_DIR . 'includes/svg-support.php';
 require_once LNC_PLUGIN_DIR . 'includes/shortcodes.php';
+require_once LNC_PLUGIN_DIR . 'includes/loop-filter-ajax.php';
 
 // Load Elementor extensions only after Elementor is ready.
 add_action( 'elementor/init', function () {
@@ -39,10 +40,13 @@ add_action( 'elementor/elements/categories_registered', function ( $elements_man
 	);
 } );
 
-// Register the Pricing Cards widget.
+// Register widgets.
 add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-pricing-cards.php';
 	$widgets_manager->register( new LNC_Pricing_Cards_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-loop-filter.php';
+	$widgets_manager->register( new LNC_Loop_Filter_Widget() );
 } );
 
 // Enqueue the Pricing Cards stylesheet (frontend + Elementor editor preview).
