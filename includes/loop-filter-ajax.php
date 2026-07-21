@@ -119,13 +119,51 @@ function lnc_loop_filter_ajax() {
 
 	wp_send_json_success(
 		[
-			'html'        => $html,
-			'found'       => (int) $query->found_posts,
-			'maxPages'    => (int) $query->max_num_pages,
-			'page'        => $page,
-			'empty'       => ! $query->have_posts() && '' === $html,
+			'html'       => $html,
+			'pagination' => lnc_loop_filter_pagination( $page, (int) $query->max_num_pages ),
+			'found'      => (int) $query->found_posts,
+			'maxPages'   => (int) $query->max_num_pages,
+			'page'       => $page,
+			'empty'      => '' === $html,
 		]
 	);
+}
+
+/**
+ * Build pagination markup using Elementor's pagination classes so the target
+ * Loop Grid's own pagination styling applies to it.
+ *
+ * @param int $current Current page.
+ * @param int $max     Total pages.
+ * @return string
+ */
+function lnc_loop_filter_pagination( $current, $max ) {
+	if ( $max < 2 ) {
+		return '';
+	}
+
+	$links = paginate_links(
+		[
+			'base'      => '#%#%',
+			'format'    => '%#%',
+			'current'   => max( 1, $current ),
+			'total'     => $max,
+			'type'      => 'array',
+			'mid_size'  => 1,
+			'end_size'  => 1,
+			'prev_text' => '&laquo; ' . esc_html__( 'Previous', 'legal-nurse-core' ),
+			'next_text' => esc_html__( 'Next', 'legal-nurse-core' ) . ' &raquo;',
+		]
+	);
+
+	if ( empty( $links ) ) {
+		return '';
+	}
+
+	// Elementor wraps pagination in .elementor-pagination; its links use .page-numbers.
+	return '<nav class="elementor-pagination" role="navigation" aria-label="' . esc_attr__( 'Pagination', 'legal-nurse-core' ) . '">'
+		. implode( '', $links )
+		. '</nav>';
 }
 
 /**

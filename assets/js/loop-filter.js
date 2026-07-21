@@ -51,84 +51,65 @@
 				|| document.querySelector( '.elementor-loop-container' );
 		}
 
-		function ensurePagination( container ) {
-			if ( paginationEl && paginationEl.isConnected ) {
-				return paginationEl;
+		// The Loop Grid widget element (for placing/reusing its pagination).
+		function resolveGrid() {
+			if ( config.target ) {
+				var t = document.querySelector( config.target );
+				if ( t ) {
+					return t.closest( '.elementor-widget-loop-grid' ) || t;
+				}
 			}
-			paginationEl = document.createElement( 'nav' );
-			paginationEl.className = 'lnc-loop-pagination';
-			paginationEl.setAttribute( 'aria-label', 'Pagination' );
-			container.parentNode.insertBefore( paginationEl, container.nextSibling );
+			var node = root;
+			while ( node && node !== document.body ) {
+				var grid = node.querySelector( '.elementor-widget-loop-grid' );
+				if ( grid ) {
+					return grid;
+				}
+				node = node.parentElement;
+			}
+			return document.querySelector( '.elementor-widget-loop-grid' );
+		}
+
+		// Reuse the grid's own .elementor-pagination node (so its styling applies),
+		// or create one inside the grid's widget container if none exists yet.
+		function ensurePagination( container ) {
+			var grid = resolveGrid();
+			var host = grid ? ( grid.querySelector( '.elementor-widget-container' ) || grid ) : ( container.parentNode );
+
+			paginationEl = host.querySelector( '.elementor-pagination' );
+			if ( ! paginationEl ) {
+				paginationEl = document.createElement( 'nav' );
+				paginationEl.className = 'elementor-pagination';
+				host.appendChild( paginationEl );
+			}
 			return paginationEl;
 		}
 
-		function pageNumbers( current, max ) {
-			// Windowed list: 1 … c-1 c c+1 … max
-			var pages = [];
-			var add = function ( p ) { if ( pages.indexOf( p ) === -1 ) { pages.push( p ); } };
-			add( 1 );
-			for ( var p = current - 1; p <= current + 1; p++ ) {
-				if ( p > 1 && p < max ) { add( p ); }
-			}
-			add( max );
-			pages.sort( function ( a, b ) { return a - b; } );
-			// Insert ellipsis markers.
-			var out = [];
-			for ( var i = 0; i < pages.length; i++ ) {
-				if ( i > 0 && pages[ i ] - pages[ i - 1 ] > 1 ) {
-					out.push( '…' );
-				}
-				out.push( pages[ i ] );
-			}
-			return out;
+		function bindPaginationLinks( nav ) {
+			nav.querySelectorAll( 'a.page-numbers' ).forEach( function ( link ) {
+				link.addEventListener( 'click', function ( e ) {
+					e.preventDefault();
+					var target;
+					if ( link.classList.contains( 'next' ) ) {
+						target = state.page + 1;
+					} else if ( link.classList.contains( 'prev' ) ) {
+						target = state.page - 1;
+					} else {
+						target = parseInt( link.textContent.replace( /\D/g, '' ), 10 );
+					}
+					if ( target && ! isNaN( target ) ) {
+						goToPage( target );
+					}
+				} );
+			} );
 		}
 
-		function renderPagination( container, maxPages ) {
-			if ( ! config.pagination ) {
-				return;
-			}
+		function renderPagination( container, paginationHtml ) {
 			var nav = ensurePagination( container );
-			nav.innerHTML = '';
-
-			if ( maxPages <= 1 ) {
-				return;
+			nav.innerHTML = paginationHtml || '';
+			if ( paginationHtml ) {
+				bindPaginationLinks( nav );
 			}
-
-			var frag = document.createDocumentFragment();
-
-			var prev = document.createElement( 'button' );
-			prev.type = 'button';
-			prev.className = 'lnc-loop-pagination__item lnc-loop-pagination__prev';
-			prev.textContent = config.prevLabel || 'Prev';
-			prev.disabled = state.page <= 1;
-			prev.addEventListener( 'click', function () { goToPage( state.page - 1 ); } );
-			frag.appendChild( prev );
-
-			pageNumbers( state.page, maxPages ).forEach( function ( p ) {
-				if ( p === '…' ) {
-					var gap = document.createElement( 'span' );
-					gap.className = 'lnc-loop-pagination__ellipsis';
-					gap.textContent = '…';
-					frag.appendChild( gap );
-					return;
-				}
-				var btn = document.createElement( 'button' );
-				btn.type = 'button';
-				btn.className = 'lnc-loop-pagination__item' + ( p === state.page ? ' is-active' : '' );
-				btn.textContent = p;
-				btn.addEventListener( 'click', function () { goToPage( p ); } );
-				frag.appendChild( btn );
-			} );
-
-			var next = document.createElement( 'button' );
-			next.type = 'button';
-			next.className = 'lnc-loop-pagination__item lnc-loop-pagination__next';
-			next.textContent = config.nextLabel || 'Next';
-			next.disabled = state.page >= maxPages;
-			next.addEventListener( 'click', function () { goToPage( state.page + 1 ); } );
-			frag.appendChild( next );
-
-			nav.appendChild( frag );
 		}
 
 		function goToPage( p ) {
@@ -179,7 +160,7 @@
 							? '<div class="lnc-loop-empty">' + ( config.emptyText || 'No posts found.' ) + '</div>'
 							: res.data.html;
 
-						renderPagination( container, res.data.maxPages || 1 );
+						renderPagination( container, res.data.pagination || '' );
 
 						// Let Elementor re-scan lazy images / widgets if present.
 						if ( window.elementorFrontend && window.elementorFrontend.elementsHandler ) {
@@ -231,9 +212,7 @@
 		}
 
 		// Initial load so the grid is AJAX-driven and pagination renders from the start.
-		if ( config.pagination ) {
-			fetchPosts();
-		}
+		fetchPosts();
 	}
 
 	function initAll( ctx ) {

@@ -157,36 +157,6 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		$this->add_control(
-			'enable_pagination',
-			[
-				'label'        => esc_html__( 'Numbered Pagination', 'legal-nurse-core' ),
-				'type'         => \Elementor\Controls_Manager::SWITCHER,
-				'return_value' => 'yes',
-				'default'      => 'yes',
-				'description'  => esc_html__( 'Show numbered page links below the grid (AJAX).', 'legal-nurse-core' ),
-			]
-		);
-
-		$this->add_control(
-			'prev_label',
-			[
-				'label'     => esc_html__( 'Previous Label', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::TEXT,
-				'default'   => esc_html__( 'Prev', 'legal-nurse-core' ),
-				'condition' => [ 'enable_pagination' => 'yes' ],
-			]
-		);
-
-		$this->add_control(
-			'next_label',
-			[
-				'label'     => esc_html__( 'Next Label', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::TEXT,
-				'default'   => esc_html__( 'Next', 'legal-nurse-core' ),
-				'condition' => [ 'enable_pagination' => 'yes' ],
-			]
-		);
 
 		$this->add_control(
 			'categories_source',
@@ -547,9 +517,6 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 			'taxonomy'   => $taxonomy,
 			'views_key'  => $views_key,
 			'allowed'    => $allowed,
-			'pagination' => 'yes' === ( $settings['enable_pagination'] ?? 'yes' ),
-			'prevLabel'  => $settings['prev_label'] ? $settings['prev_label'] : esc_html__( 'Prev', 'legal-nurse-core' ),
-			'nextLabel'  => $settings['next_label'] ? $settings['next_label'] : esc_html__( 'Next', 'legal-nurse-core' ),
 			'nonce'      => wp_create_nonce( 'lnc_loop_filter' ),
 		];
 
