@@ -5,14 +5,20 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 }
 
 .lnc-loop-filter__bar {
 	display: flex;
 	align-items: center;
 	gap: 24px;
+	flex: 1 1 auto;
 	flex-wrap: wrap;
+	min-width: 0;
+}
+
+.lnc-loop-filter__sort {
+	flex: 0 0 auto;
 }
 
 .lnc-loop-filter__btn {
