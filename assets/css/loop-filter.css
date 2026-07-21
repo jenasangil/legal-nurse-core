@@ -77,9 +77,9 @@
 	color: #777;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
 	.lnc-loop-filter__bar {
-		display: none;
+		display: none !important;
 	}
 
 	.lnc-loop-filter__categories {
