@@ -8,23 +8,7 @@
 		}
 		root.dataset.lncInit = '1';
 
-		var url   = encodeURIComponent( window.location.href );
-		var title = encodeURIComponent( document.title );
-
-		var links = {
-			facebook:  'https://www.facebook.com/sharer/sharer.php?u=' + url,
-			x:         'https://twitter.com/intent/tweet?text=' + title + '&url=' + url,
-			linkedin:  'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
-			pinterest: 'https://pinterest.com/pin/create/button/?url=' + url + '&description=' + title
-		};
-
-		Object.keys( links ).forEach( function ( key ) {
-			var el = root.querySelector( '.lnc-social-btn--' + key );
-			if ( el ) {
-				el.setAttribute( 'href', links[ key ] );
-			}
-		} );
-
+		// Share hrefs are rendered server-side (PHP); JS only handles copy-to-clipboard.
 		var copyBtn = root.querySelector( '.lnc-social-btn--copy' );
 		if ( copyBtn ) {
 			copyBtn.addEventListener( 'click', function ( e ) {

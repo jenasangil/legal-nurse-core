@@ -89,6 +89,17 @@ class LNC_Social_Share_Widget extends \Elementor\Widget_Base {
 					'default'      => 'yes',
 				]
 			);
+
+			$this->add_control(
+				'icon_' . $key,
+				[
+					/* translators: %s: network name */
+					'label'       => sprintf( esc_html__( '%s Icon', 'legal-nurse-core' ), $net['label'] ),
+					'type'        => \Elementor\Controls_Manager::ICONS,
+					'description' => esc_html__( 'Optional. Choose an icon or upload an SVG to override the default.', 'legal-nurse-core' ),
+					'condition'   => [ 'show_' . $key => 'yes' ],
+				]
+			);
 		}
 
 		$this->add_control(
@@ -175,7 +186,10 @@ class LNC_Social_Share_Widget extends \Elementor\Widget_Base {
 				'size_units' => [ 'px' ],
 				'range'      => [ 'px' => [ 'min' => 8, 'max' => 40 ] ],
 				'default'    => [ 'size' => 18, 'unit' => 'px' ],
-				'selectors'  => [ '{{WRAPPER}} .lnc-social-btn svg' => 'width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};' ],
+				'selectors'  => [
+					'{{WRAPPER}} .lnc-social-btn svg' => 'width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .lnc-social-btn i'   => 'font-size:{{SIZE}}{{UNIT}};',
+				],
 			]
 		);
 
@@ -238,10 +252,57 @@ class LNC_Social_Share_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 	}
 
+	/**
+	 * Current page URL and title for share links.
+	 *
+	 * @return array{url:string,title:string}
+	 */
+	private function get_share_context() {
+		$url = get_permalink();
+		if ( ! $url ) {
+			global $wp;
+			$url = home_url( add_query_arg( [], isset( $wp->request ) ? $wp->request : '' ) );
+		}
+
+		$title = get_the_title();
+		if ( '' === $title ) {
+			$title = wp_get_document_title();
+		}
+
+		return [ 'url' => $url, 'title' => $title ];
+	}
+
+	/**
+	 * Build the share href for a network (server-side).
+	 *
+	 * @param string $key   Network key.
+	 * @param string $url   Page URL.
+	 * @param string $title Page title.
+	 * @return string
+	 */
+	private function share_url( $key, $url, $title ) {
+		$e_url   = rawurlencode( $url );
+		$e_title = rawurlencode( $title );
+
+		switch ( $key ) {
+			case 'facebook':
+				return 'https://www.facebook.com/sharer/sharer.php?u=' . $e_url;
+			case 'x':
+				return 'https://twitter.com/intent/tweet?text=' . $e_title . '&url=' . $e_url;
+			case 'linkedin':
+				return 'https://www.linkedin.com/sharing/share-offsite/?url=' . $e_url;
+			case 'pinterest':
+				return 'https://pinterest.com/pin/create/button/?url=' . $e_url . '&description=' . $e_title;
+			default:
+				return '';
+		}
+	}
+
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 		$networks = self::networks();
 		$new_tab  = 'yes' === ( $settings['open_new_tab'] ?? 'yes' );
+		$context  = $this->get_share_context();
 
 		$classes = 'lnc-social-share';
 		if ( 'yes' === ( $settings['hide_on_mobile'] ?? '' ) ) {
@@ -255,12 +316,31 @@ class LNC_Social_Share_Widget extends \Elementor\Widget_Base {
 					if ( 'yes' !== ( $settings[ 'show_' . $key ] ?? 'yes' ) ) {
 						continue;
 					}
+
 					$is_copy = ( 'copy' === $key );
-					$target  = ( ! $is_copy && $new_tab ) ? ' target="_blank" rel="noopener noreferrer"' : '';
+
+					// Custom icon override, else the built-in SVG.
+					$custom = $settings[ 'icon_' . $key ] ?? [];
+					if ( ! empty( $custom['value'] ) ) {
+						ob_start();
+						\Elementor\Icons_Manager::render_icon( $custom, [ 'aria-hidden' => 'true' ] );
+						$icon = ob_get_clean();
+					} else {
+						$icon = $net['svg'];
+					}
+
+					// Server-side href + attributes.
+					if ( $is_copy ) {
+						$href_attr = ' href="#"';
+						$target    = '';
+					} else {
+						$href_attr = ' href="' . esc_url( $this->share_url( $key, $context['url'], $context['title'] ) ) . '"';
+						$target    = $new_tab ? ' target="_blank" rel="noopener noreferrer"' : '';
+					}
 					?>
 					<li>
-						<a class="lnc-social-btn lnc-social-btn--<?php echo esc_attr( $key ); ?>"<?php echo $target; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr( $net['label'] ); ?>">
-							<?php echo $net['svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<a class="lnc-social-btn lnc-social-btn--<?php echo esc_attr( $key ); ?>"<?php echo $href_attr . $target; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr( $net['label'] ); ?>">
+							<?php echo $icon; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</a>
 					</li>
 				<?php endforeach; ?>
