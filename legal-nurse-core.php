@@ -47,7 +47,18 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-loop-filter.php';
 	$widgets_manager->register( new LNC_Loop_Filter_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-social-share.php';
+	$widgets_manager->register( new LNC_Social_Share_Widget() );
 } );
+
+// Register Social Share assets.
+add_action( 'wp_enqueue_scripts', 'lnc_register_social_share_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_social_share_assets' );
+function lnc_register_social_share_assets() {
+	wp_register_style( 'lnc-social-share', LNC_PLUGIN_URL . 'assets/css/social-share.css', [], LNC_VERSION );
+	wp_register_script( 'lnc-social-share', LNC_PLUGIN_URL . 'assets/js/social-share.js', [], LNC_VERSION, true );
+}
 
 // Enqueue the Pricing Cards stylesheet (frontend + Elementor editor preview).
 add_action( 'wp_enqueue_scripts', 'lnc_enqueue_pricing_cards_css' );
