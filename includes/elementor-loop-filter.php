@@ -109,10 +109,10 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'target_selector',
 			[
-				'label'       => esc_html__( 'Target Loop Grid Selector', 'legal-nurse-core' ),
+				'label'       => esc_html__( 'Target Loop Grid Selector (optional)', 'legal-nurse-core' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
 				'placeholder' => '.elementor-element-abc123',
-				'description' => esc_html__( 'CSS selector of the Loop Grid to filter. Select the Loop Grid, open Advanced, and copy its CSS ID (#your-id) or add a CSS Class and use .your-class.', 'legal-nurse-core' ),
+				'description' => esc_html__( 'Leave empty to auto-detect the nearest Loop Grid in the same Container/Section. Set a CSS ID (#your-id) or Class (.your-class) only if you need to target a specific grid.', 'legal-nurse-core' ),
 			]
 		);
 
@@ -554,9 +554,9 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 		];
 
 		// Editor helper notice.
-		if ( ( '' === $target || ! $template ) && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+		if ( ! $template && \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
 			echo '<div class="elementor-alert elementor-alert-warning">'
-				. esc_html__( 'Loop Filter: set the Target Loop Grid Selector and Loop Item Template in the widget settings.', 'legal-nurse-core' )
+				. esc_html__( 'Loop Filter: choose the Loop Item Template so filtered results render. The target Loop Grid is auto-detected if left empty.', 'legal-nurse-core' )
 				. '</div>';
 		}
 		?>

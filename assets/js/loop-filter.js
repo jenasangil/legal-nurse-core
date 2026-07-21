@@ -28,12 +28,27 @@
 		var paginationEl = null;
 
 		function resolveContainer() {
-			var target = document.querySelector( config.target );
-			if ( ! target ) {
-				return null;
+			// 1) Explicit selector, if provided and present.
+			if ( config.target ) {
+				var target = document.querySelector( config.target );
+				if ( target ) {
+					return target.querySelector( '.elementor-loop-container' ) || target;
+				}
 			}
-			// Elementor Loop Grid inner container; fall back to the target itself.
-			return target.querySelector( '.elementor-loop-container' ) || target;
+
+			// 2) Auto-detect the nearest Loop Grid relative to this filter widget.
+			var node = root;
+			while ( node && node !== document.body ) {
+				var grid = node.querySelector( '.elementor-widget-loop-grid' );
+				if ( grid ) {
+					return grid.querySelector( '.elementor-loop-container' ) || grid;
+				}
+				node = node.parentElement;
+			}
+
+			// 3) Last resort: first Loop Grid on the page.
+			return document.querySelector( '.elementor-widget-loop-grid .elementor-loop-container' )
+				|| document.querySelector( '.elementor-loop-container' );
 		}
 
 		function ensurePagination( container ) {
