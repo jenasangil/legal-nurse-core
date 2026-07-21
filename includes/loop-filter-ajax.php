@@ -58,6 +58,12 @@ function lnc_loop_filter_ajax() {
 
 	$ppp = $ppp > 0 ? min( $ppp, 48 ) : 6;
 
+	// Allowed term IDs (when the widget is limited to selected categories).
+	$allowed = [];
+	if ( isset( $_POST['allowed'] ) ) {
+		$allowed = array_filter( array_map( 'absint', (array) wp_unslash( $_POST['allowed'] ) ) );
+	}
+
 	$args = [
 		'post_type'           => $post_type,
 		'post_status'         => 'publish',
@@ -68,11 +74,21 @@ function lnc_loop_filter_ajax() {
 	];
 
 	if ( 'all' !== $term && is_numeric( $term ) ) {
+		// A specific category was chosen.
 		$args['tax_query'] = [
 			[
 				'taxonomy' => $taxonomy,
 				'field'    => 'term_id',
 				'terms'    => (int) $term,
+			],
+		];
+	} elseif ( ! empty( $allowed ) ) {
+		// "All" but the widget is limited to selected categories.
+		$args['tax_query'] = [
+			[
+				'taxonomy' => $taxonomy,
+				'field'    => 'term_id',
+				'terms'    => $allowed,
 			],
 		];
 	}

@@ -60,6 +60,9 @@
 			body.append( 'template', config.template || 0 );
 			body.append( 'ppp', config.ppp || 6 );
 			body.append( 'views_key', config.views_key || 'post_views_count' );
+			( config.allowed || [] ).forEach( function ( id ) {
+				body.append( 'allowed[]', id );
+			} );
 
 			fetch( window.lncLoopFilter.ajaxUrl, {
 				method: 'POST',

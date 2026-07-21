@@ -76,6 +76,26 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 		return $options;
 	}
 
+	/**
+	 * Category term options for the multi-select (category taxonomy).
+	 *
+	 * @return array<int,string>
+	 */
+	private function get_category_options() {
+		$options = [];
+		$terms   = get_terms( [ 'taxonomy' => 'category', 'hide_empty' => false ] );
+
+		if ( is_wp_error( $terms ) ) {
+			return $options;
+		}
+
+		foreach ( $terms as $term ) {
+			$options[ $term->term_id ] = $term->name;
+		}
+
+		return $options;
+	}
+
 	protected function register_controls() {
 
 		// ---------------------------------------------------------------
@@ -134,6 +154,32 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 				'default' => 6,
 				'min'     => 1,
 				'max'     => 48,
+			]
+		);
+
+		$this->add_control(
+			'categories_source',
+			[
+				'label'   => esc_html__( 'Categories to Show', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::SELECT,
+				'default' => 'all',
+				'options' => [
+					'all'    => esc_html__( 'All categories with posts', 'legal-nurse-core' ),
+					'manual' => esc_html__( 'Selected categories only', 'legal-nurse-core' ),
+				],
+			]
+		);
+
+		$this->add_control(
+			'selected_categories',
+			[
+				'label'       => esc_html__( 'Choose Categories', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SELECT2,
+				'multiple'    => true,
+				'label_block' => true,
+				'options'     => $this->get_category_options(),
+				'description' => esc_html__( 'Only these categories appear as filters, and "All" shows posts from just these. (Loads the "category" taxonomy terms.)', 'legal-nurse-core' ),
+				'condition'   => [ 'categories_source' => 'manual' ],
 			]
 		);
 
@@ -442,12 +488,21 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 		$views_key  = $settings['views_meta_key'] ? $settings['views_meta_key'] : 'post_views_count';
 		$enable_sort = 'yes' === ( $settings['enable_sort'] ?? 'yes' );
 
-		$terms = get_terms(
-			[
-				'taxonomy'   => $taxonomy,
-				'hide_empty' => 'yes' === ( $settings['hide_empty'] ?? 'yes' ),
-			]
-		);
+		$term_args = [
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => 'yes' === ( $settings['hide_empty'] ?? 'yes' ),
+		];
+
+		// Manual selection: limit to chosen categories, preserving their order.
+		$allowed = [];
+		if ( 'manual' === ( $settings['categories_source'] ?? 'all' ) && ! empty( $settings['selected_categories'] ) ) {
+			$allowed             = array_map( 'intval', (array) $settings['selected_categories'] );
+			$term_args['include'] = $allowed;
+			$term_args['orderby'] = 'include';
+			unset( $term_args['hide_empty'] );
+		}
+
+		$terms = get_terms( $term_args );
 
 		if ( is_wp_error( $terms ) ) {
 			$terms = [];
@@ -460,6 +515,7 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 			'post_type' => $post_type,
 			'taxonomy'  => $taxonomy,
 			'views_key' => $views_key,
+			'allowed'   => $allowed,
 			'nonce'     => wp_create_nonce( 'lnc_loop_filter' ),
 		];
 
