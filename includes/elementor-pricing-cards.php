@@ -254,6 +254,17 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			[ 'label' => esc_html__( 'Layout', 'legal-nurse-core' ) ]
 		);
 
+		$this->add_control(
+			'hide_decimals',
+			[
+				'label'        => esc_html__( 'Hide Decimals on Prices', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'description'  => esc_html__( 'Show WooCommerce prices without decimals (e.g. $3,497 instead of $3,497.00).', 'legal-nurse-core' ),
+			]
+		);
+
 		$this->add_responsive_control(
 			'columns',
 			[
@@ -474,6 +485,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		}
 
 		$button_text = $settings['wc_button_text'] ?? esc_html__( 'Compare Details', 'legal-nurse-core' );
+		$price_args  = ( 'yes' === ( $settings['hide_decimals'] ?? '' ) ) ? [ 'decimals' => 0 ] : [];
 
 		foreach ( $items as $item ) {
 			$id      = $item['product_id'] ?? 0;
@@ -487,8 +499,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 
 			$cards[] = [
 				'title'          => $product->get_name(),
-				'price_original' => ( $regular && $regular !== $active ) ? wc_price( $regular ) : '',
-				'price'          => wc_price( $active ),
+				'price_original' => ( $regular && $regular !== $active ) ? wc_price( $regular, $price_args ) : '',
+				'price'          => wc_price( $active, $price_args ),
 				'note'           => $this->get_product_note( $id ),
 				'features'       => $this->get_product_features( $id ),
 				'button_text'    => $button_text,
