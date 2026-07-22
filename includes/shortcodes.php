@@ -14,6 +14,99 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_shortcode( 'site_var', 'lnc_site_var_shortcode' );
+add_shortcode( 'product_details', 'lnc_product_details_shortcode' );
+
+/**
+ * [product_details slug="my-product" field="price"]
+ *
+ * Output a single WooCommerce product field inline.
+ *
+ * Attributes:
+ *   slug     Product slug (post_name). Alternatively use id.
+ *   id       Product ID (overrides slug).
+ *   field    Which value to return (default: price):
+ *              title | price | regular_price | sale_price |
+ *              discount (percent, e.g. "30%") | discount_amount |
+ *              sku | permalink | link (HTML <a> to the product)
+ *   default  Fallback text if the product/field is unavailable.
+ *
+ * @param array $atts
+ * @return string
+ */
+function lnc_product_details_shortcode( $atts ) {
+	$atts = shortcode_atts(
+		[
+			'slug'    => '',
+			'id'      => '',
+			'field'   => 'price',
+			'default' => '',
+		],
+		$atts,
+		'product_details'
+	);
+
+	if ( ! function_exists( 'wc_get_product' ) ) {
+		return esc_html( $atts['default'] );
+	}
+
+	// Resolve the product by ID or slug.
+	$product = null;
+	if ( '' !== $atts['id'] ) {
+		$product = wc_get_product( (int) $atts['id'] );
+	} elseif ( '' !== $atts['slug'] ) {
+		$page = get_page_by_path( sanitize_title( $atts['slug'] ), OBJECT, 'product' );
+		if ( $page ) {
+			$product = wc_get_product( $page->ID );
+		}
+	}
+
+	if ( ! $product ) {
+		return esc_html( $atts['default'] );
+	}
+
+	$regular = (float) $product->get_regular_price();
+	$sale    = (float) $product->get_sale_price();
+
+	switch ( $atts['field'] ) {
+		case 'title':
+			return esc_html( $product->get_name() );
+
+		case 'regular_price':
+			return wp_kses_post( wc_price( $product->get_regular_price() ) );
+
+		case 'sale_price':
+			return $product->get_sale_price() ? wp_kses_post( wc_price( $product->get_sale_price() ) ) : esc_html( $atts['default'] );
+
+		case 'discount':
+			if ( $regular > 0 && $sale > 0 && $sale < $regular ) {
+				return round( ( ( $regular - $sale ) / $regular ) * 100 ) . '%';
+			}
+			return esc_html( $atts['default'] );
+
+		case 'discount_amount':
+			if ( $regular > 0 && $sale > 0 && $sale < $regular ) {
+				return wp_kses_post( wc_price( $regular - $sale ) );
+			}
+			return esc_html( $atts['default'] );
+
+		case 'sku':
+			return esc_html( $product->get_sku() );
+
+		case 'permalink':
+			return esc_url( $product->get_permalink() );
+
+		case 'link':
+			return sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $product->get_permalink() ),
+				esc_html( $product->get_name() )
+			);
+
+		case 'price':
+		default:
+			return wp_kses_post( wc_price( $product->get_price() ) );
+	}
+}
 
 /**
  * [site_var key="phone_number"]
