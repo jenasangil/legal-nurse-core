@@ -74,15 +74,6 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			[ 'label' => esc_html__( 'Source', 'legal-nurse-core' ) ]
 		);
 
-		$this->add_control(
-			'wc_button_text',
-			[
-				'label'   => esc_html__( 'Button Text', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => esc_html__( 'Compare Details', 'legal-nurse-core' ),
-			]
-		);
-
 		// Per-item card list: each row selects a product and carries its own styling.
 		$item = new \Elementor\Repeater();
 
@@ -94,6 +85,25 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'label_block' => true,
 				'options'     => $this->get_product_options(),
 				'description' => esc_html__( 'Title & price come from the product; note & features from ACF (pricing_note, features).', 'legal-nurse-core' ),
+			]
+		);
+
+		$item->add_control(
+			'button_text',
+			[
+				'label'   => esc_html__( 'Button Text', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::TEXT,
+				'default' => esc_html__( 'Learn More', 'legal-nurse-core' ),
+			]
+		);
+
+		$item->add_control(
+			'button_link',
+			[
+				'label'       => esc_html__( 'Button Link', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::URL,
+				'placeholder' => esc_html__( 'Leave empty to use the product page', 'legal-nurse-core' ),
+				'description' => esc_html__( 'Where the button redirects. Defaults to the product page.', 'legal-nurse-core' ),
 			]
 		);
 
@@ -560,7 +570,6 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			return $cards;
 		}
 
-		$button_text = $settings['wc_button_text'] ?? esc_html__( 'Compare Details', 'legal-nurse-core' );
 		$price_args  = ( 'yes' === ( $settings['hide_decimals'] ?? '' ) ) ? [ 'decimals' => 0 ] : [];
 
 		foreach ( $items as $item ) {
@@ -573,6 +582,12 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			$regular = $product->get_regular_price();
 			$active  = $product->get_price();
 
+			// Per-card button: text + link, falling back to the product page.
+			$button_text = $item['button_text'] ?? esc_html__( 'Learn More', 'legal-nurse-core' );
+			$link        = $item['button_link'] ?? [];
+			$button_url  = ! empty( $link['url'] ) ? $link['url'] : $product->get_permalink();
+			$btn_target  = ! empty( $link['is_external'] ) ? '_blank' : '';
+
 			$cards[] = [
 				'title'          => $product->get_name(),
 				'price_original' => ( $regular && $regular !== $active ) ? wc_price( $regular, $price_args ) : '',
@@ -580,8 +595,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'note'           => $this->get_product_note( $id ),
 				'features'       => $this->get_product_features( $id ),
 				'button_text'    => $button_text,
-				'button_url'     => $product->get_permalink(),
-				'button_target'  => '',
+				'button_url'     => $button_url,
+				'button_target'  => $btn_target,
+				'button_nofollow' => ! empty( $link['nofollow'] ),
 				'product_id'     => (int) $id,
 				'add_to_cart_url' => function_exists( 'wc_get_checkout_url' )
 					? add_query_arg( 'add-to-cart', (int) $id, wc_get_checkout_url() )
@@ -817,15 +833,24 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				}
 
 				if ( $has_link ) {
+					$rel_parts = [];
+					if ( $card['button_target'] ) {
+						$rel_parts[] = 'noopener';
+					}
+					if ( ! empty( $card['button_nofollow'] ) ) {
+						$rel_parts[] = 'nofollow';
+					}
 					$target    = $card['button_target'] ? ' target="' . esc_attr( $card['button_target'] ) . '"' : '';
+					$rel       = $rel_parts ? ' rel="' . esc_attr( implode( ' ', $rel_parts ) ) . '"' : '';
 					$href      = $card['button_url'] ? esc_url( $card['button_url'] ) : '#';
 					$btn_style = $btn
 						? sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) )
 						: '';
 					printf(
-						'<a class="lnc-pcard__button lnc-pcard__button--link" href="%s"%s style="%s">%s</a>',
+						'<a class="lnc-pcard__button lnc-pcard__button--link" href="%s"%s%s style="%s">%s</a>',
 						$href,
 						$target,
+						$rel,
 						$btn_style,
 						esc_html( $card['button_text'] )
 					);
