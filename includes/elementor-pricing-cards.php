@@ -583,7 +583,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'button_url'     => $product->get_permalink(),
 				'button_target'  => '',
 				'product_id'     => (int) $id,
-				'add_to_cart_url' => $product->add_to_cart_url(),
+				'add_to_cart_url' => function_exists( 'wc_get_checkout_url' )
+					? add_query_arg( 'add-to-cart', (int) $id, wc_get_checkout_url() )
+					: $product->add_to_cart_url(),
 				'is_purchasable' => $product->is_purchasable() && $product->is_in_stock(),
 				'style'          => [
 					'bg_color'           => $item['bg_color'] ?? '',
@@ -806,7 +808,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 						esc_attr( $cart_color )
 					);
 					printf(
-						'<a class="lnc-pcard__button lnc-pcard__button--cart add_to_cart_button ajax_add_to_cart" href="%s" data-product_id="%d" data-quantity="1" rel="nofollow" style="%s">%s</a>',
+						'<a class="lnc-pcard__button lnc-pcard__button--cart" href="%s" data-product_id="%d" rel="nofollow" style="%s">%s</a>',
 						esc_url( $card['add_to_cart_url'] ),
 						(int) $card['product_id'],
 						$cart_style,
