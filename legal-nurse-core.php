@@ -52,6 +52,18 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 	$widgets_manager->register( new LNC_Social_Share_Widget() );
 } );
 
+// Load the default plugin font (Wix Madefor Display).
+add_action( 'wp_enqueue_scripts', 'lnc_enqueue_fonts' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_enqueue_fonts' );
+function lnc_enqueue_fonts() {
+	wp_enqueue_style(
+		'lnc-fonts',
+		'https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap',
+		[],
+		null // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	);
+}
+
 // Register Social Share assets.
 add_action( 'wp_enqueue_scripts', 'lnc_register_social_share_assets' );
 add_action( 'elementor/preview/enqueue_styles', 'lnc_register_social_share_assets' );

@@ -1,5 +1,9 @@
 /* Legal Nurse Core — Loop Filter */
 
+.lnc-loop-filter {
+	font-family: "Wix Madefor Display", sans-serif;
+}
+
 .lnc-loop-filter__inner {
 	display: flex;
 	align-items: center;

@@ -4,6 +4,7 @@
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 24px;
+	font-family: "Wix Madefor Display", sans-serif;
 }
 
 .lnc-pcard {
