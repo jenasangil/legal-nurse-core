@@ -190,6 +190,51 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$item->add_control(
+			'cart_heading',
+			[
+				'label'     => esc_html__( 'Add To Cart Button', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$item->add_control(
+			'cart_bg',
+			[
+				'label'   => esc_html__( 'Background', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#1BA39C',
+			]
+		);
+
+		$item->add_control(
+			'cart_color',
+			[
+				'label'   => esc_html__( 'Text Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#FFFFFF',
+			]
+		);
+
+		$item->add_control(
+			'cart_hover_bg',
+			[
+				'label'   => esc_html__( 'Hover Background', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#178F89',
+			]
+		);
+
+		$item->add_control(
+			'cart_hover_color',
+			[
+				'label'   => esc_html__( 'Hover Text Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#FFFFFF',
+			]
+		);
+
+		$item->add_control(
 			'hover_heading',
 			[
 				'label'     => esc_html__( 'Card Hover', 'legal-nurse-core' ),
@@ -293,12 +338,43 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'show_features',
+			[
+				'label'        => esc_html__( 'Show Features', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+			]
+		);
+
+		$this->add_control(
+			'show_add_to_cart',
+			[
+				'label'        => esc_html__( 'Show Add To Cart', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+			]
+		);
+
+		$this->add_control(
+			'add_to_cart_text',
+			[
+				'label'     => esc_html__( 'Add To Cart Text', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::TEXT,
+				'default'   => esc_html__( 'Add To Cart', 'legal-nurse-core' ),
+				'condition' => [ 'show_add_to_cart' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
 			'show_check_icon',
 			[
 				'label'        => esc_html__( 'Show Feature Icons', 'legal-nurse-core' ),
 				'type'         => \Elementor\Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'default'      => 'yes',
+				'condition'    => [ 'show_features' => 'yes' ],
 			]
 		);
 
@@ -506,6 +582,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'button_text'    => $button_text,
 				'button_url'     => $product->get_permalink(),
 				'button_target'  => '',
+				'product_id'     => (int) $id,
+				'add_to_cart_url' => $product->add_to_cart_url(),
+				'is_purchasable' => $product->is_purchasable() && $product->is_in_stock(),
 				'style'          => [
 					'bg_color'           => $item['bg_color'] ?? '',
 					'border_color'       => $item['border_color'] ?? '',
@@ -517,6 +596,10 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'button_color'       => $item['button_color'] ?? '',
 					'button_hover_bg'    => $item['button_hover_bg'] ?? '',
 					'button_hover_color' => $item['button_hover_color'] ?? '',
+					'cart_bg'            => $item['cart_bg'] ?? '',
+					'cart_color'         => $item['cart_color'] ?? '',
+					'cart_hover_bg'      => $item['cart_hover_bg'] ?? '',
+					'cart_hover_color'   => $item['cart_hover_color'] ?? '',
 					'hover_border_color' => $item['hover_border_color'] ?? '',
 					'hover_border_width' => isset( $item['hover_border_width']['size'] ) ? (float) $item['hover_border_width']['size'] : null,
 					'hover_padding'      => $item['hover_padding'] ?? [],
@@ -579,15 +662,32 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			$btn_rules[] = sprintf( 'color:%s !important;', $bh_c );
 		}
 
+		$cart_rules = [];
+		$ch_bg = $this->css_safe( $style['cart_hover_bg'] ?? '' );
+		$ch_c  = $this->css_safe( $style['cart_hover_color'] ?? '' );
+		if ( '' !== $ch_bg ) {
+			$cart_rules[] = sprintf( 'background:%1$s !important;border-color:%1$s !important;', $ch_bg );
+		}
+		if ( '' !== $ch_c ) {
+			$cart_rules[] = sprintf( 'color:%s !important;', $ch_c );
+		}
+
 		$out = '';
 		if ( $card_rules ) {
 			$out .= sprintf( '.%1$s.lnc-pcard:hover{%2$s}', $uid, implode( '', $card_rules ) );
 		}
 		if ( $btn_rules ) {
 			$out .= sprintf(
-				'.%1$s .lnc-pcard__button:hover,.%1$s .lnc-pcard__button:focus{%2$s}',
+				'.%1$s .lnc-pcard__button--link:hover,.%1$s .lnc-pcard__button--link:focus{%2$s}',
 				$uid,
 				implode( '', $btn_rules )
+			);
+		}
+		if ( $cart_rules ) {
+			$out .= sprintf(
+				'.%1$s .lnc-pcard__button--cart:hover,.%1$s .lnc-pcard__button--cart:focus{%2$s}',
+				$uid,
+				implode( '', $cart_rules )
 			);
 		}
 
@@ -607,8 +707,11 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		$show_check   = 'yes' === ( $settings['show_check_icon'] ?? 'yes' );
-		$feature_icon = $settings['feature_icon'] ?? [];
+		$show_check    = 'yes' === ( $settings['show_check_icon'] ?? 'yes' );
+		$show_features = 'yes' === ( $settings['show_features'] ?? 'yes' );
+		$show_cart     = 'yes' === ( $settings['show_add_to_cart'] ?? 'yes' );
+		$cart_text     = $settings['add_to_cart_text'] ? $settings['add_to_cart_text'] : esc_html__( 'Add To Cart', 'legal-nurse-core' );
+		$feature_icon  = $settings['feature_icon'] ?? [];
 
 		$widget_id = $this->get_id();
 
@@ -668,7 +771,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			}
 
 			// Features.
-			if ( ! empty( $card['features'] ) ) {
+			if ( $show_features && ! empty( $card['features'] ) ) {
 				echo '<ul class="lnc-pcard__features">';
 				foreach ( $card['features'] as $feature ) {
 					echo '<li class="lnc-pcard__feature" style="color:' . esc_attr( $txt ) . '">';
@@ -687,20 +790,46 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				echo '</ul>';
 			}
 
-			// Button.
-			if ( '' !== $card['button_text'] ) {
-				$target = $card['button_target'] ? ' target="' . esc_attr( $card['button_target'] ) . '"' : '';
-				$href   = $card['button_url'] ? esc_url( $card['button_url'] ) : '#';
-				$btn_style = $btn
-					? sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) )
-					: '';
-				printf(
-					'<a class="lnc-pcard__button" href="%s"%s style="%s">%s</a>',
-					$href,
-					$target,
-					$btn_style,
-					esc_html( $card['button_text'] )
-				);
+			// Buttons (Add To Cart + Learn More, inline).
+			$has_cart = $show_cart && ! empty( $card['is_purchasable'] ) && $card['product_id'];
+			$has_link = '' !== $card['button_text'];
+
+			if ( $has_cart || $has_link ) {
+				echo '<div class="lnc-pcard__buttons">';
+
+				if ( $has_cart ) {
+					$cart_bg    = $style['cart_bg'] ?? '';
+					$cart_color = $style['cart_color'] ?? '';
+					$cart_style = sprintf(
+						'background:%1$s;border-color:%1$s;color:%2$s;',
+						esc_attr( $cart_bg ),
+						esc_attr( $cart_color )
+					);
+					printf(
+						'<a class="lnc-pcard__button lnc-pcard__button--cart add_to_cart_button ajax_add_to_cart" href="%s" data-product_id="%d" data-quantity="1" rel="nofollow" style="%s">%s</a>',
+						esc_url( $card['add_to_cart_url'] ),
+						(int) $card['product_id'],
+						$cart_style,
+						esc_html( $cart_text )
+					);
+				}
+
+				if ( $has_link ) {
+					$target    = $card['button_target'] ? ' target="' . esc_attr( $card['button_target'] ) . '"' : '';
+					$href      = $card['button_url'] ? esc_url( $card['button_url'] ) : '#';
+					$btn_style = $btn
+						? sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) )
+						: '';
+					printf(
+						'<a class="lnc-pcard__button lnc-pcard__button--link" href="%s"%s style="%s">%s</a>',
+						$href,
+						$target,
+						$btn_style,
+						esc_html( $card['button_text'] )
+					);
+				}
+
+				echo '</div>';
 			}
 
 			echo '</div>'; // .lnc-pcard
