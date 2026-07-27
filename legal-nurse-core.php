@@ -50,7 +50,17 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-social-share.php';
 	$widgets_manager->register( new LNC_Social_Share_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-compare-table.php';
+	$widgets_manager->register( new LNC_Compare_Table_Widget() );
 } );
+
+// Register Comparison Table stylesheet.
+add_action( 'wp_enqueue_scripts', 'lnc_register_compare_table_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_compare_table_assets' );
+function lnc_register_compare_table_assets() {
+	wp_register_style( 'lnc-compare-table', LNC_PLUGIN_URL . 'assets/css/compare-table.css', [], LNC_VERSION );
+}
 
 // Load the default plugin font (Wix Madefor Display).
 add_action( 'wp_enqueue_scripts', 'lnc_enqueue_fonts' );
