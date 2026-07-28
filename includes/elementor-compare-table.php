@@ -158,6 +158,31 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'sticky_header',
+			[
+				'label'        => esc_html__( 'Sticky Header', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'separator'    => 'before',
+				'description'  => esc_html__( 'Keep the plan header row visible while scrolling the page.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
+			'sticky_offset',
+			[
+				'label'      => esc_html__( 'Sticky Top Offset', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 200 ] ],
+				'default'    => [ 'size' => 0, 'unit' => 'px' ],
+				'description' => esc_html__( 'Space from the top (e.g. for a fixed header/nav).', 'legal-nurse-core' ),
+				'condition'  => [ 'sticky_header' => 'yes' ],
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->register_style_controls();
@@ -244,8 +269,13 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 
 		$allowed = [ 'em' => [], 'strong' => [], 'span' => [ 'class' => [] ], 'sup' => [], 'sub' => [], 'br' => [] ];
 
+		$sticky      = 'yes' === ( $settings['sticky_header'] ?? '' );
+		$sticky_top  = isset( $settings['sticky_offset']['size'] ) ? (int) $settings['sticky_offset']['size'] : 0;
+		$root_class  = 'lnc-ct' . ( $sticky ? ' lnc-ct--sticky' : '' );
+		$root_style  = '--lnc-ct-cols:' . $grid_cols . ';--lnc-ct-sticky-top:' . $sticky_top . 'px;';
+
 		echo '<div class="lnc-ct-scroll">';
-		echo '<div class="lnc-ct" style="--lnc-ct-cols:' . esc_attr( $grid_cols ) . '">';
+		echo '<div class="' . esc_attr( $root_class ) . '" style="' . esc_attr( $root_style ) . '">';
 
 		// Header row.
 		echo '<div class="lnc-ct__row lnc-ct__head">';

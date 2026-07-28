@@ -79,12 +79,27 @@
 	stroke: currentColor;
 }
 
-/* Horizontal scroll on small screens without breaking the page. */
-.lnc-ct-scroll {
-	overflow-x: auto;
+/* Sticky plan header. Kept out of an overflow context so it sticks to the
+   page/viewport; the first-column label gets a solid background so rows
+   don't show through as they scroll under it. */
+.lnc-ct--sticky .lnc-ct__head {
+	position: sticky;
+	top: var(--lnc-ct-sticky-top, 0);
+	z-index: 5;
 }
 
+.lnc-ct--sticky .lnc-ct__firstlabel {
+	background: #fff;
+}
+
+/* Horizontal scroll on small screens without breaking the page.
+   Applied only where needed so it doesn't create an overflow context that
+   would cancel the sticky header on desktop. */
 @media (max-width: 767px) {
+	.lnc-ct-scroll {
+		overflow-x: auto;
+	}
+
 	.lnc-ct {
 		min-width: 640px;
 	}
