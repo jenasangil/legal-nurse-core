@@ -68,7 +68,7 @@ add_action( 'elementor/preview/enqueue_styles', 'lnc_enqueue_fonts' );
 function lnc_enqueue_fonts() {
 	wp_enqueue_style(
 		'lnc-fonts',
-		'https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap',
+		'https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&family=Wix+Madefor+Text:wght@400;500;600;700&display=swap',
 		[],
 		null // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 	);

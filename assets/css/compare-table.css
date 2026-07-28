@@ -1,11 +1,12 @@
-/* Legal Nurse Core — Comparison Table */
+/* Legal Nurse Core — Comparison Table (styled to Figma: Legal Nurse 2026) */
 
 .lnc-ct {
-	font-family: "Wix Madefor Display", sans-serif;
-	border: 1px solid #ECECE4;
-	border-radius: 14px;
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+	color: #2a2926;
+	background: #ffffff;
+	border: 1px solid #e6e2d8;
+	border-radius: 12px;
 	overflow: hidden;
-	background: #fff;
 }
 
 .lnc-ct__row {
@@ -14,63 +15,72 @@
 }
 
 .lnc-ct__row + .lnc-ct__row {
-	border-top: 1px solid #ECECE4;
+	border-top: 1px solid #e6e2d8;
 }
 
+/* Feature (first) column */
 .lnc-ct__feat {
-	padding: 14px 18px;
+	padding: 18px 22px;
 	display: flex;
 	align-items: center;
-	font-size: 14.5px;
-	color: #33475b;
+	font-size: 18px;
 	line-height: 1.4;
+	color: #2a2926;
 }
 
+/* "INCLUDED" label — kicker style */
 .lnc-ct__firstlabel {
-	font-size: 12px;
-	letter-spacing: .12em;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: 1.5px;
 	text-transform: uppercase;
-	font-weight: 700;
-	color: #6b7684;
+	color: #2a2926;
 }
 
+/* Plan header cells */
 .lnc-ct__plan {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	font-weight: 700;
-	font-size: 18px;
-	padding: 16px 14px;
+	font-size: 20px;
+	font-weight: 600;
+	padding: 18px 16px;
+	border-left: 1px solid #e6e2d8;
 }
 
+/* Category band spans all columns */
 .lnc-ct__band {
 	grid-column: 1 / -1;
-	background: #2F8D86;
-	color: #fff;
-	font-weight: 700;
-	font-size: 15px;
-	padding: 12px 18px;
+	background: #25797c;
+	color: #ffffff;
+	font-weight: 600;
+	font-size: 18px;
+	padding: 14px 22px;
 }
 
+/* Value / check cells */
 .lnc-ct__cell {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	padding: 14px 18px;
-	font-size: 13px;
+	padding: 18px 16px;
+	font-size: 16px;
+	color: #2a2926;
+	border-left: 1px solid #e6e2d8;
 }
 
 .lnc-ct__check {
 	display: inline-flex;
 	align-items: center;
 	line-height: 1;
+	color: #25797c;
 }
 
 .lnc-ct__check svg {
-	width: 16px;
-	height: 16px;
+	width: 18px;
+	height: 18px;
 	fill: none;
 	stroke: currentColor;
 }
@@ -79,9 +89,7 @@
 	stroke: currentColor;
 }
 
-/* Sticky plan header. Kept out of an overflow context so it sticks to the
-   page/viewport; the first-column label gets a solid background so rows
-   don't show through as they scroll under it. */
+/* Sticky plan header */
 .lnc-ct--sticky .lnc-ct__head {
 	position: sticky;
 	top: var(--lnc-ct-sticky-top, 0);
@@ -89,18 +97,39 @@
 }
 
 .lnc-ct--sticky .lnc-ct__firstlabel {
-	background: #fff;
+	background: #ffffff;
 }
 
-/* Horizontal scroll on small screens without breaking the page.
-   Applied only where needed so it doesn't create an overflow context that
-   would cancel the sticky header on desktop. */
+/* Mobile: compress to fit the viewport like the Figma mobile frame. */
 @media (max-width: 767px) {
-	.lnc-ct-scroll {
-		overflow-x: auto;
+	.lnc-ct__feat {
+		padding: 10px 12px;
+		font-size: 11px;
+		line-height: 1.3;
 	}
 
-	.lnc-ct {
-		min-width: 640px;
+	.lnc-ct__firstlabel {
+		font-size: 9px;
+		letter-spacing: 1px;
+	}
+
+	.lnc-ct__plan {
+		padding: 10px 6px;
+		font-size: 12px;
+	}
+
+	.lnc-ct__band {
+		padding: 8px 12px;
+		font-size: 12px;
+	}
+
+	.lnc-ct__cell {
+		padding: 10px 6px;
+		font-size: 10px;
+	}
+
+	.lnc-ct__check svg {
+		width: 13px;
+		height: 13px;
 	}
 }

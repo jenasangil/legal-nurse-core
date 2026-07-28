@@ -68,11 +68,11 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 
 		$plan = new \Elementor\Repeater();
 		$plan->add_control( 'name', [ 'label' => esc_html__( 'Plan Name', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => esc_html__( 'Plan', 'legal-nurse-core' ) ] );
-		$plan->add_control( 'header_bg', [ 'label' => esc_html__( 'Header Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#F1ECE1' ] );
-		$plan->add_control( 'header_color', [ 'label' => esc_html__( 'Header Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#33475B' ] );
-		$plan->add_control( 'column_bg', [ 'label' => esc_html__( 'Column Tint', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#F7F3EA' ] );
-		$plan->add_control( 'check_color', [ 'label' => esc_html__( 'Check Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1BA39C' ] );
-		$plan->add_control( 'cell_text_color', [ 'label' => esc_html__( 'Cell Text Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#5b6472' ] );
+		$plan->add_control( 'header_bg', [ 'label' => esc_html__( 'Header Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#F4EFE1' ] );
+		$plan->add_control( 'header_color', [ 'label' => esc_html__( 'Header Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#2a2926' ] );
+		$plan->add_control( 'column_bg', [ 'label' => esc_html__( 'Column Tint', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#FBF8F1' ] );
+		$plan->add_control( 'check_color', [ 'label' => esc_html__( 'Check Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c' ] );
+		$plan->add_control( 'cell_text_color', [ 'label' => esc_html__( 'Cell Text Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#2a2926' ] );
 
 		$this->add_control(
 			'plans',
@@ -82,9 +82,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 				'fields'      => $plan->get_controls(),
 				'title_field' => '{{{ name }}}',
 				'default'     => [
-					[ 'name' => 'Basic', 'header_bg' => '#EFE8D6', 'header_color' => '#33475B', 'column_bg' => '#F4EFE4', 'check_color' => '#1BA39C', 'cell_text_color' => '#5b6472' ],
-					[ 'name' => 'Executive', 'header_bg' => '#8FE3D0', 'header_color' => '#1F5A52', 'column_bg' => '#D9F3EC', 'check_color' => '#10847C', 'cell_text_color' => '#1F5A52' ],
-					[ 'name' => 'VIP', 'header_bg' => '#6C63C7', 'header_color' => '#FFFFFF', 'column_bg' => '#C9C5EA', 'check_color' => '#4A41A8', 'cell_text_color' => '#3d3670' ],
+					[ 'name' => 'Basic', 'header_bg' => '#F4EFE1', 'header_color' => '#2a2926', 'column_bg' => '#FBF8F1', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
+					[ 'name' => 'Executive', 'header_bg' => '#A9E4D6', 'header_color' => '#216164', 'column_bg' => '#E3F5F0', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
+					[ 'name' => 'VIP', 'header_bg' => '#6E64C6', 'header_color' => '#FFFFFF', 'column_bg' => '#CBC7E9', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
 				],
 			]
 		);
@@ -194,7 +194,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'band_bg', [
 			'label'     => esc_html__( 'Category Band Background', 'legal-nurse-core' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#2F8D86',
+			'default'   => '#25797c',
 			'selectors' => [ '{{WRAPPER}} .lnc-ct__band' => 'background:{{VALUE}};' ],
 		] );
 		$this->add_control( 'band_color', [
@@ -206,8 +206,13 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'border_color', [
 			'label'     => esc_html__( 'Row Border Color', 'legal-nurse-core' ),
 			'type'      => \Elementor\Controls_Manager::COLOR,
-			'default'   => '#ECECE4',
-			'selectors' => [ '{{WRAPPER}} .lnc-ct__row + .lnc-ct__row' => 'border-top-color:{{VALUE}};', '{{WRAPPER}} .lnc-ct' => 'border-color:{{VALUE}};' ],
+			'default'   => '#e6e2d8',
+			'selectors' => [
+				'{{WRAPPER}} .lnc-ct__row + .lnc-ct__row' => 'border-top-color:{{VALUE}};',
+				'{{WRAPPER}} .lnc-ct'                     => 'border-color:{{VALUE}};',
+				'{{WRAPPER}} .lnc-ct__plan'               => 'border-left-color:{{VALUE}};',
+				'{{WRAPPER}} .lnc-ct__cell'               => 'border-left-color:{{VALUE}};',
+			],
 		] );
 		$this->add_control( 'radius', [
 			'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
