@@ -45,6 +45,10 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		return [ 'lnc-compare-table' ];
 	}
 
+	public function get_script_depends() {
+		return [ 'lnc-compare-table' ];
+	}
+
 	/** Values that render as a checkmark. */
 	private static function is_check( $value ) {
 		return in_array( strtolower( trim( $value ) ), [ 'check', 'yes', 'true', '1', 'x', '✓' ], true );
@@ -173,13 +177,26 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'sticky_offset',
 			[
-				'label'      => esc_html__( 'Sticky Top Offset', 'legal-nurse-core' ),
-				'type'       => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [ 'px' => [ 'min' => 0, 'max' => 200 ] ],
-				'default'    => [ 'size' => 0, 'unit' => 'px' ],
-				'description' => esc_html__( 'Space from the top (e.g. for a fixed header/nav).', 'legal-nurse-core' ),
-				'condition'  => [ 'sticky_header' => 'yes' ],
+				'label'       => esc_html__( 'Sticky Top Offset (Desktop)', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SLIDER,
+				'size_units'  => [ 'px' ],
+				'range'       => [ 'px' => [ 'min' => 0, 'max' => 300 ] ],
+				'default'     => [ 'size' => 120, 'unit' => 'px' ],
+				'description' => esc_html__( 'Distance from the top on desktop (e.g. your fixed header height).', 'legal-nurse-core' ),
+				'condition'   => [ 'sticky_header' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'sticky_offset_mobile',
+			[
+				'label'       => esc_html__( 'Sticky Top Offset (Mobile)', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SLIDER,
+				'size_units'  => [ 'px' ],
+				'range'       => [ 'px' => [ 'min' => 0, 'max' => 300 ] ],
+				'default'     => [ 'size' => 80, 'unit' => 'px' ],
+				'description' => esc_html__( 'Distance from the top on mobile (< 768px).', 'legal-nurse-core' ),
+				'condition'   => [ 'sticky_header' => 'yes' ],
 			]
 		);
 
@@ -277,13 +294,18 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 
 		$allowed = [ 'em' => [], 'strong' => [], 'span' => [ 'class' => [] ], 'sup' => [], 'sub' => [], 'br' => [] ];
 
-		$sticky      = 'yes' === ( $settings['sticky_header'] ?? '' );
-		$sticky_top  = isset( $settings['sticky_offset']['size'] ) ? (int) $settings['sticky_offset']['size'] : 0;
-		$root_class  = 'lnc-ct' . ( $sticky ? ' lnc-ct--sticky' : '' );
-		$root_style  = '--lnc-ct-cols:' . $grid_cols . ';--lnc-ct-sticky-top:' . $sticky_top . 'px;';
+		$sticky        = 'yes' === ( $settings['sticky_header'] ?? '' );
+		$sticky_top    = isset( $settings['sticky_offset']['size'] ) ? (int) $settings['sticky_offset']['size'] : 120;
+		$sticky_top_mb = isset( $settings['sticky_offset_mobile']['size'] ) ? (int) $settings['sticky_offset_mobile']['size'] : 80;
+		$root_class    = 'lnc-ct' . ( $sticky ? ' lnc-ct--sticky' : '' );
+		$root_style    = '--lnc-ct-cols:' . $grid_cols . ';';
+
+		$sticky_attrs = $sticky
+			? ' data-sticky-top="' . esc_attr( $sticky_top ) . '" data-sticky-top-mobile="' . esc_attr( $sticky_top_mb ) . '"'
+			: '';
 
 		echo '<div class="lnc-ct-scroll">';
-		echo '<div class="' . esc_attr( $root_class ) . '" style="' . esc_attr( $root_style ) . '">';
+		echo '<div class="' . esc_attr( $root_class ) . '" style="' . esc_attr( $root_style ) . '"' . $sticky_attrs . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		// Header row.
 		echo '<div class="lnc-ct__row lnc-ct__head">';

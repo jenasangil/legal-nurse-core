@@ -89,14 +89,16 @@
 	stroke: currentColor;
 }
 
-/* Sticky plan header */
-.lnc-ct--sticky .lnc-ct__head {
-	position: sticky;
-	top: var(--lnc-ct-sticky-top, 0);
-	z-index: 5;
+/* Sticky plan header — fixed clone injected by JS. */
+.lnc-ct--stickyclone {
+	border-radius: 0;
+	border-top: 0;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
 }
 
-.lnc-ct--sticky .lnc-ct__firstlabel {
+/* Solid background on the first cell so rows don't show through the clone. */
+.lnc-ct--sticky .lnc-ct__firstlabel,
+.lnc-ct--stickyclone .lnc-ct__firstlabel {
 	background: #ffffff;
 }
 
