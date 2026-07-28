@@ -83,7 +83,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 				'title_field' => '{{{ name }}}',
 				'default'     => [
 					[ 'name' => 'Basic', 'header_bg' => '#F4EFE1', 'header_color' => '#2a2926', 'column_bg' => '#FBF8F1', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
-					[ 'name' => 'Executive', 'header_bg' => '#A9E4D6', 'header_color' => '#216164', 'column_bg' => '#E3F5F0', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
+					[ 'name' => 'Executive', 'header_bg' => '#A9E4D6', 'header_color' => '#2a2926', 'column_bg' => '#E3F5F0', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
 					[ 'name' => 'VIP', 'header_bg' => '#6E64C6', 'header_color' => '#FFFFFF', 'column_bg' => '#CBC7E9', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
 				],
 			]
@@ -152,9 +152,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'check_icon',
 			[
-				'label'   => esc_html__( 'Check Icon', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::ICONS,
-				'default' => [ 'value' => 'fas fa-check', 'library' => 'fa-solid' ],
+				'label'       => esc_html__( 'Check Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'description' => esc_html__( 'Leave empty to use the default check. Or choose an icon / upload an SVG.', 'legal-nurse-core' ),
 			]
 		);
 
@@ -251,6 +251,8 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 	}
 
 	protected function render() {
+		wp_enqueue_style( 'lnc-compare-table' );
+
 		$settings = $this->get_settings_for_display();
 		$plans    = $settings['plans'] ?? [];
 		$rows     = $settings['rows'] ?? [];
@@ -262,15 +264,16 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$plan_count = count( $plans );
 		$grid_cols  = '2.4fr repeat(' . (int) $plan_count . ', 1fr)';
 
-		// Prebuild the check icon HTML.
+		// Prebuild the check icon HTML. Default to an inline SVG so it renders
+		// even when Font Awesome is not enqueued on the page.
 		$icon = $settings['check_icon'] ?? [];
-		ob_start();
 		if ( ! empty( $icon['value'] ) ) {
+			ob_start();
 			\Elementor\Icons_Manager::render_icon( $icon, [ 'aria-hidden' => 'true' ] );
+			$check_html = ob_get_clean();
 		} else {
-			echo '&#10003;';
+			$check_html = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>';
 		}
-		$check_html = ob_get_clean();
 
 		$allowed = [ 'em' => [], 'strong' => [], 'span' => [ 'class' => [] ], 'sup' => [], 'sub' => [], 'br' => [] ];
 
