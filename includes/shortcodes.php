@@ -15,6 +15,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_shortcode( 'site_var', 'lnc_site_var_shortcode' );
 add_shortcode( 'product_details', 'lnc_product_details_shortcode' );
+add_shortcode( 'weekly_random_number', 'lnc_weekly_random_number_shortcode' );
+
+/**
+ * Output a daily-consistent random number whose range changes by day of week.
+ * The value is seeded from today's date, so it stays the same all day and
+ * changes once per day. Usage: [weekly_random_number]
+ *
+ * @return string
+ */
+function lnc_weekly_random_number_shortcode() {
+	$day_of_week = (int) current_time( 'w' );
+
+	$ranges = [
+		0 => [ 20, 29 ],   // Sunday.
+		1 => [ 30, 45 ],   // Monday.
+		2 => [ 46, 55 ],   // Tuesday.
+		3 => [ 56, 75 ],   // Wednesday.
+		4 => [ 76, 80 ],   // Thursday.
+		5 => [ 80, 100 ],  // Friday.
+		6 => [ 101, 150 ], // Saturday.
+	];
+
+	if ( ! isset( $ranges[ $day_of_week ] ) ) {
+		return '';
+	}
+
+	list( $min, $max ) = $ranges[ $day_of_week ];
+
+	// Seed from today's date (e.g. 20260724) so the number is stable all day.
+	$seed = (int) current_time( 'Ymd' );
+	mt_srand( $seed );
+
+	$number = mt_rand( $min, $max );
+
+	// Restore normal (unseeded) RNG state.
+	mt_srand();
+
+	return (string) $number;
+}
 
 /**
  * [product_details slug="my-product" field="price"]
