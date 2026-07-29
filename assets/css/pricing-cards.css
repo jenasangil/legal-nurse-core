@@ -118,4 +118,9 @@
 
 @media (max-width: 767px) {
 	.lnc-pcards { grid-template-columns: 1fr; }
+
+	.lnc-pcard__button--link {
+		width: 100%;
+		text-align: center;
+	}
 }
