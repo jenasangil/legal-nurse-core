@@ -546,6 +546,15 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name'     => 'button_typography',
+				'label'    => esc_html__( 'Buttons', 'legal-nurse-core' ),
+				'selector' => '{{WRAPPER}} .lnc-pcard__button',
+			]
+		);
+
 		$this->end_controls_section();
 	}
 
