@@ -39,7 +39,7 @@
 }
 
 .lnc-pcard__note {
-	margin: 0 0 18px;
+	margin: 0px 0 8px;
 	font-size: 15px;
 	line-height: 1.4;
 	font-weight: 600 !important;
@@ -51,11 +51,11 @@
 
 .lnc-pcard__features {
 	list-style: none;
-	margin: 0 0 24px;
+	margin: 0 0 12px;
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 8px;
 	flex: 1 1 auto;
 }
 
@@ -94,7 +94,7 @@
 
 .lnc-pcard__button {
 	display: inline-block;
-	padding: 12px 26px;
+	padding: 8px 26px;
 	color: var(--lnc-accent, #1BA39C);
 	border: 1px solid var(--lnc-accent, #1BA39C);
 	border-radius: 999px;
