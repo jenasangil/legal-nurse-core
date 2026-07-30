@@ -173,9 +173,18 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$item->add_control(
-			'button_color',
+			'button_text_color',
 			[
-				'label'   => esc_html__( 'Button Text/Border', 'legal-nurse-core' ),
+				'label'   => esc_html__( 'Button Text Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '#1BA39C',
+			]
+		);
+
+		$item->add_control(
+			'button_border_color',
+			[
+				'label'   => esc_html__( 'Button Border Color', 'legal-nurse-core' ),
 				'type'    => \Elementor\Controls_Manager::COLOR,
 				'default' => '#1BA39C',
 			]
@@ -323,9 +332,9 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				'prevent_empty' => false,
 				'title_field'   => '{{{ product_id }}}',
 				'default'       => [
-					[ 'bg_color' => '#F1ECE1', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#4A4A4A', 'check_color' => '#1BA39C', 'button_color' => '#1BA39C' ],
-					[ 'bg_color' => '#8FE3D0', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#2E4057', 'check_color' => '#2E4057', 'button_color' => '#2E4057' ],
-					[ 'bg_color' => '#6C63C7', 'title_color' => '#FFFFFF', 'price_color' => '#FFFFFF', 'text_color' => '#F0EEFF', 'check_color' => '#FFFFFF', 'button_color' => '#FFFFFF' ],
+					[ 'bg_color' => '#F1ECE1', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#4A4A4A', 'check_color' => '#1BA39C', 'button_text_color' => '#1BA39C', 'button_border_color' => '#1BA39C' ],
+					[ 'bg_color' => '#8FE3D0', 'title_color' => '#2E4057', 'price_color' => '#2E4057', 'text_color' => '#2E4057', 'check_color' => '#2E4057', 'button_text_color' => '#2E4057', 'button_border_color' => '#2E4057' ],
+					[ 'bg_color' => '#6C63C7', 'title_color' => '#FFFFFF', 'price_color' => '#FFFFFF', 'text_color' => '#F0EEFF', 'check_color' => '#FFFFFF', 'button_text_color' => '#FFFFFF', 'button_border_color' => '#FFFFFF' ],
 				],
 			]
 		);
@@ -642,7 +651,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'price_color'        => $item['price_color'] ?? '',
 					'text_color'         => $item['text_color'] ?? '',
 					'check_color'        => $item['check_color'] ?? '',
-					'button_color'       => $item['button_color'] ?? '',
+					'button_text_color'  => $item['button_text_color'] ?? '',
+					'button_border_color' => $item['button_border_color'] ?? '',
 					'button_border_width' => isset( $item['button_border_width']['size'] ) ? (float) $item['button_border_width']['size'] : 1,
 					'button_hover_bg'    => $item['button_hover_bg'] ?? '',
 					'button_hover_color' => $item['button_hover_color'] ?? '',
@@ -779,7 +789,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			$p_col  = $style['price_color'] ?? '';
 			$txt    = $style['text_color'] ?? '';
 			$chk    = $style['check_color'] ?? '';
-			$btn    = $style['button_color'] ?? '';
+			$btn_txt = $style['button_text_color'] ?? '';
+			$btn_bc  = $style['button_border_color'] ?? '';
 
 			// Unique per-card class so hover states can be scoped via inline <style>.
 			$uid = 'lnc-pcard--' . $widget_id . '-' . $index;
@@ -884,8 +895,12 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					$href      = $card['button_url'] ? esc_url( $card['button_url'] ) : '#';
 					$link_bw   = (int) ( $style['button_border_width'] ?? 1 );
 					$btn_style = sprintf( 'border-width:%dpx;border-style:solid;', $link_bw );
-					if ( $btn ) {
-						$btn_style .= sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) );
+					if ( '' !== $btn_txt ) {
+						// --lnc-accent drives the default hover fill/text.
+						$btn_style .= sprintf( 'color:%1$s;--lnc-accent:%1$s;', esc_attr( $btn_txt ) );
+					}
+					if ( '' !== $btn_bc ) {
+						$btn_style .= sprintf( 'border-color:%s;', esc_attr( $btn_bc ) );
 					}
 					printf(
 						'<a class="lnc-pcard__button lnc-pcard__button--link" href="%s"%s%s style="%s">%s</a>',
