@@ -182,6 +182,17 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$item->add_control(
+			'button_border_width',
+			[
+				'label'      => esc_html__( 'Button Border Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 12 ] ],
+				'default'    => [ 'size' => 1, 'unit' => 'px' ],
+			]
+		);
+
+		$item->add_control(
 			'button_hover_bg',
 			[
 				'label'   => esc_html__( 'Button Hover Background', 'legal-nurse-core' ),
@@ -632,6 +643,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'text_color'         => $item['text_color'] ?? '',
 					'check_color'        => $item['check_color'] ?? '',
 					'button_color'       => $item['button_color'] ?? '',
+					'button_border_width' => isset( $item['button_border_width']['size'] ) ? (float) $item['button_border_width']['size'] : 1,
 					'button_hover_bg'    => $item['button_hover_bg'] ?? '',
 					'button_hover_color' => $item['button_hover_color'] ?? '',
 					'cart_bg'            => $item['cart_bg'] ?? '',
@@ -870,9 +882,11 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					$target    = $card['button_target'] ? ' target="' . esc_attr( $card['button_target'] ) . '"' : '';
 					$rel       = $rel_parts ? ' rel="' . esc_attr( implode( ' ', $rel_parts ) ) . '"' : '';
 					$href      = $card['button_url'] ? esc_url( $card['button_url'] ) : '#';
-					$btn_style = $btn
-						? sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) )
-						: '';
+					$link_bw   = (int) ( $style['button_border_width'] ?? 1 );
+					$btn_style = sprintf( 'border-width:%dpx;border-style:solid;', $link_bw );
+					if ( $btn ) {
+						$btn_style .= sprintf( '--lnc-accent:%1$s;color:%1$s;border-color:%1$s;', esc_attr( $btn ) );
+					}
 					printf(
 						'<a class="lnc-pcard__button lnc-pcard__button--link" href="%s"%s%s style="%s">%s</a>',
 						$href,
