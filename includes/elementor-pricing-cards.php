@@ -227,6 +227,26 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$item->add_control(
+			'cart_border_color',
+			[
+				'label'   => esc_html__( 'Border Color', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::COLOR,
+				'default' => '',
+			]
+		);
+
+		$item->add_control(
+			'cart_border_width',
+			[
+				'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 12 ] ],
+				'default'    => [ 'size' => 0, 'unit' => 'px' ],
+			]
+		);
+
+		$item->add_control(
 			'cart_hover_bg',
 			[
 				'label'   => esc_html__( 'Hover Background', 'legal-nurse-core' ),
@@ -616,6 +636,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 					'button_hover_color' => $item['button_hover_color'] ?? '',
 					'cart_bg'            => $item['cart_bg'] ?? '',
 					'cart_color'         => $item['cart_color'] ?? '',
+					'cart_border_color'  => $item['cart_border_color'] ?? '',
+					'cart_border_width'  => isset( $item['cart_border_width']['size'] ) ? (float) $item['cart_border_width']['size'] : 0,
 					'cart_hover_bg'      => $item['cart_hover_bg'] ?? '',
 					'cart_hover_color'   => $item['cart_hover_color'] ?? '',
 					'hover_border_color' => $item['hover_border_color'] ?? '',
@@ -818,9 +840,14 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 				if ( $has_cart ) {
 					$cart_bg    = $style['cart_bg'] ?? '';
 					$cart_color = $style['cart_color'] ?? '';
+					$cart_bw    = (float) ( $style['cart_border_width'] ?? 0 );
+					// Border color falls back to the background when not set.
+					$cart_bc    = '' !== ( $style['cart_border_color'] ?? '' ) ? $style['cart_border_color'] : $cart_bg;
 					$cart_style = sprintf(
-						'background:%1$s;border-color:%1$s;color:%2$s;',
+						'background:%1$s;border:%2$dpx solid %3$s;color:%4$s;',
 						esc_attr( $cart_bg ),
+						(int) $cart_bw,
+						esc_attr( $cart_bc ),
 						esc_attr( $cart_color )
 					);
 					printf(
