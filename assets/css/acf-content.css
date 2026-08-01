@@ -1,0 +1,29 @@
+/* Legal Nurse Core — ACF Content / Video */
+
+.lnc-acf-content {
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+}
+
+.lnc-acf-content iframe,
+.lnc-acf-content video,
+.lnc-acf-content embed,
+.lnc-acf-content object {
+	max-width: 100%;
+}
+
+/* Responsive embeds: scale iframe to the container at a set aspect ratio. */
+.lnc-acf-content--responsive iframe {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	border: 0;
+}
+
+/* Fallback for browsers without aspect-ratio support. */
+@supports not (aspect-ratio: 16 / 9) {
+	.lnc-acf-content--responsive iframe {
+		height: 56.25%;
+		min-height: 320px;
+	}
+}

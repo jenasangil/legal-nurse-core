@@ -53,7 +53,17 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-compare-table.php';
 	$widgets_manager->register( new LNC_Compare_Table_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-acf-content.php';
+	$widgets_manager->register( new LNC_ACF_Content_Widget() );
 } );
+
+// Register ACF Content stylesheet.
+add_action( 'wp_enqueue_scripts', 'lnc_register_acf_content_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_acf_content_assets' );
+function lnc_register_acf_content_assets() {
+	wp_register_style( 'lnc-acf-content', LNC_PLUGIN_URL . 'assets/css/acf-content.css', [], LNC_VERSION );
+}
 
 // Register Comparison Table stylesheet.
 add_action( 'wp_enqueue_scripts', 'lnc_register_compare_table_assets' );
