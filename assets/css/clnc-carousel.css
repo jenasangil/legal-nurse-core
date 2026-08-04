@@ -1,0 +1,410 @@
+/* -------------------------------------------------------------------------- */
+/*  CLNC Carousel Widget Styles                                               */
+/* -------------------------------------------------------------------------- */
+
+.clnc-carousel-wrap .container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.clnc-carousel-wrap #learnmore .ctr {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.clnc-carousel-wrap .section-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: hidden;
+}
+
+.clnc-carousel-wrap .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.clnc-carousel-wrap .filter-label {
+    font-size: 18px;
+    line-height: 1.37833;
+    font-weight: 700;
+    color: #212529;
+    margin-right: 4px;
+}
+
+.clnc-carousel-wrap .filter-btn {
+    padding: 8px 26px;
+    border-radius: 100px;
+    border: 2px solid #D4117F;
+    background: transparent;
+    color: #D4117F;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 100px;
+    height: 50px;
+    outline: none !important;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.clnc-carousel-wrap .filter-btn:hover {
+    background: #FFF6FD;
+    border-width: 3px;
+}
+
+.clnc-carousel-wrap .filter-btn.active {
+    background: #D4117F;
+    color: #fff;
+    font-weight: 700;
+}
+
+.clnc-carousel-wrap .count-nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.clnc-carousel-wrap .resource-count {
+    font-size: 18px;
+    color: #212529;
+    line-height: 0.7222222222;
+}
+
+.clnc-carousel-wrap .nav-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.clnc-carousel-wrap .nav-row-mobile {
+    display: none;
+}
+
+.clnc-carousel-wrap .nav-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #D4117F;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    border: none;
+    outline: none !important;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    transition: all 0.2s;
+}
+
+.clnc-carousel-wrap .nav-btn:hover {
+    background: #6F0157;
+}
+
+.clnc-carousel-wrap .nav-btn.swiper-button-disabled {
+    background: #E4E6E7;
+    pointer-events: none;
+}
+
+.clnc-carousel-wrap .nav-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: #FFF;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.clnc-carousel-wrap .nav-btn svg path {
+    stroke: #FFF;
+}
+
+.clnc-carousel-wrap .nav-btn.swiper-button-disabled svg path {
+    stroke: #B0B5BA;
+}
+
+.clnc-carousel-wrap .swiper {
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    height: auto;
+}
+
+.clnc-carousel-wrap .swiper-wrapper {
+    height: auto !important;
+    align-items: stretch;
+}
+
+.clnc-carousel-wrap .swiper-slide {
+    height: auto;
+}
+
+.clnc-carousel-wrap .swiper-slide>div {
+    height: 100%;
+    min-height: 300px;
+}
+
+.clnc-carousel-wrap .resource-card {
+    background: #FEF1FA;
+    border: 1px solid #FDCDEF;
+    border-radius: 16px;
+    padding: 20px 25px 21px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: all 0.2s;
+}
+
+.clnc-carousel-wrap .resource-card:hover {
+    border-color: #D4117F;
+}
+
+.clnc-carousel-wrap .resource-card:hover a.card-link {
+    color: #D4117F;
+}
+
+.clnc-carousel-wrap .resource-card:hover a.card-link svg path {
+    stroke: #D4117F;
+}
+
+.clnc-carousel-wrap .badge-new {
+    display: inline-block;
+    background: #6F0157;
+    color: #fff;
+    font-size: 16px;
+    line-height: 0.75;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.clnc-carousel-wrap .swiper-card-body {
+    text-align: left;
+}
+
+.clnc-carousel-wrap .card-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #434343;
+    margin-bottom: 5px;
+    line-height: 1.45455;
+    letter-spacing: -0.1px;
+}
+
+.clnc-carousel-wrap .card-desc {
+    font-size: 18px;
+    font-weight: 400;
+    color: #434343;
+    line-height: 1.5;
+}
+
+.clnc-carousel-wrap .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #6F0157;
+    text-decoration: none !important;
+    margin-top: auto;
+    padding-top: 12px;
+    transition: all 0.2s;
+}
+
+.clnc-carousel-wrap .card-link svg {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.2s;
+}
+
+.clnc-carousel-wrap .empty-state {
+    text-align: center;
+    padding: 48px 0;
+    color: #999;
+    font-size: 15px;
+}
+
+@keyframes clnc-shimmer {
+    0% {
+        background-position: -600px 0;
+    }
+
+    100% {
+        background-position: 600px 0;
+    }
+}
+
+.clnc-carousel-wrap .skeleton-card {
+    background: #FEF1FA;
+    border-radius: 14px;
+    padding: 24px;
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.clnc-carousel-wrap .skel {
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg, #f0d8e8 25%, #fce8f3 50%, #f0d8e8 75%);
+    background-size: 600px 100%;
+    animation: clnc-shimmer 1.4s infinite linear;
+}
+
+.clnc-carousel-wrap .skeleton-card .skel:nth-child(1) {
+    animation-delay: 0.00s;
+}
+
+.clnc-carousel-wrap .skeleton-card .skel:nth-child(2) {
+    animation-delay: 0.07s;
+}
+
+.clnc-carousel-wrap .skeleton-card .skel:nth-child(3) {
+    animation-delay: 0.14s;
+}
+
+.clnc-carousel-wrap .skeleton-card .skel:nth-child(4) {
+    animation-delay: 0.21s;
+}
+
+.clnc-carousel-wrap .skeleton-card .skel:nth-child(5) {
+    animation-delay: 0.28s;
+}
+
+.clnc-carousel-wrap .skeleton-card .skel:nth-child(6) {
+    animation-delay: 0.35s;
+}
+
+.clnc-carousel-wrap .skel-badge {
+    width: 48px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+.clnc-carousel-wrap .skel-title {
+    width: 78%;
+    height: 17px;
+}
+
+.clnc-carousel-wrap .skel-title2 {
+    width: 52%;
+    height: 17px;
+}
+
+.clnc-carousel-wrap .skel-line {
+    width: 100%;
+    height: 12px;
+}
+
+.clnc-carousel-wrap .skel-line2 {
+    width: 85%;
+    height: 12px;
+}
+
+.clnc-carousel-wrap .skel-link {
+    width: 88px;
+    height: 13px;
+    margin-top: auto;
+}
+
+@media screen and (max-width: 767px) {
+    .clnc-carousel-wrap #learnmore .ctr {
+        padding-top: 26px;
+        padding-bottom: 26px;
+    }
+
+    .clnc-carousel-wrap .swiper {
+        overflow: visible;
+        margin-bottom: 20px;
+    }
+
+    .clnc-carousel-wrap .swiper-slide {
+        width: 265px;
+    }
+
+    .clnc-carousel-wrap .count-nav-row .nav-buttons {
+        display: none;
+    }
+
+    .clnc-carousel-wrap .nav-row-mobile {
+        display: block;
+        margin-top: 70px;
+    }
+
+    .clnc-carousel-wrap .nav-row-mobile .nav-buttons {
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .clnc-carousel-wrap .nav-row-mobile .swiper-pagination {
+        color: #212529;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 0.7222222222;
+        position: relative;
+        width: auto;
+        bottom: auto;
+    }
+
+    .clnc-carousel-wrap .filter-label {
+        width: 100%;
+        text-align: left;
+    }
+
+    .clnc-carousel-wrap .filter-bar {
+        margin-bottom: 24px;
+    }
+
+    .clnc-carousel-wrap .filter-btn {
+        padding: 10px 22px;
+        min-width: 86px;
+    }
+
+    .clnc-carousel-wrap .count-nav-row {
+        margin-bottom: 22px;
+    }
+}
+
+@media (min-width: 576px) {
+    .clnc-carousel-wrap .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .clnc-carousel-wrap .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .clnc-carousel-wrap .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .clnc-carousel-wrap .container {
+        max-width: 1140px;
+    }
+}
