@@ -9,7 +9,7 @@ This plugin registers several native Elementor widgets specifically tailored for
 - **Featured Carousel**: A dynamic, swiper-based carousel that pulls specific pages/posts into filterable categories. Includes extensive custom styling controls directly inside the Elementor editor.
 - **Child Pages**: Automatically displays child pages in a grid layout. Supports featured images and excerpts.
 - **ACF Content**: Integrates with Advanced Custom Fields (ACF) to output custom data.
-- **Compare Table**: A bespoke comparison table layout widget.
+- **Compare Table**: A comparison table layout widget.
 - **Loop Filter**: Handles custom post loops and filtering logic.
 - **Social Share**: Custom-styled social sharing buttons.
 
@@ -31,7 +31,7 @@ The plugin enqueues its own optimized styles and scripts for its custom widgets:
 - **Elementor Widgets**: All Elementor widget classes are located in the `includes/` directory and loaded automatically via `legal-nurse-core.php`.
 
 ## Author
-**Growenrollments**  
+**Grow Enrollments**  
 https://growenrollments.com
 
 ## License
