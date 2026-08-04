@@ -70,23 +70,6 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 		return $options;
 	}
 
-	/**
-	 * SEO meta description for a page (Yoast / Rank Math), else the excerpt.
-	 *
-	 * @param int $id
-	 * @return string
-	 */
-	private function get_meta_description( $id ) {
-		$meta = get_post_meta( $id, '_yoast_wpseo_metadesc', true );
-		if ( '' === $meta ) {
-			$meta = get_post_meta( $id, 'rank_math_description', true );
-		}
-		if ( '' === $meta ) {
-			$meta = get_the_excerpt( $id );
-		}
-		return (string) $meta;
-	}
-
 	protected function register_controls() {
 
 		$this->start_controls_section( 'section_content', [ 'label' => esc_html__( 'Content', 'legal-nurse-core' ) ] );
@@ -151,12 +134,29 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'show_meta',
+			'show_image',
 			[
-				'label'        => esc_html__( 'Show Meta Description', 'legal-nurse-core' ),
+				'label'        => esc_html__( 'Show Featured Image', 'legal-nurse-core' ),
 				'type'         => \Elementor\Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
 				'default'      => 'yes',
+			]
+		);
+
+		$this->add_control(
+			'image_size',
+			[
+				'label'     => esc_html__( 'Image Size', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::SELECT,
+				'default'   => 'medium_large',
+				'options'   => [
+					'thumbnail'    => esc_html__( 'Thumbnail', 'legal-nurse-core' ),
+					'medium'       => esc_html__( 'Medium', 'legal-nurse-core' ),
+					'medium_large' => esc_html__( 'Medium Large', 'legal-nurse-core' ),
+					'large'        => esc_html__( 'Large', 'legal-nurse-core' ),
+					'full'         => esc_html__( 'Full', 'legal-nurse-core' ),
+				],
+				'condition' => [ 'show_image' => 'yes' ],
 			]
 		);
 
@@ -166,19 +166,21 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 				'label'        => esc_html__( 'Show Excerpt', 'legal-nurse-core' ),
 				'type'         => \Elementor\Controls_Manager::SWITCHER,
 				'return_value' => 'yes',
-				'default'      => '',
-				'description'  => esc_html__( 'Shows the page excerpt in addition to (or instead of) the meta description.', 'legal-nurse-core' ),
+				'default'      => 'yes',
+				'description'  => esc_html__( 'Outputs the page\'s hand-written excerpt.', 'legal-nurse-core' ),
 			]
 		);
 
 		$this->add_control(
 			'excerpt_words',
 			[
-				'label'     => esc_html__( 'Excerpt/Meta Word Limit', 'legal-nurse-core' ),
-				'type'      => \Elementor\Controls_Manager::NUMBER,
-				'default'   => 24,
-				'min'       => 0,
-				'max'       => 100,
+				'label'       => esc_html__( 'Excerpt Word Limit', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::NUMBER,
+				'default'     => 0,
+				'min'         => 0,
+				'max'         => 100,
+				'description' => esc_html__( '0 = show the full excerpt (keeps formatting like italics).', 'legal-nurse-core' ),
+				'condition'   => [ 'show_excerpt' => 'yes' ],
 			]
 		);
 
@@ -274,6 +276,30 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'image_radius',
+			[
+				'label'      => esc_html__( 'Image Radius', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+				'default'    => [ 'size' => 24, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-childpage__image img' => 'border-radius:{{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'image_spacing',
+			[
+				'label'      => esc_html__( 'Image Spacing', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+				'default'    => [ 'size' => 16, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-childpage__image' => 'margin-bottom:{{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control(
 			'title_color',
 			[
 				'label'     => esc_html__( 'Title Color', 'legal-nurse-core' ),
@@ -351,11 +377,13 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		$show_meta     = 'yes' === ( $settings['show_meta'] ?? 'yes' );
-		$show_excerpt  = 'yes' === ( $settings['show_excerpt'] ?? '' );
+		$show_image    = 'yes' === ( $settings['show_image'] ?? 'yes' );
+		$image_size    = $settings['image_size'] ? $settings['image_size'] : 'medium_large';
+		$show_excerpt  = 'yes' === ( $settings['show_excerpt'] ?? 'yes' );
 		$show_readmore = 'yes' === ( $settings['show_readmore'] ?? 'yes' );
-		$words         = (int) ( $settings['excerpt_words'] ?? 24 );
+		$words         = (int) ( $settings['excerpt_words'] ?? 0 );
 		$readmore      = $settings['readmore_text'] ? $settings['readmore_text'] : esc_html__( 'Read More', 'legal-nurse-core' );
+		$excerpt_tags  = [ 'em' => [], 'strong' => [], 'i' => [], 'b' => [], 'br' => [] ];
 
 		echo '<div class="lnc-childpages">';
 
@@ -365,23 +393,31 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			$title = get_the_title( $id );
 
 			echo '<article class="lnc-childpage">';
+
+			// Featured image before the title.
+			if ( $show_image && has_post_thumbnail( $id ) ) {
+				printf(
+					'<a class="lnc-childpage__image" href="%s">%s</a>',
+					esc_url( $url ),
+					get_the_post_thumbnail( $id, $image_size, [ 'alt' => esc_attr( $title ) ] ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				);
+			}
+
 			printf(
 				'<h3 class="lnc-childpage__title"><a href="%s">%s</a></h3>',
 				esc_url( $url ),
 				esc_html( $title )
 			);
 
-			if ( $show_meta ) {
-				$meta = $this->get_meta_description( $id );
-				if ( '' !== $meta ) {
-					printf( '<p class="lnc-childpage__text lnc-childpage__meta">%s</p>', esc_html( wp_trim_words( $meta, $words, '…' ) ) );
-				}
-			}
-
 			if ( $show_excerpt ) {
-				$excerpt = get_the_excerpt( $id );
+				// Use the page's hand-written excerpt, preserving light formatting.
+				$excerpt = get_post_field( 'post_excerpt', $id );
+				if ( '' === $excerpt ) {
+					$excerpt = get_the_excerpt( $id );
+				}
 				if ( '' !== $excerpt ) {
-					printf( '<p class="lnc-childpage__text lnc-childpage__excerpt">%s</p>', esc_html( wp_trim_words( $excerpt, $words, '…' ) ) );
+					$out = ( $words > 0 ) ? esc_html( wp_trim_words( $excerpt, $words, '…' ) ) : wp_kses( $excerpt, $excerpt_tags );
+					printf( '<p class="lnc-childpage__text lnc-childpage__excerpt">%s</p>', $out ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 			}
 

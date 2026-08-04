@@ -15,6 +15,20 @@
 	border-radius: 12px;
 }
 
+.lnc-childpage__image {
+	display: block;
+	margin-bottom: 16px;
+	line-height: 0;
+}
+
+.lnc-childpage__image img {
+	width: 100%;
+	height: auto;
+	display: block;
+	object-fit: cover;
+	border-radius: 24px;
+}
+
 .lnc-childpage__title {
 	margin: 0 0 10px;
 	font-size: 20px;
