@@ -57,6 +57,9 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-acf-content.php';
 	$widgets_manager->register( new LNC_ACF_Content_Widget() );
 
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-featured-carousel.php';
+	$widgets_manager->register( new LNC_Featured_Carousel_Widget() );
+
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-child-pages.php';
 	$widgets_manager->register( new LNC_Child_Pages_Widget() );
 } );
@@ -107,4 +110,15 @@ function lnc_enqueue_pricing_cards_css() {
 		[],
 		LNC_VERSION
 	);
+}
+
+// Register Featured Carousel assets.
+add_action( 'wp_enqueue_scripts', 'lnc_register_featured_carousel_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_featured_carousel_assets' );
+function lnc_register_featured_carousel_assets() {
+	wp_register_style( 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', [], null );
+	wp_register_script( 'swiper-js', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', [], null, true );
+	
+	wp_register_style( 'clnc-carousel', LNC_PLUGIN_URL . 'assets/css/clnc-carousel.css', [ 'swiper' ], filemtime( LNC_PLUGIN_DIR . 'assets/css/clnc-carousel.css' ) );
+	wp_register_script( 'clnc-carousel', LNC_PLUGIN_URL . 'assets/js/clnc-carousel.js', [ 'swiper-js' ], filemtime( LNC_PLUGIN_DIR . 'assets/js/clnc-carousel.js' ), true );
 }
