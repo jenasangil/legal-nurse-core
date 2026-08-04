@@ -1,0 +1,58 @@
+/* Legal Nurse Core — Child Pages */
+
+.lnc-childpages {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+}
+
+.lnc-childpage {
+	display: flex;
+	flex-direction: column;
+	padding: 24px;
+	background: #fff;
+	border-radius: 12px;
+}
+
+.lnc-childpage__title {
+	margin: 0 0 10px;
+	font-size: 20px;
+	line-height: 1.3;
+}
+
+.lnc-childpage__title a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.lnc-childpage__title a:hover {
+	text-decoration: underline;
+}
+
+.lnc-childpage__text {
+	margin: 0 0 14px;
+	font-size: 15px;
+	line-height: 1.5;
+	color: #4a4a4a;
+	flex: 1 1 auto;
+}
+
+.lnc-childpage__more {
+	align-self: flex-start;
+	font-weight: 600;
+	text-decoration: none;
+	color: #25797c;
+}
+
+.lnc-childpage__more:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+	.lnc-childpages { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 767px) {
+	.lnc-childpages { grid-template-columns: 1fr; }
+}
