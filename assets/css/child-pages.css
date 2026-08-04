@@ -1,18 +1,57 @@
 /* Legal Nurse Core — Child Pages */
 
 .lnc-childpages {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 24px;
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 }
 
-.lnc-childpage {
+/* Grid layout (cards) */
+.lnc-childpages--grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+}
+
+.lnc-childpages--grid .lnc-childpage {
 	display: flex;
 	flex-direction: column;
 	padding: 24px;
 	background: #fff;
 	border-radius: 12px;
+}
+
+/* List layout (image left, text right, stacked rows) */
+.lnc-childpages--list {
+	display: flex;
+	flex-direction: column;
+}
+
+.lnc-childpages--list .lnc-childpage {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	gap: 32px;
+	padding: 28px 0;
+	border-bottom: 1px solid #e6e2d8;
+}
+
+.lnc-childpages--list .lnc-childpage:first-child {
+	padding-top: 0;
+}
+
+.lnc-childpages--list .lnc-childpage__image {
+	flex: 0 0 220px;
+	max-width: 220px;
+	margin-bottom: 0;
+}
+
+.lnc-childpages--list .lnc-childpage__body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.lnc-childpage__body {
+	display: flex;
+	flex-direction: column;
 }
 
 .lnc-childpage__image {
@@ -64,9 +103,21 @@
 }
 
 @media (max-width: 1024px) {
-	.lnc-childpages { grid-template-columns: repeat(2, 1fr); }
+	.lnc-childpages--grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 767px) {
-	.lnc-childpages { grid-template-columns: 1fr; }
+	.lnc-childpages--grid { grid-template-columns: 1fr; }
+
+	/* Stack the list rows on mobile: image on top, text below. */
+	.lnc-childpages--list .lnc-childpage {
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.lnc-childpages--list .lnc-childpage__image {
+		flex-basis: auto;
+		max-width: 100%;
+		width: 100%;
+	}
 }
