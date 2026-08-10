@@ -1,0 +1,105 @@
+/* Legal Nurse Core — Web Lead Form (Gravity Forms styling) */
+
+.lnc-web-lead-form .gform_title,
+.lnc-web-lead-form .gform_required_legend,
+.lnc-web-lead-form .ginput_container_address .gform-field-label--type-sub,
+.lnc-web-lead-form .gform_validation_errors {
+	display: none !important;
+}
+
+.lnc-web-lead-form .gform_fields {
+	row-gap: 12px !important;
+}
+
+.lnc-web-lead-form .ginput_address_state {
+	inline-size: 100%;
+}
+
+.lnc-web-lead-form .gfield select.large,
+.lnc-web-lead-form .gfield input.large,
+.lnc-web-lead-form .gform-theme--foundation .ginput_complex select {
+	border-radius: 12px !important;
+	border: 1px solid #AAE5E1;
+	background: #FFF;
+	height: 50px;
+	padding: 5px 16px;
+	box-shadow: none;
+	outline: none;
+	font-size: 1rem;
+}
+
+.lnc-web-lead-form .gfield select.large,
+.lnc-web-lead-form .gform-theme--foundation .ginput_complex select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7' fill='none'%3E%3Cpath d='M10.0335 0.700195L5.36686 5.36686L0.700195 0.700195' stroke='%2325797C' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 16px center;
+	background-size: 11px 7px;
+	padding-right: 40px;
+}
+
+.lnc-web-lead-form .gfield input.large::placeholder,
+.lnc-web-lead-form .gfield select.large:invalid,
+.lnc-web-lead-form .gform-theme--foundation .ginput_complex select:invalid {
+	color: #77776D;
+	font-size: 1rem;
+	font-weight: 400;
+	opacity: 1;
+}
+
+.lnc-web-lead-form .gform-field-label {
+	color: #2A2926;
+	font-family: "Wix Madefor Display", Sans-serif;
+	font-size: 1rem;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 1.25rem;
+	margin-bottom: 4px;
+	padding-right: 2px;
+}
+
+.lnc-web-lead-form .gfield_required_asterisk {
+	color: #F00;
+	font-family: "Wix Madefor Display", Sans-serif;
+	font-size: 1.125rem;
+	font-style: normal;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+.lnc-web-lead-form .gfield_validation_message {
+	position: absolute;
+	text-align: right;
+	width: 100%;
+}
+
+.lnc-web-lead-form .gform_button {
+	border-radius: 200px !important;
+	background: #25797C !important;
+	padding: 16px 28px !important;
+	border: none !important;
+	color: #FFF !important;
+	text-align: center !important;
+	font-family: "Wix Madefor Display", Sans-serif !important;
+	font-size: 1rem !important;
+	font-style: normal !important;
+	font-weight: 600 !important;
+	line-height: 1.375rem !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.lnc-web-lead-form .gform_button:hover {
+	background: #216164 !important;
+}
+
+.lnc-web-lead-form .gform_button:disabled {
+	opacity: 0.4 !important;
+}
+
+.lnc-web-lead-form .gform_confirmation_message {
+	margin: 120px 0 !important;
+	font-weight: 600 !important;
+}

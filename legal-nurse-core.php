@@ -62,7 +62,27 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-child-pages.php';
 	$widgets_manager->register( new LNC_Child_Pages_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-web-lead-form.php';
+	$widgets_manager->register( new LNC_Web_Lead_Form_Widget() );
 } );
+
+// Register Web Lead Form assets (style + Creatio tracking scripts).
+add_action( 'wp_enqueue_scripts', 'lnc_register_web_lead_form_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_web_lead_form_assets' );
+function lnc_register_web_lead_form_assets() {
+	wp_register_style( 'lnc-web-lead-form', LNC_PLUGIN_URL . 'assets/css/web-lead-form.css', [], LNC_VERSION );
+
+	wp_register_script( 'creatio-track-cookies', 'https://webtracking-v01.creatio.com/JS/track-cookies.js', [], null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	wp_register_script( 'creatio-create-object', 'https://webtracking-v01.creatio.com/JS/create-object.js', [], null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	wp_register_script(
+		'lnc-web-lead-form',
+		LNC_PLUGIN_URL . 'assets/js/web-lead-form.js',
+		[ 'creatio-track-cookies', 'creatio-create-object' ],
+		LNC_VERSION,
+		true
+	);
+}
 
 // Register ACF Content + Child Pages stylesheets.
 add_action( 'wp_enqueue_scripts', 'lnc_register_acf_content_assets' );
