@@ -49,15 +49,16 @@
 	opacity: 1;
 }
 
-.lnc-web-lead-form .gform-field-label {
-	color: #2A2926;
-	font-family: "Wix Madefor Display", Sans-serif;
-	font-size: 1rem;
-	font-style: normal;
-	font-weight: 500;
-	line-height: 1.25rem;
-	margin-bottom: 4px;
-	padding-right: 2px;
+.lnc-web-lead-form .gform-field-label,
+.lnc-web-lead-form .gfield_label {
+	color: #2A2926 !important;
+	font-family: "Wix Madefor Display", Sans-serif !important;
+	font-size: 1rem !important;
+	font-style: normal !important;
+	font-weight: 500 !important;
+	line-height: 1.25rem !important;
+	margin-bottom: 4px !important;
+	padding-right: 2px !important;
 }
 
 .lnc-web-lead-form .gfield_required_asterisk {
