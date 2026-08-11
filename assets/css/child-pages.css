@@ -109,15 +109,17 @@
 @media (max-width: 767px) {
 	.lnc-childpages--grid { grid-template-columns: 1fr; }
 
-	/* Stack the list rows on mobile: image on top, text below. */
+	/* Stack the list rows on mobile: image on top, text below.
+	   !important overrides the Elementor Image Width control, whose
+	   wrapper-scoped rule otherwise keeps the fixed desktop width. */
 	.lnc-childpages--list .lnc-childpage {
 		flex-direction: column;
 		gap: 16px;
 	}
 
 	.lnc-childpages--list .lnc-childpage__image {
-		flex-basis: auto;
-		max-width: 100%;
-		width: 100%;
+		flex: 0 0 auto !important;
+		max-width: 100% !important;
+		width: 100% !important;
 	}
 }
