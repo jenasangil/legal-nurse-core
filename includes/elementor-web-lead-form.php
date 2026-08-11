@@ -20,7 +20,7 @@ class LNC_Web_Lead_Form_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'LN - Web Lead Form', 'legal-nurse-core' );
+		return esc_html__( 'LN - Forms', 'legal-nurse-core' );
 	}
 
 	public function get_icon() {
