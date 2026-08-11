@@ -92,6 +92,18 @@
 	margin-top: auto;
 }
 
+/* Full-width buttons: stack and fill the card, with a 30px top margin. */
+.lnc-pcard__buttons--full {
+	flex-direction: column;
+	align-items: stretch;
+	margin-top: 30px;
+}
+
+.lnc-pcard__buttons--full .lnc-pcard__button {
+	width: 100%;
+	text-align: center;
+}
+
 .lnc-pcard__button {
 	display: inline-block;
 	padding: 8px 26px;
