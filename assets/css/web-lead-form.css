@@ -130,6 +130,10 @@
 	margin-top: 10px;
 }
 
+.lnc-web-lead-form .gfield--type-email .gform-grid-row .gform-grid-col:first-child label {
+	display: none;
+}
+
 .lnc-web-lead-form .gfield--type-address .gform-grid-col {
 	width: 100%;
 }
