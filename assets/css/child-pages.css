@@ -54,32 +54,31 @@
 	flex-direction: column;
 }
 
-/* Center content inside each card (image, title, excerpt, read more).
-   Works for both layouts: text elements fill the body width, so they need
-   an explicit text-align in addition to the flex align-items. */
-.lnc-childpages--center .lnc-childpage__body {
+/* LIST: vertically center the image and text as a group; text stays left. */
+.lnc-childpages--list.lnc-childpages--center .lnc-childpage {
 	align-items: center;
 }
 
-.lnc-childpages--center .lnc-childpage__title,
-.lnc-childpages--center .lnc-childpage__text {
+/* GRID: center the card content horizontally. */
+.lnc-childpages--grid.lnc-childpages--center .lnc-childpage,
+.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__body {
+	align-items: center;
+	text-align: center;
+}
+
+.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__title,
+.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__text {
 	text-align: center;
 	width: 100%;
 }
 
-.lnc-childpages--center .lnc-childpage__image {
+.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__image {
 	margin-left: auto;
 	margin-right: auto;
 }
 
-.lnc-childpages--center .lnc-childpage__more {
+.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__more {
 	align-self: center;
-}
-
-/* Grid: also center the card itself. */
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage {
-	align-items: center;
-	text-align: center;
 }
 
 .lnc-childpage__image {
