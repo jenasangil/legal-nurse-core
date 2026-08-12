@@ -225,6 +225,17 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'center_content',
+			[
+				'label'        => esc_html__( 'Center Content', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'description'  => esc_html__( 'Center the image, title, excerpt, and Read More inside each card.', 'legal-nurse-core' ),
+			]
+		);
+
 		$this->add_responsive_control(
 			'image_width',
 			[
@@ -412,8 +423,9 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 		$readmore      = $settings['readmore_text'] ? $settings['readmore_text'] : esc_html__( 'Read More', 'legal-nurse-core' );
 		$excerpt_tags  = [ 'em' => [], 'strong' => [], 'i' => [], 'b' => [], 'br' => [] ];
 		$layout        = ( 'grid' === ( $settings['layout'] ?? 'list' ) ) ? 'grid' : 'list';
+		$center        = 'yes' === ( $settings['center_content'] ?? '' ) ? ' lnc-childpages--center' : '';
 
-		echo '<div class="lnc-childpages lnc-childpages--' . esc_attr( $layout ) . '">';
+		echo '<div class="lnc-childpages lnc-childpages--' . esc_attr( $layout ) . esc_attr( $center ) . '">';
 
 		foreach ( $children as $page ) {
 			$id    = $page->ID;

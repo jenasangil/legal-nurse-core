@@ -54,6 +54,27 @@
 	flex-direction: column;
 }
 
+/* Center content inside each card (image, title, excerpt, read more). */
+.lnc-childpages--center .lnc-childpage,
+.lnc-childpages--center .lnc-childpage__body {
+	align-items: center;
+	text-align: center;
+}
+
+.lnc-childpages--center .lnc-childpage__image {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.lnc-childpages--center .lnc-childpage__more {
+	align-self: center;
+}
+
+/* Center the whole list column as well. */
+.lnc-childpages--list.lnc-childpages--center {
+	align-items: center;
+}
+
 .lnc-childpage__image {
 	display: block;
 	margin-bottom: 16px;
