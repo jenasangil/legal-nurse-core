@@ -212,6 +212,43 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 	private function register_style_controls() {
 		$this->start_controls_section( 'section_style', [ 'label' => esc_html__( 'Layout', 'legal-nurse-core' ), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
 
+		$this->add_control(
+			'layout',
+			[
+				'label'   => esc_html__( 'Layout', 'legal-nurse-core' ),
+				'type'    => \Elementor\Controls_Manager::SELECT,
+				'default' => 'list',
+				'options' => [
+					'list' => esc_html__( 'List (image left, text right)', 'legal-nurse-core' ),
+					'grid' => esc_html__( 'Grid (cards)', 'legal-nurse-core' ),
+				],
+			]
+		);
+
+		$this->add_control(
+			'center_content',
+			[
+				'label'        => esc_html__( 'Center Content', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'description'  => esc_html__( 'Center the image, title, excerpt, and Read More inside each card.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_responsive_control(
+			'image_width',
+			[
+				'label'      => esc_html__( 'Image Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range'      => [ 'px' => [ 'min' => 100, 'max' => 500 ], '%' => [ 'min' => 15, 'max' => 60 ] ],
+				'default'    => [ 'size' => 220, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-childpages--list .lnc-childpage__image' => 'flex:0 0 {{SIZE}}{{UNIT}};max-width:{{SIZE}}{{UNIT}};' ],
+				'condition'  => [ 'layout' => 'list' ],
+			]
+		);
+
 		$this->add_responsive_control(
 			'columns',
 			[
@@ -221,7 +258,8 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 				'tablet_default' => '2',
 				'mobile_default' => '1',
 				'options'        => [ '1' => '1', '2' => '2', '3' => '3', '4' => '4' ],
-				'selectors'      => [ '{{WRAPPER}} .lnc-childpages' => 'grid-template-columns:repeat({{VALUE}},1fr);' ],
+				'selectors'      => [ '{{WRAPPER}} .lnc-childpages--grid' => 'grid-template-columns:repeat({{VALUE}},1fr);' ],
+				'condition'      => [ 'layout' => 'grid' ],
 			]
 		);
 
@@ -384,8 +422,10 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 		$words         = (int) ( $settings['excerpt_words'] ?? 0 );
 		$readmore      = $settings['readmore_text'] ? $settings['readmore_text'] : esc_html__( 'Read More', 'legal-nurse-core' );
 		$excerpt_tags  = [ 'em' => [], 'strong' => [], 'i' => [], 'b' => [], 'br' => [] ];
+		$layout        = ( 'grid' === ( $settings['layout'] ?? 'list' ) ) ? 'grid' : 'list';
+		$center        = 'yes' === ( $settings['center_content'] ?? '' ) ? ' lnc-childpages--center' : '';
 
-		echo '<div class="lnc-childpages">';
+		echo '<div class="lnc-childpages lnc-childpages--' . esc_attr( $layout ) . esc_attr( $center ) . '">';
 
 		foreach ( $children as $page ) {
 			$id    = $page->ID;
@@ -402,6 +442,8 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 					get_the_post_thumbnail( $id, $image_size, [ 'alt' => esc_attr( $title ) ] ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				);
 			}
+
+			echo '<div class="lnc-childpage__body">';
 
 			printf(
 				'<h3 class="lnc-childpage__title"><a href="%s">%s</a></h3>',
@@ -429,6 +471,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 				);
 			}
 
+			echo '</div>'; // .lnc-childpage__body
 			echo '</article>';
 		}
 

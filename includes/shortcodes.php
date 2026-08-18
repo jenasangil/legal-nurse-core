@@ -66,7 +66,8 @@ function lnc_weekly_random_number_shortcode() {
  *   field    Which value to return (default: price):
  *              title | price | regular_price | sale_price |
  *              discount (percent, e.g. "30%") | discount_amount |
- *              sku | permalink | link (HTML <a> to the product)
+ *              sku | permalink | checkout (add-to-cart→checkout URL) |
+ *              cart (add-to-cart URL) | link (HTML <a> to the product)
  *   default  Fallback text if the product/field is unavailable.
  *
  * @param array $atts
@@ -133,6 +134,17 @@ function lnc_product_details_shortcode( $atts ) {
 
 		case 'permalink':
 			return esc_url( $product->get_permalink() );
+
+		case 'checkout':
+			// Add the product to the cart and go straight to checkout.
+			$checkout = function_exists( 'wc_get_checkout_url' )
+				? add_query_arg( 'add-to-cart', $product->get_id(), wc_get_checkout_url() )
+				: $product->add_to_cart_url();
+			return esc_url( $checkout );
+
+		case 'cart':
+			// Add-to-cart URL (WooCommerce default behavior/redirect).
+			return esc_url( $product->add_to_cart_url() );
 
 		case 'link':
 			return sprintf(

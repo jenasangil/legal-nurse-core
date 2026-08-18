@@ -418,6 +418,17 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'full_width_buttons',
+			[
+				'label'        => esc_html__( 'Full Width Buttons', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'description'  => esc_html__( 'Stack Add To Cart and Learn More full width, with a 30px top margin.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
 			'show_check_icon',
 			[
 				'label'        => esc_html__( 'Show Feature Icons', 'legal-nurse-core' ),
@@ -782,6 +793,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		$show_features = 'yes' === ( $settings['show_features'] ?? 'yes' );
 		$show_cart     = 'yes' === ( $settings['show_add_to_cart'] ?? 'yes' );
 		$cart_text     = $settings['add_to_cart_text'] ? $settings['add_to_cart_text'] : esc_html__( 'Add To Cart', 'legal-nurse-core' );
+		$full_width    = 'yes' === ( $settings['full_width_buttons'] ?? '' );
 		$feature_icon  = $settings['feature_icon'] ?? [];
 
 		$widget_id = $this->get_id();
@@ -867,7 +879,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			$has_link = '' !== $card['button_text'];
 
 			if ( $has_cart || $has_link ) {
-				echo '<div class="lnc-pcard__buttons">';
+				$buttons_class = 'lnc-pcard__buttons' . ( $full_width ? ' lnc-pcard__buttons--full' : '' );
+				echo '<div class="' . esc_attr( $buttons_class ) . '">';
 
 				if ( $has_cart ) {
 					$cart_bg    = $style['cart_bg'] ?? '';
