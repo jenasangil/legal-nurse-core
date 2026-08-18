@@ -66,7 +66,17 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-web-lead-form.php';
 	$widgets_manager->register( new LNC_Web_Lead_Form_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-memorable-cases.php';
+	$widgets_manager->register( new LNC_Memorable_Cases_Widget() );
 } );
+
+// Register Memorable Cases stylesheet.
+add_action( 'wp_enqueue_scripts', 'lnc_register_memorable_cases_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_memorable_cases_assets' );
+function lnc_register_memorable_cases_assets() {
+	wp_register_style( 'lnc-memorable-cases', LNC_PLUGIN_URL . 'assets/css/memorable-cases.css', [], LNC_VERSION );
+}
 
 // Register Web Lead Form assets (style + Creatio tracking scripts).
 add_action( 'wp_enqueue_scripts', 'lnc_register_web_lead_form_assets' );
