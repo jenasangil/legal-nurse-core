@@ -69,7 +69,18 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-memorable-cases.php';
 	$widgets_manager->register( new LNC_Memorable_Cases_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-pages-by-category.php';
+	$widgets_manager->register( new LNC_Pages_By_Category_Widget() );
 } );
+
+// Register Pages by Category assets.
+add_action( 'wp_enqueue_scripts', 'lnc_register_pages_by_category_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_pages_by_category_assets' );
+function lnc_register_pages_by_category_assets() {
+	wp_register_style( 'lnc-pages-by-category', LNC_PLUGIN_URL . 'assets/css/pages-by-category.css', [], LNC_VERSION );
+	wp_register_script( 'lnc-pages-by-category', LNC_PLUGIN_URL . 'assets/js/pages-by-category.js', [], LNC_VERSION, true );
+}
 
 // Register Memorable Cases stylesheet.
 add_action( 'wp_enqueue_scripts', 'lnc_register_memorable_cases_assets' );
