@@ -68,7 +68,9 @@ function lnc_weekly_random_number_shortcode() {
  *              discount (percent, e.g. "30%") | discount_amount |
  *              sku | permalink | checkout (add-to-cart→checkout URL) |
  *              cart (add-to-cart URL) | link (HTML <a> to the product)
- *   default  Fallback text if the product/field is unavailable.
+ *   default      Fallback text if the product/field is unavailable.
+ *   no_decimals  yes/true/1 to show prices without decimals (applies to
+ *                price, regular_price, sale_price, discount_amount).
  *
  * @param array $atts
  * @return string
@@ -76,10 +78,11 @@ function lnc_weekly_random_number_shortcode() {
 function lnc_product_details_shortcode( $atts ) {
 	$atts = shortcode_atts(
 		[
-			'slug'    => '',
-			'id'      => '',
-			'field'   => 'price',
-			'default' => '',
+			'slug'        => '',
+			'id'          => '',
+			'field'       => 'price',
+			'default'     => '',
+			'no_decimals' => '',
 		],
 		$atts,
 		'product_details'
@@ -88,6 +91,11 @@ function lnc_product_details_shortcode( $atts ) {
 	if ( ! function_exists( 'wc_get_product' ) ) {
 		return esc_html( $atts['default'] );
 	}
+
+	// Price formatting args (drop decimals when requested).
+	$price_args = in_array( strtolower( $atts['no_decimals'] ), [ 'yes', 'true', '1' ], true )
+		? [ 'decimals' => 0 ]
+		: [];
 
 	// Resolve the product by ID or slug.
 	$product = null;
@@ -112,10 +120,10 @@ function lnc_product_details_shortcode( $atts ) {
 			return esc_html( $product->get_name() );
 
 		case 'regular_price':
-			return wp_kses_post( wc_price( $product->get_regular_price() ) );
+			return wp_kses_post( wc_price( $product->get_regular_price(), $price_args ) );
 
 		case 'sale_price':
-			return $product->get_sale_price() ? wp_kses_post( wc_price( $product->get_sale_price() ) ) : esc_html( $atts['default'] );
+			return $product->get_sale_price() ? wp_kses_post( wc_price( $product->get_sale_price(), $price_args ) ) : esc_html( $atts['default'] );
 
 		case 'discount':
 			if ( $regular > 0 && $sale > 0 && $sale < $regular ) {
@@ -125,7 +133,7 @@ function lnc_product_details_shortcode( $atts ) {
 
 		case 'discount_amount':
 			if ( $regular > 0 && $sale > 0 && $sale < $regular ) {
-				return wp_kses_post( wc_price( $regular - $sale ) );
+				return wp_kses_post( wc_price( $regular - $sale, $price_args ) );
 			}
 			return esc_html( $atts['default'] );
 
@@ -155,7 +163,7 @@ function lnc_product_details_shortcode( $atts ) {
 
 		case 'price':
 		default:
-			return wp_kses_post( wc_price( $product->get_price() ) );
+			return wp_kses_post( wc_price( $product->get_price(), $price_args ) );
 	}
 }
 
