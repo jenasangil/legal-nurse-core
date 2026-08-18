@@ -1,0 +1,71 @@
+/* Legal Nurse Core — Memorable Cases */
+
+.lnc-cases {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 24px;
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+}
+
+.lnc-case {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+.lnc-case__media {
+	flex: 0 0 auto;
+	display: block;
+	line-height: 0;
+}
+
+/* Round image (pulled from right_box_text). */
+.lnc-case__media img,
+.lnc-case__media-placeholder {
+	width: 120px;
+	height: 120px;
+	border-radius: 100%;
+	border: 4px solid #D4F3F0;
+	object-fit: cover;
+	display: block;
+}
+
+.lnc-case__media-placeholder {
+	background: #ecece9;
+}
+
+.lnc-case__body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.lnc-case__title {
+	margin: 0 0 4px;
+	font-size: 17px;
+	line-height: 1.3;
+}
+
+.lnc-case__title a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.lnc-case__title a:hover {
+	text-decoration: underline;
+}
+
+.lnc-case__byline {
+	font-size: 14px;
+	line-height: 1.4;
+	color: #4a4a4a;
+}
+
+.lnc-case__byline p {
+	margin: 0;
+}
+
+@media (max-width: 767px) {
+	.lnc-cases {
+		grid-template-columns: 1fr;
+	}
+}
