@@ -155,6 +155,39 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		// ==========================================
+		// CONTENT TAB: Navigation
+		// ==========================================
+		$this->start_controls_section(
+			'section_content_navigation',
+			[
+				'label' => esc_html__( 'Navigation Icons', 'legal-nurse-core' ),
+				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
+			]
+		);
+
+		$this->add_control(
+			'nav_prev_icon',
+			[
+				'label'       => esc_html__( 'Previous Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'skin'        => 'inline',
+				'label_block' => false,
+			]
+		);
+
+		$this->add_control(
+			'nav_next_icon',
+			[
+				'label'       => esc_html__( 'Next Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'skin'        => 'inline',
+				'label_block' => false,
+			]
+		);
+
+		$this->end_controls_section();
+
+		// ==========================================
 		// STYLE TAB: Filter Buttons
 		// ==========================================
 		$this->start_controls_section(
@@ -162,14 +195,6 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			[
 				'label' => esc_html__( 'Filter Buttons', 'legal-nurse-core' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
-			]
-		);
-
-		$this->add_group_control(
-			\Elementor\Group_Control_Typography::get_type(),
-			[
-				'name'     => 'filters_typography',
-				'selector' => '{{WRAPPER}} .filter-btn',
 			]
 		);
 
@@ -197,26 +222,26 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'filters_border_radius',
 			[
 				'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
 				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} .filter-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
 			]
 		);
 		
-		$this->add_control(
+		$this->add_responsive_control(
 			'filters_border_width',
 			[
 				'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
 				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px' ],
 				'selectors'  => [
-					'{{WRAPPER}} .filter-btn' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+					'{{WRAPPER}} .filter-btn' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; border-style: solid;',
 				],
 			]
 		);
@@ -227,6 +252,13 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_tab(
 			'tab_filters_normal',
 			[ 'label' => esc_html__( 'Normal', 'legal-nurse-core' ) ]
+		);
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name'     => 'filters_typography',
+				'selector' => '{{WRAPPER}} .filter-btn',
+			]
 		);
 		$this->add_control(
 			'filters_text_color',
@@ -252,12 +284,26 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 				'selectors' => [ '{{WRAPPER}} .filter-btn' => 'border-color: {{VALUE}};' ],
 			]
 		);
+		$this->add_group_control(
+			\Elementor\Group_Control_Box_Shadow::get_type(),
+			[
+				'name'     => 'filters_box_shadow',
+				'selector' => '{{WRAPPER}} .filter-btn',
+			]
+		);
 		$this->end_controls_tab();
 
 		// Hover
 		$this->start_controls_tab(
 			'tab_filters_hover',
 			[ 'label' => esc_html__( 'Hover', 'legal-nurse-core' ) ]
+		);
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name'     => 'filters_typography_hover',
+				'selector' => '{{WRAPPER}} .filter-btn:hover',
+			]
 		);
 		$this->add_control(
 			'filters_text_color_hover',
@@ -283,12 +329,26 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 				'selectors' => [ '{{WRAPPER}} .filter-btn:hover' => 'border-color: {{VALUE}};' ],
 			]
 		);
+		$this->add_group_control(
+			\Elementor\Group_Control_Box_Shadow::get_type(),
+			[
+				'name'     => 'filters_box_shadow_hover',
+				'selector' => '{{WRAPPER}} .filter-btn:hover',
+			]
+		);
 		$this->end_controls_tab();
 
 		// Active
 		$this->start_controls_tab(
 			'tab_filters_active',
 			[ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ]
+		);
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[
+				'name'     => 'filters_typography_active',
+				'selector' => '{{WRAPPER}} .filter-btn.active',
+			]
 		);
 		$this->add_control(
 			'filters_text_color_active',
@@ -312,6 +372,13 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 				'label'     => esc_html__( 'Border Color', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [ '{{WRAPPER}} .filter-btn.active' => 'border-color: {{VALUE}};' ],
+			]
+		);
+		$this->add_group_control(
+			\Elementor\Group_Control_Box_Shadow::get_type(),
+			[
+				'name'     => 'filters_box_shadow_active',
+				'selector' => '{{WRAPPER}} .filter-btn.active',
 			]
 		);
 		$this->end_controls_tab();
@@ -437,6 +504,20 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 				'selectors' => [ '{{WRAPPER}} .card-title' => 'color: {{VALUE}};' ],
 			]
 		);
+		$this->add_responsive_control(
+			'card_title_spacing',
+			[
+				'label'      => esc_html__( 'Bottom Spacing', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem' ],
+				'range'      => [
+					'px' => [ 'min' => 0, 'max' => 100 ],
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .card-title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
 
 		// Card Description
 		$this->add_control(
@@ -547,14 +628,25 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
-			'card_link_icon_color',
+			'card_link_icon_stroke_color',
 			[
-				'label'     => esc_html__( 'Icon Color', 'legal-nurse-core' ),
+				'label'     => esc_html__( 'Icon Stroke Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ 
+					'{{WRAPPER}} .card-link svg' => 'stroke: {{VALUE}};',
+					'{{WRAPPER}} .card-link svg path' => 'stroke: {{VALUE}};' 
+				],
+			]
+		);
+		$this->add_control(
+			'card_link_icon_fill_color',
+			[
+				'label'     => esc_html__( 'Icon Fill Color', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [ 
 					'{{WRAPPER}} .card-link i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .card-link svg' => 'fill: {{VALUE}}; stroke: {{VALUE}};',
-					'{{WRAPPER}} .card-link svg path' => 'fill: {{VALUE}}; stroke: {{VALUE}};' 
+					'{{WRAPPER}} .card-link svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .card-link svg path' => 'fill: {{VALUE}};' 
 				],
 			]
 		);
@@ -590,14 +682,25 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
-			'card_link_icon_color_hover',
+			'card_link_icon_stroke_color_hover',
 			[
-				'label'     => esc_html__( 'Icon Color', 'legal-nurse-core' ),
+				'label'     => esc_html__( 'Icon Stroke Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ 
+					'{{WRAPPER}} .resource-card:hover .card-link svg, {{WRAPPER}} .card-link:hover svg' => 'stroke: {{VALUE}};',
+					'{{WRAPPER}} .resource-card:hover .card-link svg path, {{WRAPPER}} .card-link:hover svg path' => 'stroke: {{VALUE}};' 
+				],
+			]
+		);
+		$this->add_control(
+			'card_link_icon_fill_color_hover',
+			[
+				'label'     => esc_html__( 'Icon Fill Color', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [ 
 					'{{WRAPPER}} .resource-card:hover .card-link i, {{WRAPPER}} .card-link:hover i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .resource-card:hover .card-link svg, {{WRAPPER}} .card-link:hover svg' => 'fill: {{VALUE}}; stroke: {{VALUE}};',
-					'{{WRAPPER}} .resource-card:hover .card-link svg path, {{WRAPPER}} .card-link:hover svg path' => 'fill: {{VALUE}}; stroke: {{VALUE}};' 
+					'{{WRAPPER}} .resource-card:hover .card-link svg, {{WRAPPER}} .card-link:hover svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .resource-card:hover .card-link svg path, {{WRAPPER}} .card-link:hover svg path' => 'fill: {{VALUE}};' 
 				],
 			]
 		);
@@ -701,9 +804,75 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'heading_nav_arrows',
 			[
-				'label'     => esc_html__( 'Arrows', 'legal-nurse-core' ),
+				'label'     => esc_html__( 'Buttons & Arrows', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::HEADING,
 				'separator' => 'before',
+			]
+		);
+
+		$this->add_responsive_control(
+			'nav_buttons_gap',
+			[
+				'label'      => esc_html__( 'Buttons Gap', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem' ],
+				'range'      => [
+					'px' => [ 'min' => 0, 'max' => 100 ],
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .nav-buttons' => 'gap: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'nav_btn_size',
+			[
+				'label'      => esc_html__( 'Button Size', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem' ],
+				'range'      => [
+					'px' => [ 'min' => 20, 'max' => 150 ],
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .nav-btn' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'nav_btn_padding',
+			[
+				'label'      => esc_html__( 'Padding', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', '%' ],
+				'selectors'  => [
+					'{{WRAPPER}} .nav-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'nav_btn_border_radius',
+			[
+				'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+				'selectors'  => [
+					'{{WRAPPER}} .nav-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'nav_btn_border_width',
+			[
+				'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px' ],
+				'selectors'  => [
+					'{{WRAPPER}} .nav-btn' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}}; border-style: solid;',
+				],
 			]
 		);
 
@@ -723,12 +892,33 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
-			'nav_icon_color',
+			'nav_border_color',
 			[
-				'label'     => esc_html__( 'Icon Color', 'legal-nurse-core' ),
+				'label'     => esc_html__( 'Border Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .nav-btn' => 'border-color: {{VALUE}};' ],
+			]
+		);
+		$this->add_control(
+			'nav_icon_stroke_color',
+			[
+				'label'     => esc_html__( 'Icon Stroke Color', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [ 
+					'{{WRAPPER}} .nav-btn svg' => 'stroke: {{VALUE}};',
 					'{{WRAPPER}} .nav-btn svg path' => 'stroke: {{VALUE}};' 
+				],
+			]
+		);
+		$this->add_control(
+			'nav_icon_fill_color',
+			[
+				'label'     => esc_html__( 'Icon Fill Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ 
+					'{{WRAPPER}} .nav-btn i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .nav-btn svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .nav-btn svg path' => 'fill: {{VALUE}};' 
 				],
 			]
 		);
@@ -748,12 +938,33 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
-			'nav_icon_color_hover',
+			'nav_border_color_hover',
 			[
-				'label'     => esc_html__( 'Icon Color', 'legal-nurse-core' ),
+				'label'     => esc_html__( 'Border Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .nav-btn:hover' => 'border-color: {{VALUE}};' ],
+			]
+		);
+		$this->add_control(
+			'nav_icon_stroke_color_hover',
+			[
+				'label'     => esc_html__( 'Icon Stroke Color', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [ 
+					'{{WRAPPER}} .nav-btn:hover svg' => 'stroke: {{VALUE}};',
 					'{{WRAPPER}} .nav-btn:hover svg path' => 'stroke: {{VALUE}};' 
+				],
+			]
+		);
+		$this->add_control(
+			'nav_icon_fill_color_hover',
+			[
+				'label'     => esc_html__( 'Icon Fill Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ 
+					'{{WRAPPER}} .nav-btn:hover i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .nav-btn:hover svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .nav-btn:hover svg path' => 'fill: {{VALUE}};' 
 				],
 			]
 		);
@@ -773,18 +984,73 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
-			'nav_icon_color_disabled',
+			'nav_border_color_disabled',
 			[
-				'label'     => esc_html__( 'Icon Color', 'legal-nurse-core' ),
+				'label'     => esc_html__( 'Border Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .nav-btn.swiper-button-disabled' => 'border-color: {{VALUE}};' ],
+			]
+		);
+		$this->add_control(
+			'nav_icon_stroke_color_disabled',
+			[
+				'label'     => esc_html__( 'Icon Stroke Color', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [ 
+					'{{WRAPPER}} .nav-btn.swiper-button-disabled svg' => 'stroke: {{VALUE}};',
 					'{{WRAPPER}} .nav-btn.swiper-button-disabled svg path' => 'stroke: {{VALUE}};' 
+				],
+			]
+		);
+		$this->add_control(
+			'nav_icon_fill_color_disabled',
+			[
+				'label'     => esc_html__( 'Icon Fill Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ 
+					'{{WRAPPER}} .nav-btn.swiper-button-disabled i' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .nav-btn.swiper-button-disabled svg' => 'fill: {{VALUE}};',
+					'{{WRAPPER}} .nav-btn.swiper-button-disabled svg path' => 'fill: {{VALUE}};' 
+				],
+			]
+		);
+		$this->add_control(
+			'nav_opacity_disabled',
+			[
+				'label'     => esc_html__( 'Opacity', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::SLIDER,
+				'range'     => [
+					'px' => [
+						'min'  => 0,
+						'max'  => 1,
+						'step' => 0.05,
+					],
+				],
+				'selectors' => [
+					'{{WRAPPER}} .nav-btn.swiper-button-disabled' => 'opacity: {{SIZE}};',
 				],
 			]
 		);
 		$this->end_controls_tab();
 
 		$this->end_controls_tabs();
+
+		$this->add_responsive_control(
+			'nav_icon_size',
+			[
+				'label'      => esc_html__( 'Icon Size', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem' ],
+				'range'      => [
+					'px' => [ 'min' => 6, 'max' => 50 ],
+				],
+				'selectors'  => [
+					'{{WRAPPER}} .nav-btn i'   => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .nav-btn svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+				],
+				'separator'  => 'before',
+			]
+		);
 
 		$this->end_controls_section();
 	}
@@ -846,6 +1112,20 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			$icon_html = ob_get_clean();
 		}
 		$icon_pos = $settings['link_icon_position'] ?? 'right';
+
+		$nav_prev_icon_html = '';
+		if ( ! empty( $settings['nav_prev_icon']['value'] ) ) {
+			ob_start();
+			\Elementor\Icons_Manager::render_icon( $settings['nav_prev_icon'], [ 'aria-hidden' => 'true' ] );
+			$nav_prev_icon_html = ob_get_clean();
+		}
+
+		$nav_next_icon_html = '';
+		if ( ! empty( $settings['nav_next_icon']['value'] ) ) {
+			ob_start();
+			\Elementor\Icons_Manager::render_icon( $settings['nav_next_icon'], [ 'aria-hidden' => 'true' ] );
+			$nav_next_icon_html = ob_get_clean();
+		}
 		?>
 		<div class="clnc-carousel-wrap" data-resources="<?php echo $resources_json; ?>" data-icon-pos="<?php echo esc_attr( $icon_pos ); ?>">
 			<template class="clnc-icon-template"><?php echo $icon_html; ?></template>
@@ -865,14 +1145,22 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 					<span class="resource-count"></span>
 					<div class="nav-buttons">
 						<button class="nav-btn btn-prev" aria-label="Previous">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<path d="M11.0606 4L3 12L11.0606 20M3 12L22 12" stroke="#B0B5BA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-							</svg>
+							<?php if ( ! empty( $nav_prev_icon_html ) ) : ?>
+								<?php echo $nav_prev_icon_html; ?>
+							<?php else : ?>
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M11.0606 4L3 12L11.0606 20M3 12L22 12" stroke="#B0B5BA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							<?php endif; ?>
 						</button>
 						<button class="nav-btn btn-next" aria-label="Next">
-							<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
-								<path d="M11.9394 1L20 9L11.9394 17M20 9L1 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-							</svg>
+							<?php if ( ! empty( $nav_next_icon_html ) ) : ?>
+								<?php echo $nav_next_icon_html; ?>
+							<?php else : ?>
+								<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
+									<path d="M11.9394 1L20 9L11.9394 17M20 9L1 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							<?php endif; ?>
 						</button>
 					</div>
 				</div>
@@ -884,15 +1172,23 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 				<div class="nav-row-mobile">
 					<div class="nav-buttons">
 						<button class="nav-btn btn-prev" aria-label="Previous">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<path d="M11.0606 4L3 12L11.0606 20M3 12L22 12" stroke="#B0B5BA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-							</svg>
+							<?php if ( ! empty( $nav_prev_icon_html ) ) : ?>
+								<?php echo $nav_prev_icon_html; ?>
+							<?php else : ?>
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<path d="M11.0606 4L3 12L11.0606 20M3 12L22 12" stroke="#B0B5BA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							<?php endif; ?>
 						</button>
 						<div class="swiper-pagination"></div>
 						<button class="nav-btn btn-next" aria-label="Next">
-							<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
-								<path d="M11.9394 1L20 9L11.9394 17M20 9L1 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-							</svg>
+							<?php if ( ! empty( $nav_next_icon_html ) ) : ?>
+								<?php echo $nav_next_icon_html; ?>
+							<?php else : ?>
+								<svg xmlns="http://www.w3.org/2000/svg" width="21" height="18" viewBox="0 0 21 18" fill="none">
+									<path d="M11.9394 1L20 9L11.9394 17M20 9L1 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							<?php endif; ?>
 						</button>
 					</div>
 				</div>
