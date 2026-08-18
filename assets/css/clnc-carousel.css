@@ -16,7 +16,7 @@
 }
 
 .clnc-carousel-wrap .section-wrapper {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     overflow-x: hidden;
 }
@@ -26,14 +26,15 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .clnc-carousel-wrap .filter-label {
-    font-size: 18px;
-    line-height: 1.37833;
-    font-weight: 700;
-    color: #212529;
+    font-family: "Wix Madefor Text", sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    font-weight: 500;
+    color: #2A2926;
     margin-right: 4px;
 }
 
@@ -46,24 +47,25 @@
     font-size: 18px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
-    min-width: 100px;
-    height: 50px;
+    transition: all 0.2s ease-in-out;
     outline: none !important;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+    box-sizing: border-box;
 }
 
 .clnc-carousel-wrap .filter-btn:hover {
     background: #FFF6FD;
-    border-width: 3px;
+    color: #D4117F;
+    border-color: #D4117F;
 }
 
 .clnc-carousel-wrap .filter-btn.active {
     background: #D4117F;
     color: #fff;
+    border-color: #D4117F;
     font-weight: 700;
 }
 
@@ -75,9 +77,9 @@
 }
 
 .clnc-carousel-wrap .resource-count {
-    font-size: 18px;
-    color: #212529;
-    line-height: 0.7222222222;
+    font-size: 1rem;
+    color: #2A2926;
+    line-height: 1.5;
 }
 
 .clnc-carousel-wrap .nav-buttons {
@@ -98,8 +100,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #555;
-    border: none;
+    color: #FFF;
+    border: 0 solid transparent;
+    box-sizing: border-box;
     outline: none !important;
     user-select: none;
     -moz-user-select: none;
@@ -115,6 +118,13 @@
 .clnc-carousel-wrap .nav-btn.swiper-button-disabled {
     background: #E4E6E7;
     pointer-events: none;
+    color: #B0B5BA;
+}
+
+.clnc-carousel-wrap .nav-btn i {
+    font-size: 20px;
+    color: inherit;
+    line-height: 1;
 }
 
 .clnc-carousel-wrap .nav-btn svg {
@@ -124,6 +134,7 @@
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
+    display: block;
 }
 
 .clnc-carousel-wrap .nav-btn svg path {
@@ -200,7 +211,6 @@
     font-size: 22px;
     font-weight: 700;
     color: #434343;
-    margin-bottom: 5px;
     line-height: 1.45455;
     letter-spacing: -0.1px;
 }
@@ -219,7 +229,6 @@
     font-size: 18px;
     font-weight: 500;
     color: #6F0157;
-    text-decoration: none !important;
     margin-top: auto;
     padding-top: 12px;
     transition: all 0.2s;
@@ -232,6 +241,13 @@
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
+    transition: all 0.2s;
+}
+
+.clnc-carousel-wrap .card-link i {
+    font-size: 18px;
+    color: inherit;
+    line-height: 1;
     transition: all 0.2s;
 }
 
@@ -373,11 +389,14 @@
 
     .clnc-carousel-wrap .filter-bar {
         margin-bottom: 24px;
+        flex-direction: column;
+        align-items: stretch;
+        row-gap: 8px;
     }
 
-    .clnc-carousel-wrap .filter-btn {
-        padding: 10px 22px;
-        min-width: 86px;
+    .clnc-carousel-wrap .filter-label {
+        font-size: 1.125rem;
+        line-height: 1.33333;
     }
 
     .clnc-carousel-wrap .count-nav-row {
