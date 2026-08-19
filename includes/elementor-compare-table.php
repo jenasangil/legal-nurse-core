@@ -151,6 +151,15 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'lock_icon',
+			[
+				'label'       => esc_html__( 'Lock Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'description' => esc_html__( 'Leave empty to use the default lock. Or choose an icon / upload an SVG. Type "lock" in a cell to use it.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
 			'sticky_header',
 			[
 				'label'        => esc_html__( 'Sticky Header', 'legal-nurse-core' ),
@@ -240,6 +249,27 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
 			'name' => 'header_typography', 'label' => esc_html__( 'Plan Header', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-ct__plan',
 		] );
+		$this->add_responsive_control( 'plan_padding', [
+			'label'      => esc_html__( 'Plan Header Padding', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+			'size_units' => [ 'px', 'em' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-ct__plan' => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+		] );
+		$this->add_responsive_control( 'plan_align', [
+			'label'     => esc_html__( 'Plan Header Alignment', 'legal-nurse-core' ),
+			'type'      => \Elementor\Controls_Manager::CHOOSE,
+			'options'   => [
+				'flex-start' => [ 'title' => esc_html__( 'Left', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-left' ],
+				'center'     => [ 'title' => esc_html__( 'Center', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-center' ],
+				'flex-end'   => [ 'title' => esc_html__( 'Right', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-right' ],
+			],
+			'selectors' => [ '{{WRAPPER}} .lnc-ct__plan' => 'justify-content:{{VALUE}};text-align:{{VALUE}};' ],
+		] );
+		$this->add_control( 'plan_border_color', [
+			'label'     => esc_html__( 'Plan Header Border', 'legal-nurse-core' ),
+			'type'      => \Elementor\Controls_Manager::COLOR,
+			'selectors' => [ '{{WRAPPER}} .lnc-ct__plan + .lnc-ct__plan' => 'border-left-color:{{VALUE}};' ],
+		] );
 		$this->add_control( 'icon_size', [
 			'label'      => esc_html__( 'Check Icon Size', 'legal-nurse-core' ),
 			'type'       => \Elementor\Controls_Manager::SLIDER,
@@ -280,8 +310,16 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			$check_html = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>';
 		}
 
-		// Lock icon (uses currentColor so it follows the cell's check color).
-		$lock_html = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.494 18c-.413 0-.765-.147-1.057-.441A1.44 1.44 0 0 1 4 16.5v-8c0-.413.147-.766.441-1.059A1.44 1.44 0 0 1 5.5 7H6V5c0-1.107.39-2.05 1.171-2.83A3.86 3.86 0 0 1 10.005 1c1.108 0 2.05.39 2.828 1.17C13.611 2.95 14 3.893 14 5v2h.5c.413 0 .766.147 1.059.441.294.293.441.646.441 1.059v8c0 .413-.147.766-.441 1.059A1.44 1.44 0 0 1 14.499 18H5.494ZM5.5 16.5h9v-8h-9v8Zm2-9.5h5V5c0-.694-.243-1.285-.729-1.771A2.41 2.41 0 0 0 10 2.5a2.41 2.41 0 0 0-1.771.729A2.41 2.41 0 0 0 7.5 5v2Z"/></svg>';
+		// Lock icon: use the chosen icon, else a default inline SVG.
+		$lock = $settings['lock_icon'] ?? [];
+		if ( ! empty( $lock['value'] ) ) {
+			ob_start();
+			\Elementor\Icons_Manager::render_icon( $lock, [ 'aria-hidden' => 'true' ] );
+			$lock_html = ob_get_clean();
+		} else {
+			// Uses currentColor so it follows the cell's check color.
+			$lock_html = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.494 18c-.413 0-.765-.147-1.057-.441A1.44 1.44 0 0 1 4 16.5v-8c0-.413.147-.766.441-1.059A1.44 1.44 0 0 1 5.5 7H6V5c0-1.107.39-2.05 1.171-2.83A3.86 3.86 0 0 1 10.005 1c1.108 0 2.05.39 2.828 1.17C13.611 2.95 14 3.893 14 5v2h.5c.413 0 .766.147 1.059.441.294.293.441.646.441 1.059v8c0 .413-.147.766-.441 1.059A1.44 1.44 0 0 1 14.499 18H5.494ZM5.5 16.5h9v-8h-9v8Zm2-9.5h5V5c0-.694-.243-1.285-.729-1.771A2.41 2.41 0 0 0 10 2.5a2.41 2.41 0 0 0-1.771.729A2.41 2.41 0 0 0 7.5 5v2Z"/></svg>';
+		}
 
 		$allowed = [ 'em' => [], 'strong' => [], 'span' => [ 'class' => [] ], 'sup' => [], 'sub' => [], 'br' => [] ];
 
