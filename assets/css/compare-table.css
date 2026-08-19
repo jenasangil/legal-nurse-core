@@ -1,25 +1,12 @@
 /* Legal Nurse Core — Comparison Table (styled to Figma: Legal Nurse 2026) */
 
-/* Horizontal scroll wrapper (keeps columns full-width and scrolls sideways).
-   The frame (border + rounded corners) lives here so the corners stay within
-   the visible viewport while the table scrolls inside it. */
-.lnc-ct-scroll {
-	width: 100%;
-	max-width: 100%;
-	overflow-x: scroll;
-	-webkit-overflow-scrolling: touch;
-	border: 1px solid #e6e2d8;
-	border-radius: 12px;
-}
-
 .lnc-ct {
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 	color: #2a2926;
 	background: #ffffff;
-	/* Size to the columns' content and fill the wrapper on wide screens, so
-	   the box is genuinely wider than the viewport and the wrapper scrolls. */
-	width: max-content;
-	min-width: 100%;
+	border: 1px solid #e6e2d8;
+	border-radius: 12px;
+	overflow: hidden;
 }
 
 .lnc-ct__row {
@@ -126,30 +113,36 @@
 	background: #ffffff;
 }
 
-/* Mobile: keep readable column widths and scroll horizontally instead of
-   squishing everything to fit the viewport. */
+/* Mobile: compress to fit the viewport like the Figma mobile frame. */
 @media (max-width: 767px) {
 	.lnc-ct__feat {
-		padding: 14px 16px;
-		font-size: 14px;
+		padding: 10px 12px;
+		font-size: 11px;
+		line-height: 1.3;
 	}
 
 	.lnc-ct__firstlabel {
-		font-size: 11px;
+		font-size: 9px;
+		letter-spacing: 1px;
 	}
 
 	.lnc-ct__plan {
-		padding: 14px 10px;
-		font-size: 16px;
+		padding: 10px 6px;
+		font-size: 12px;
 	}
 
 	.lnc-ct__band {
-		padding: 12px 16px;
-		font-size: 15px;
+		padding: 8px 12px;
+		font-size: 12px;
 	}
 
 	.lnc-ct__cell {
-		padding: 14px 10px;
-		font-size: 14px;
+		padding: 10px 6px;
+		font-size: 10px;
+	}
+
+	.lnc-ct__check svg {
+		width: 13px;
+		height: 13px;
 	}
 }
