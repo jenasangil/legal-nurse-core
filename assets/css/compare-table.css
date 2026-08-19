@@ -25,7 +25,6 @@
 
 /* Feature (first) column */
 .lnc-ct__feat {
-	width: 195px;
 	padding: 18px 22px;
 	display: flex;
 	align-items: center;
@@ -125,7 +124,9 @@
 		min-width: 640px;
 	}
 
-	.lnc-ct__head {
-		width: 195px;
+	/* Fix the first column and give plan columns a floor so the table
+	   overflows and scrolls sideways. */
+	.lnc-ct__row {
+		grid-template-columns: var(--lnc-ct-cols-m, 195px repeat(3, minmax(120px, 1fr)));
 	}
 }

@@ -304,6 +304,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 
 		$plan_count = count( $plans );
 		$grid_cols  = '2.4fr repeat(' . (int) $plan_count . ', 1fr)';
+		// Mobile: fixed 195px first column + a floor per plan column so the
+		// table overflows its wrapper and scrolls sideways.
+		$grid_cols_m = '195px repeat(' . (int) $plan_count . ', minmax(120px, 1fr))';
 
 		// Prebuild the check icon HTML. Default to an inline SVG so it renders
 		// even when Font Awesome is not enqueued on the page.
@@ -333,7 +336,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		$sticky_top    = isset( $settings['sticky_offset']['size'] ) ? (int) $settings['sticky_offset']['size'] : 120;
 		$sticky_top_mb = isset( $settings['sticky_offset_mobile']['size'] ) ? (int) $settings['sticky_offset_mobile']['size'] : 80;
 		$root_class    = 'lnc-ct' . ( $sticky ? ' lnc-ct--sticky' : '' );
-		$root_style    = '--lnc-ct-cols:' . $grid_cols . ';';
+		$root_style    = '--lnc-ct-cols:' . $grid_cols . ';--lnc-ct-cols-m:' . $grid_cols_m . ';';
 
 		$sticky_attrs = $sticky
 			? ' data-sticky-top="' . esc_attr( $sticky_top ) . '" data-sticky-top-mobile="' . esc_attr( $sticky_top_mb ) . '"'
