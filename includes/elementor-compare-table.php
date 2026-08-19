@@ -223,7 +223,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			'default'   => '#e6e2d8',
 			'selectors' => [
 				'{{WRAPPER}} .lnc-ct__row + .lnc-ct__row' => 'border-top-color:{{VALUE}};',
-				'{{WRAPPER}} .lnc-ct'                     => 'border-color:{{VALUE}};',
+				'{{WRAPPER}} .lnc-ct-scroll'              => 'border-color:{{VALUE}};',
 				'{{WRAPPER}} .lnc-ct__plan'               => 'border-left-color:{{VALUE}};',
 				'{{WRAPPER}} .lnc-ct__cell'               => 'border-left-color:{{VALUE}};',
 			],
@@ -234,7 +234,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			'size_units' => [ 'px' ],
 			'range'      => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
 			'default'    => [ 'size' => 14, 'unit' => 'px' ],
-			'selectors'  => [ '{{WRAPPER}} .lnc-ct' => 'border-radius:{{SIZE}}{{UNIT}};' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-ct-scroll' => 'border-radius:{{SIZE}}{{UNIT}};' ],
 		] );
 		$this->add_responsive_control( 'cell_padding', [
 			'label'      => esc_html__( 'Cell Padding', 'legal-nurse-core' ),

@@ -1,18 +1,21 @@
 /* Legal Nurse Core — Comparison Table (styled to Figma: Legal Nurse 2026) */
 
-/* Horizontal scroll wrapper (keeps columns full-width on small screens). */
+/* Horizontal scroll wrapper (keeps columns full-width and scrolls sideways).
+   The frame (border + rounded corners) lives here so the corners stay within
+   the visible viewport while the table scrolls inside it. */
 .lnc-ct-scroll {
+	width: 100%;
+	max-width: 100%;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
+	border: 1px solid #e6e2d8;
+	border-radius: 12px;
 }
 
 .lnc-ct {
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 	color: #2a2926;
 	background: #ffffff;
-	border: 1px solid #e6e2d8;
-	border-radius: 12px;
-	overflow: hidden;
 }
 
 .lnc-ct__row {
