@@ -89,6 +89,17 @@
 	stroke: currentColor;
 }
 
+/* Lock is a filled icon — undo the check's stroke styling. */
+.lnc-ct__lock svg {
+	stroke: unset;
+	fill: currentColor;
+}
+
+.lnc-ct__lock svg path {
+	stroke: unset;
+	fill: currentColor;
+}
+
 /* Sticky plan header — fixed clone injected by JS. */
 .lnc-ct--stickyclone {
 	border-radius: 0;

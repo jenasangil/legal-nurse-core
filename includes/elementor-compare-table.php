@@ -270,6 +270,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			'type'      => \Elementor\Controls_Manager::COLOR,
 			'selectors' => [ '{{WRAPPER}} .lnc-ct__plan + .lnc-ct__plan' => 'border-left-color:{{VALUE}};' ],
 		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name' => 'value_typography', 'label' => esc_html__( 'Cell Value Text', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-ct__value',
+		] );
 		$this->add_control( 'icon_size', [
 			'label'      => esc_html__( 'Check Icon Size', 'legal-nurse-core' ),
 			'type'       => \Elementor\Controls_Manager::SLIDER,
