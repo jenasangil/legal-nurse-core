@@ -127,7 +127,7 @@
 /* Mobile: keep readable columns and scroll horizontally. */
 @media (max-width: 767px) {
 	.lnc-ct {
-		min-width: 660px;
+		min-width: 670px;
 		margin-right: 16px;
 	}
 
