@@ -303,7 +303,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		}
 
 		$plan_count = count( $plans );
-		$grid_cols  = '2.4fr repeat(' . (int) $plan_count . ', 1fr)';
+		// minmax keeps a readable minimum per column so the table overflows (and
+		// the wrapper scrolls) on narrow screens instead of squishing.
+		$grid_cols = 'minmax(180px, 2.4fr) repeat(' . (int) $plan_count . ', minmax(120px, 1fr))';
 
 		// Prebuild the check icon HTML. Default to an inline SVG so it renders
 		// even when Font Awesome is not enqueued on the page.
