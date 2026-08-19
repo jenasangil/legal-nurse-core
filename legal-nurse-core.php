@@ -118,8 +118,10 @@ function lnc_register_acf_content_assets() {
 add_action( 'wp_enqueue_scripts', 'lnc_register_compare_table_assets' );
 add_action( 'elementor/preview/enqueue_styles', 'lnc_register_compare_table_assets' );
 function lnc_register_compare_table_assets() {
-	wp_register_style( 'lnc-compare-table', LNC_PLUGIN_URL . 'assets/css/compare-table.css', [], LNC_VERSION );
-	wp_register_script( 'lnc-compare-table', LNC_PLUGIN_URL . 'assets/js/compare-table.js', [], LNC_VERSION, true );
+	$css = LNC_PLUGIN_DIR . 'assets/css/compare-table.css';
+	$js  = LNC_PLUGIN_DIR . 'assets/js/compare-table.js';
+	wp_register_style( 'lnc-compare-table', LNC_PLUGIN_URL . 'assets/css/compare-table.css', [], file_exists( $css ) ? filemtime( $css ) : LNC_VERSION );
+	wp_register_script( 'lnc-compare-table', LNC_PLUGIN_URL . 'assets/js/compare-table.js', [], file_exists( $js ) ? filemtime( $js ) : LNC_VERSION, true );
 }
 
 // Load the default plugin font (Wix Madefor Display).
