@@ -16,6 +16,10 @@
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 	color: #2a2926;
 	background: #ffffff;
+	/* Size to the columns' content and fill the wrapper on wide screens, so
+	   the box is genuinely wider than the viewport and the wrapper scrolls. */
+	width: max-content;
+	min-width: 100%;
 }
 
 .lnc-ct__row {
@@ -125,10 +129,6 @@
 /* Mobile: keep readable column widths and scroll horizontally instead of
    squishing everything to fit the viewport. */
 @media (max-width: 767px) {
-	.lnc-ct-scroll {
-		min-width: 400px;
-	}
-
 	.lnc-ct__feat {
 		padding: 14px 16px;
 		font-size: 14px;
