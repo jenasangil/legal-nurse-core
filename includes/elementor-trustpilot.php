@@ -109,20 +109,37 @@ class LNC_Trustpilot_Widget extends \Elementor\Widget_Base {
 					'center' => [ 'title' => esc_html__( 'Center', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-center' ],
 					'right'  => [ 'title' => esc_html__( 'Right', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-right' ],
 				],
-				'default'   => 'left',
-				'selectors' => [ '{{WRAPPER}} .trustpilot-widget' => 'text-align:{{VALUE}};' ],
+				'default'         => 'left',
+				'selectors_dictionary' => [
+					'left'   => 'margin-right:auto;margin-left:0;',
+					'center' => 'margin-left:auto;margin-right:auto;',
+					'right'  => 'margin-left:auto;margin-right:0;',
+				],
+				'selectors' => [ '{{WRAPPER}} .trustpilot-widget' => '{{VALUE}}' ],
 			]
 		);
 
 		$this->add_responsive_control(
 			'height',
 			[
-				'label'      => esc_html__( 'Height', 'legal-nurse-core' ),
+				'label'       => esc_html__( 'Height', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SLIDER,
+				'size_units'  => [ 'px' ],
+				'range'       => [ 'px' => [ 'min' => 20, 'max' => 800 ] ],
+				'default'     => [ 'size' => 52, 'unit' => 'px' ],
+				'description' => esc_html__( 'Match the chosen TrustBox template height (Micro ~24px, compact ~52px, Mini ~150px).', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_responsive_control(
+			'max_width',
+			[
+				'label'      => esc_html__( 'Max Width', 'legal-nurse-core' ),
 				'type'       => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [ 'px' => [ 'min' => 20, 'max' => 800 ] ],
-				'default'    => [ 'size' => 140, 'unit' => 'px' ],
-				'description' => esc_html__( 'Set to match the chosen TrustBox template height.', 'legal-nurse-core' ),
+				'size_units' => [ 'px', '%' ],
+				'range'      => [ 'px' => [ 'min' => 100, 'max' => 1200 ], '%' => [ 'min' => 10, 'max' => 100 ] ],
+				'default'    => [ 'size' => 240, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .trustpilot-widget' => 'max-width:{{SIZE}}{{UNIT}};' ],
 			]
 		);
 
