@@ -124,4 +124,8 @@
 	.lnc-ct {
 		min-width: 640px;
 	}
+
+	.lnc-ct__head {
+		width: 195px;
+	}
 }
