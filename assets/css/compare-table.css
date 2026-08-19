@@ -123,35 +123,4 @@
 	.lnc-ct {
 		min-width: 640px;
 	}
-
-	.lnc-ct__feat {
-		padding: 10px 12px;
-		font-size: 11px;
-		line-height: 1.3;
-	}
-
-	.lnc-ct__firstlabel {
-		font-size: 9px;
-		letter-spacing: 1px;
-	}
-
-	.lnc-ct__plan {
-		padding: 10px 6px;
-		font-size: 12px;
-	}
-
-	.lnc-ct__band {
-		padding: 8px 12px;
-		font-size: 12px;
-	}
-
-	.lnc-ct__cell {
-		padding: 10px 6px;
-		font-size: 10px;
-	}
-
-	.lnc-ct__check svg {
-		width: 13px;
-		height: 13px;
-	}
 }
