@@ -72,7 +72,32 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-pages-by-category.php';
 	$widgets_manager->register( new LNC_Pages_By_Category_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-trustpilot.php';
+	$widgets_manager->register( new LNC_Trustpilot_Widget() );
 } );
+
+// Register the Trustpilot bootstrap script (hydrates .trustpilot-widget).
+add_action( 'wp_enqueue_scripts', 'lnc_register_trustpilot_assets' );
+add_action( 'elementor/preview/enqueue_scripts', 'lnc_register_trustpilot_assets' );
+function lnc_register_trustpilot_assets() {
+	wp_register_script(
+		'trustpilot-bootstrap',
+		'https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js',
+		[],
+		null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+		true
+	);
+}
+
+// Load the Trustpilot bootstrap script asynchronously.
+add_filter( 'script_loader_tag', 'lnc_trustpilot_async_script', 10, 2 );
+function lnc_trustpilot_async_script( $tag, $handle ) {
+	if ( 'trustpilot-bootstrap' === $handle && false === strpos( $tag, ' async' ) ) {
+		$tag = str_replace( ' src=', ' async src=', $tag );
+	}
+	return $tag;
+}
 
 // Register Pages by Category assets.
 add_action( 'wp_enqueue_scripts', 'lnc_register_pages_by_category_assets' );
