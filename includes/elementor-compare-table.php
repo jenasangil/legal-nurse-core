@@ -54,6 +54,11 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 		return in_array( strtolower( trim( $value ) ), [ 'check', 'yes', 'true', '1', 'x', '✓' ], true );
 	}
 
+	/** Values that render as a lock icon. */
+	private static function is_lock( $value ) {
+		return in_array( strtolower( trim( $value ) ), [ 'lock', 'locked', 'padlock' ], true );
+	}
+
 	protected function register_controls() {
 
 		// ---------------------------------------------------------------
@@ -66,12 +71,11 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			[
 				'label'   => esc_html__( 'First Column Label', 'legal-nurse-core' ),
 				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => esc_html__( 'Included', 'legal-nurse-core' ),
 			]
 		);
 
 		$plan = new \Elementor\Repeater();
-		$plan->add_control( 'name', [ 'label' => esc_html__( 'Plan Name', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::TEXT, 'default' => esc_html__( 'Plan', 'legal-nurse-core' ) ] );
+		$plan->add_control( 'name', [ 'label' => esc_html__( 'Plan Name', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::TEXT ] );
 		$plan->add_control( 'header_bg', [ 'label' => esc_html__( 'Header Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#F4EFE1' ] );
 		$plan->add_control( 'header_color', [ 'label' => esc_html__( 'Header Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#2a2926' ] );
 		$plan->add_control( 'column_bg', [ 'label' => esc_html__( 'Column Tint', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#FBF8F1' ] );
@@ -85,11 +89,6 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 				'type'        => \Elementor\Controls_Manager::REPEATER,
 				'fields'      => $plan->get_controls(),
 				'title_field' => '{{{ name }}}',
-				'default'     => [
-					[ 'name' => 'Basic', 'header_bg' => '#F4EFE1', 'header_color' => '#2a2926', 'column_bg' => '#FBF8F1', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
-					[ 'name' => 'Executive', 'header_bg' => '#A9E4D6', 'header_color' => '#2a2926', 'column_bg' => '#E3F5F0', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
-					[ 'name' => 'VIP', 'header_bg' => '#6E64C6', 'header_color' => '#FFFFFF', 'column_bg' => '#CBC7E9', 'check_color' => '#25797c', 'cell_text_color' => '#2a2926' ],
-				],
 			]
 		);
 
@@ -119,7 +118,6 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 				'label'       => esc_html__( 'Label', 'legal-nurse-core' ),
 				'type'        => \Elementor\Controls_Manager::TEXTAREA,
 				'rows'        => 2,
-				'default'     => esc_html__( 'Feature name', 'legal-nurse-core' ),
 				'description' => esc_html__( 'Category title (band) or feature name. Basic HTML like <em> is allowed.', 'legal-nurse-core' ),
 			]
 		);
@@ -128,8 +126,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			[
 				'label'       => esc_html__( 'Cells', 'legal-nurse-core' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
-				'default'     => 'check|check|check',
-				'description' => esc_html__( 'One value per plan, separated by "|". Use check for a tick, leave empty for blank, or type text (e.g. Once a month).', 'legal-nurse-core' ),
+				'description' => esc_html__( 'One value per plan, separated by "|". Use check for a tick, lock for a lock icon, leave empty for blank, or type text (e.g. Once a month).', 'legal-nurse-core' ),
 				'condition'   => [ 'row_type' => 'feature' ],
 			]
 		);
@@ -141,15 +138,6 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 				'type'        => \Elementor\Controls_Manager::REPEATER,
 				'fields'      => $row->get_controls(),
 				'title_field' => '{{{ label }}}',
-				'default'     => [
-					[ 'row_type' => 'band', 'label' => 'Certification Resources' ],
-					[ 'row_type' => 'feature', 'label' => 'CLNC® Certification Program (Online Video)', 'cells' => 'check|check|check' ],
-					[ 'row_type' => 'feature', 'label' => 'CLNC® Certification Exam', 'cells' => 'check|check|check' ],
-					[ 'row_type' => 'band', 'label' => 'Mentoring' ],
-					[ 'row_type' => 'feature', 'label' => 'Free Mentoring from CLNC® Mentors', 'cells' => 'Once a month|Twice a month|Priority, unlimited' ],
-					[ 'row_type' => 'band', 'label' => 'Next-Level Resources' ],
-					[ 'row_type' => 'feature', 'label' => '79 Medical-Related Case Reports', 'cells' => '||check' ],
-				],
 			]
 		);
 
@@ -292,6 +280,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			$check_html = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>';
 		}
 
+		// Lock icon (uses currentColor so it follows the cell's check color).
+		$lock_html = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M5.494 18c-.413 0-.765-.147-1.057-.441A1.44 1.44 0 0 1 4 16.5v-8c0-.413.147-.766.441-1.059A1.44 1.44 0 0 1 5.5 7H6V5c0-1.107.39-2.05 1.171-2.83A3.86 3.86 0 0 1 10.005 1c1.108 0 2.05.39 2.828 1.17C13.611 2.95 14 3.893 14 5v2h.5c.413 0 .766.147 1.059.441.294.293.441.646.441 1.059v8c0 .413-.147.766-.441 1.059A1.44 1.44 0 0 1 14.499 18H5.494ZM5.5 16.5h9v-8h-9v8Zm2-9.5h5V5c0-.694-.243-1.285-.729-1.771A2.41 2.41 0 0 0 10 2.5a2.41 2.41 0 0 0-1.771.729A2.41 2.41 0 0 0 7.5 5v2Z"/></svg>';
+
 		$allowed = [ 'em' => [], 'strong' => [], 'span' => [ 'class' => [] ], 'sup' => [], 'sub' => [], 'br' => [] ];
 
 		$sticky        = 'yes' === ( $settings['sticky_header'] ?? '' );
@@ -341,6 +332,8 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 					echo '';
 				} elseif ( self::is_check( $value ) ) {
 					echo '<span class="lnc-ct__check" style="color:' . esc_attr( $p['check_color'] ?? '' ) . '">' . $check_html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				} elseif ( self::is_lock( $value ) ) {
+					echo '<span class="lnc-ct__check lnc-ct__lock" style="color:' . esc_attr( $p['check_color'] ?? '' ) . '">' . $lock_html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				} else {
 					echo '<span class="lnc-ct__value" style="color:' . esc_attr( $p['cell_text_color'] ?? '' ) . '">' . esc_html( $value ) . '</span>';
 				}
