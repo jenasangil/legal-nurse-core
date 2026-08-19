@@ -127,7 +127,8 @@
 /* Mobile: keep readable columns and scroll horizontally. */
 @media (max-width: 767px) {
 	.lnc-ct {
-		min-width: 640px;
+		min-width: 660px;
+		margin-right: 16px;
 	}
 
 	/* Fix the first column and give plan columns a floor so the table
