@@ -73,8 +73,60 @@
 		setTimeout( function () { sync(); onScroll(); }, 400 );
 	}
 
+	// Click-and-drag to pan the table horizontally (touch already drags).
+	function initDrag( scroll ) {
+		if ( scroll.dataset.lncDragInit === '1' ) {
+			return;
+		}
+		scroll.dataset.lncDragInit = '1';
+
+		var down = false, moved = false, startX = 0, startLeft = 0;
+
+		scroll.addEventListener( 'pointerdown', function ( e ) {
+			// Only left mouse / pen; leave touch to native scrolling.
+			if ( e.pointerType === 'touch' ) {
+				return;
+			}
+			down = true;
+			moved = false;
+			startX = e.clientX;
+			startLeft = scroll.scrollLeft;
+			scroll.classList.add( 'is-grabbing' );
+		} );
+
+		scroll.addEventListener( 'pointermove', function ( e ) {
+			if ( ! down ) {
+				return;
+			}
+			var dx = e.clientX - startX;
+			if ( Math.abs( dx ) > 3 ) {
+				moved = true;
+			}
+			scroll.scrollLeft = startLeft - dx;
+		} );
+
+		function end() {
+			down = false;
+			scroll.classList.remove( 'is-grabbing' );
+		}
+		scroll.addEventListener( 'pointerup', end );
+		scroll.addEventListener( 'pointerleave', end );
+		scroll.addEventListener( 'pointercancel', end );
+
+		// Suppress clicks (e.g. on links) that end a drag.
+		scroll.addEventListener( 'click', function ( e ) {
+			if ( moved ) {
+				e.preventDefault();
+				e.stopPropagation();
+				moved = false;
+			}
+		}, true );
+	}
+
 	function initAll( ctx ) {
-		( ctx || document ).querySelectorAll( '.lnc-ct--sticky' ).forEach( initSticky );
+		var scope = ctx || document;
+		scope.querySelectorAll( '.lnc-ct--sticky' ).forEach( initSticky );
+		scope.querySelectorAll( '.lnc-ct-scroll' ).forEach( initDrag );
 	}
 
 	if ( document.readyState !== 'loading' ) {

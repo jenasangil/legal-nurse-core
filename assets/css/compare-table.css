@@ -3,6 +3,12 @@
 .lnc-ct-scroll {
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
+	cursor: grab;
+}
+
+.lnc-ct-scroll.is-grabbing {
+	cursor: grabbing;
+	user-select: none;
 }
 
 .lnc-ct {
