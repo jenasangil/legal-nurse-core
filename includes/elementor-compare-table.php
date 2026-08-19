@@ -247,6 +247,9 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			'name' => 'feature_typography', 'label' => esc_html__( 'Feature Text', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-ct__feat',
 		] );
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
+			'name' => 'firstlabel_typography', 'label' => esc_html__( 'First Column Label', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-ct__firstlabel',
+		] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [
 			'name' => 'header_typography', 'label' => esc_html__( 'Plan Header', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-ct__plan',
 		] );
 		$this->add_responsive_control( 'plan_padding', [
