@@ -25,6 +25,7 @@
 
 /* Feature (first) column */
 .lnc-ct__feat {
+	width: 195px;
 	padding: 18px 22px;
 	display: flex;
 	align-items: center;
