@@ -1,9 +1,9 @@
 // ── Swiper ────────────────────────────────────────────────
 
 const BREAKPOINTS = {
-    0: { slidesPerView: 'auto', spaceBetween: 16 },
-    768: { slidesPerView: 2, spaceBetween: 16 },
-    992: { slidesPerView: 3, spaceBetween: 16 },
+    0: { slidesPerView: 'auto', spaceBetween: 24 },
+    768: { slidesPerView: 2, spaceBetween: 24 },
+    992: { slidesPerView: 3, spaceBetween: 24 },
     1200: { slidesPerView: 4, spaceBetween: 24 },
 };
 

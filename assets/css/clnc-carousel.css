@@ -343,6 +343,10 @@
 }
 
 @media screen and (max-width: 767px) {
+    .clnc-carousel-wrap .section-wrapper {
+        overflow-x: visible;
+    }
+
     .clnc-carousel-wrap #learnmore .ctr {
         padding-top: 26px;
         padding-bottom: 26px;
@@ -354,7 +358,7 @@
     }
 
     .clnc-carousel-wrap .swiper-slide {
-        width: 265px;
+        width: 302px;
     }
 
     .clnc-carousel-wrap .count-nav-row .nav-buttons {
@@ -363,7 +367,7 @@
 
     .clnc-carousel-wrap .nav-row-mobile {
         display: block;
-        margin-top: 70px;
+        margin-top: 20px;
     }
 
     .clnc-carousel-wrap .nav-row-mobile .nav-buttons {
@@ -385,6 +389,7 @@
     .clnc-carousel-wrap .filter-label {
         width: 100%;
         text-align: left;
+        margin: 0 0 7px;
     }
 
     .clnc-carousel-wrap .filter-bar {
@@ -400,7 +405,7 @@
     }
 
     .clnc-carousel-wrap .count-nav-row {
-        margin-bottom: 22px;
+        margin-bottom: 36px;
     }
 }
 
