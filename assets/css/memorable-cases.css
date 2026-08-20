@@ -10,12 +10,15 @@
 .lnc-case {
 	display: flex;
 	flex-direction: column;
+	min-height: 180px;
 	border-left: 2px solid #25797c;
 	padding-left: 18px;
 }
 
 .lnc-case__body {
 	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
 	min-width: 0;
 }
 
@@ -41,14 +44,17 @@
 }
 
 .lnc-case__byline p {
-	margin: 0;
+	margin: 16px 0 0;
+	font-size: 14px;
 }
 
 .lnc-case__more {
 	display: inline-flex;
 	align-items: center;
+	align-self: flex-start;
 	gap: 6px;
-	margin-top: 12px;
+	margin-top: auto;
+	padding-top: 12px;
 	text-decoration: none;
 	color: #25797c;
 	font-weight: 600;
