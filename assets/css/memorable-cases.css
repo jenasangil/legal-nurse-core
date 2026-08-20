@@ -49,13 +49,35 @@
 	align-items: center;
 	gap: 6px;
 	margin-top: 12px;
-	text-decoration: underline;
+	text-decoration: none;
 	color: #25797c;
 	font-weight: 600;
 }
 
-.lnc-case__more:hover {
+/* Only the label is underlined; the arrow/icon is not. */
+.lnc-case__more-label {
+	text-decoration: underline;
+}
+
+.lnc-case__more:hover .lnc-case__more-label {
 	text-decoration: none;
+}
+
+.lnc-case__more-arrow {
+	display: inline-flex;
+	align-items: center;
+	text-decoration: none;
+	line-height: 1;
+}
+
+.lnc-case__more-arrow svg {
+	width: 1em;
+	height: 1em;
+	fill: currentColor;
+}
+
+.lnc-case__more-arrow i {
+	font-size: 1em;
 }
 
 @media (max-width: 767px) {

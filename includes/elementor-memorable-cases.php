@@ -164,6 +164,16 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'read_more_icon',
+			[
+				'label'       => esc_html__( 'Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'description' => esc_html__( 'Leave empty for a default → arrow, or choose an icon / upload an SVG.', 'legal-nurse-core' ),
+				'condition'   => [ 'show_read_more' => 'yes' ],
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->register_style_controls();
@@ -352,6 +362,15 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		$show_read_more = 'yes' === ( $settings['show_read_more'] ?? 'yes' );
 		$read_label     = $settings['read_more_label'] ? $settings['read_more_label'] : esc_html__( 'Read full case', 'legal-nurse-core' );
 
+		// Read-more arrow: the chosen icon, else a default → glyph.
+		$icon      = $settings['read_more_icon'] ?? [];
+		$arrow_html = '&rarr;';
+		if ( ! empty( $icon['value'] ) ) {
+			ob_start();
+			\Elementor\Icons_Manager::render_icon( $icon, [ 'aria-hidden' => 'true' ] );
+			$arrow_html = ob_get_clean();
+		}
+
 		$q = new WP_Query(
 			[
 				'post_type'      => 'page',
@@ -379,7 +398,8 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			$q->the_post();
 			$id    = get_the_ID();
 			$url   = get_permalink( $id );
-			$title = get_the_title( $id );
+			// Strip inline tags (e.g. <em>, <sup>) so they don't show as text.
+			$title = wp_strip_all_tags( get_the_title( $id ) );
 
 			$rbt    = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 			$byline = is_string( $rbt ) ? $rbt : '';
@@ -407,11 +427,10 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			}
 
 			if ( $show_read_more ) {
-				printf(
-					'<a class="lnc-case__more" href="%s">%s <span class="lnc-case__more-arrow" aria-hidden="true">&rarr;</span></a>',
-					esc_url( $url ),
-					esc_html( $read_label )
-				);
+				echo '<a class="lnc-case__more" href="' . esc_url( $url ) . '">';
+				echo '<span class="lnc-case__more-label">' . esc_html( $read_label ) . '</span>';
+				echo '<span class="lnc-case__more-arrow" aria-hidden="true">' . $arrow_html . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '</a>';
 			}
 			echo '</div>';
 
