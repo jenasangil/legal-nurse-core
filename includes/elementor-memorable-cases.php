@@ -40,6 +40,10 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		return [ 'lnc-memorable-cases' ];
 	}
 
+	public function get_script_depends() {
+		return [ 'lnc-memorable-cases' ];
+	}
+
 	/**
 	 * All pages as id => indented title, for the parent selector.
 	 *
@@ -132,6 +136,60 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'show_title',
+			[
+				'label'        => esc_html__( 'Show Title', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'separator'    => 'before',
+			]
+		);
+
+		$this->add_control(
+			'enable_view_more',
+			[
+				'label'        => esc_html__( 'Enable "View More"', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'separator'    => 'before',
+				'description'  => esc_html__( 'Show only the first N items with a button to reveal the rest.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
+			'initial_count',
+			[
+				'label'     => esc_html__( 'Initially Visible', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::NUMBER,
+				'default'   => 4,
+				'min'       => 1,
+				'condition' => [ 'enable_view_more' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'view_more_label',
+			[
+				'label'     => esc_html__( '"View More" Label', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::TEXT,
+				'default'   => esc_html__( 'View More', 'legal-nurse-core' ),
+				'condition' => [ 'enable_view_more' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'view_less_label',
+			[
+				'label'     => esc_html__( '"View Less" Label', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::TEXT,
+				'default'   => esc_html__( 'View Less', 'legal-nurse-core' ),
+				'condition' => [ 'enable_view_more' => 'yes' ],
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->register_style_controls();
@@ -145,8 +203,8 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			[
 				'label'          => esc_html__( 'Columns', 'legal-nurse-core' ),
 				'type'           => \Elementor\Controls_Manager::SELECT,
-				'default'        => '1',
-				'tablet_default' => '1',
+				'default'        => '2',
+				'tablet_default' => '2',
 				'mobile_default' => '1',
 				'options'        => [ '1' => '1', '2' => '2', '3' => '3' ],
 				'selectors'      => [ '{{WRAPPER}} .lnc-cases' => 'grid-template-columns:repeat({{VALUE}},1fr);' ],
@@ -240,6 +298,87 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->end_controls_section();
+
+		// View More button style.
+		$this->start_controls_section(
+			'section_button_style',
+			[
+				'label'     => esc_html__( 'View More Button', 'legal-nurse-core' ),
+				'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
+				'condition' => [ 'enable_view_more' => 'yes' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'button_align',
+			[
+				'label'     => esc_html__( 'Alignment', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::CHOOSE,
+				'options'   => [
+					'flex-start' => [ 'title' => esc_html__( 'Left', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-left' ],
+					'center'     => [ 'title' => esc_html__( 'Center', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-center' ],
+					'flex-end'   => [ 'title' => esc_html__( 'Right', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-right' ],
+				],
+				'default'   => 'center',
+				'selectors' => [ '{{WRAPPER}} .lnc-cases__more' => 'justify-content:{{VALUE}};' ],
+			]
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			[ 'name' => 'button_typography', 'selector' => '{{WRAPPER}} .lnc-cases__more-btn' ]
+		);
+
+		$this->start_controls_tabs( 'button_tabs' );
+
+		$this->start_controls_tab( 'button_normal', [ 'label' => esc_html__( 'Normal', 'legal-nurse-core' ) ] );
+		$this->add_control( 'button_color', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-cases__more-btn' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'button_bg', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ '{{WRAPPER}} .lnc-cases__more-btn' => 'background:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'button_hover', [ 'label' => esc_html__( 'Hover', 'legal-nurse-core' ) ] );
+		$this->add_control( 'button_color_h', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-cases__more-btn:hover' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'button_bg_h', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-cases__more-btn:hover' => 'background:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->add_responsive_control(
+			'button_padding',
+			[
+				'label'      => esc_html__( 'Padding', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'default'    => [ 'top' => 12, 'right' => 28, 'bottom' => 12, 'left' => 28, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-cases__more-btn' => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control(
+			'button_radius',
+			[
+				'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 50 ] ],
+				'default'    => [ 'size' => 999, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-cases__more-btn' => 'border-radius:{{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'button_top_spacing',
+			[
+				'label'      => esc_html__( 'Top Spacing', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+				'default'    => [ 'size' => 28, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-cases__more' => 'margin-top:{{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->end_controls_section();
 	}
 
 	/**
@@ -275,10 +414,13 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		$number  = (int) ( $settings['number'] ?? 12 );
-		$orderby = $settings['orderby'] ?? 'menu_order';
-		$order   = ( 'DESC' === ( $settings['order'] ?? 'ASC' ) ) ? 'DESC' : 'ASC';
-		$field   = $settings['meta_field'] ? $settings['meta_field'] : 'right_box_text';
+		$number     = (int) ( $settings['number'] ?? 12 );
+		$orderby    = $settings['orderby'] ?? 'menu_order';
+		$order      = ( 'DESC' === ( $settings['order'] ?? 'ASC' ) ) ? 'DESC' : 'ASC';
+		$field      = $settings['meta_field'] ? $settings['meta_field'] : 'right_box_text';
+		$show_title = 'yes' === ( $settings['show_title'] ?? 'yes' );
+		$view_more  = 'yes' === ( $settings['enable_view_more'] ?? '' );
+		$initial    = max( 1, (int) ( $settings['initial_count'] ?? 4 ) );
 
 		$q = new WP_Query(
 			[
@@ -301,8 +443,12 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
+		$total    = (int) $q->post_count;
+		$has_more = $view_more && $total > $initial;
+
 		echo '<div class="lnc-cases">';
 
+		$index = 0;
 		while ( $q->have_posts() ) {
 			$q->the_post();
 			$id    = get_the_ID();
@@ -320,7 +466,16 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 				$byline   = preg_replace( '/<img\b[^>]*>/i', '', $rbt, 1 );
 			}
 
-			echo '<article class="lnc-case">';
+			// Keep only the first paragraph of the byline.
+			if ( preg_match( '/<p\b[^>]*>.*?<\/p>/is', $byline, $pm ) ) {
+				$byline = $pm[0];
+			}
+
+			$hidden      = $has_more && $index >= $initial;
+			$item_class  = 'lnc-case' . ( $hidden ? ' lnc-case--hidden' : '' );
+			$item_hidden = $hidden ? ' hidden' : '';
+
+			echo '<article class="' . esc_attr( $item_class ) . '"' . $item_hidden . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 			echo '<a class="lnc-case__media" href="' . esc_url( $url ) . '">';
 			if ( '' !== $img_html ) {
@@ -331,11 +486,13 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			echo '</a>';
 
 			echo '<div class="lnc-case__body">';
-			printf(
-				'<h3 class="lnc-case__title"><a href="%s">%s</a></h3>',
-				esc_url( $url ),
-				esc_html( $title )
-			);
+			if ( $show_title ) {
+				printf(
+					'<h3 class="lnc-case__title"><a href="%s">%s</a></h3>',
+					esc_url( $url ),
+					esc_html( $title )
+				);
+			}
 
 			$byline = trim( (string) $byline );
 			if ( '' !== $byline ) {
@@ -344,9 +501,22 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			echo '</div>';
 
 			echo '</article>';
+			$index++;
 		}
 		wp_reset_postdata();
 
 		echo '</div>';
+
+		if ( $has_more ) {
+			wp_enqueue_script( 'lnc-memorable-cases' );
+			$more_label = $settings['view_more_label'] ? $settings['view_more_label'] : esc_html__( 'View More', 'legal-nurse-core' );
+			$less_label = $settings['view_less_label'] ? $settings['view_less_label'] : esc_html__( 'View Less', 'legal-nurse-core' );
+			printf(
+				'<div class="lnc-cases__more"><button type="button" class="lnc-cases__more-btn" data-more="%s" data-less="%s">%s</button></div>',
+				esc_attr( $more_label ),
+				esc_attr( $less_label ),
+				esc_html( $more_label )
+			);
+		}
 	}
 }

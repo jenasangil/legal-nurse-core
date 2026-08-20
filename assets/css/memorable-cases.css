@@ -64,6 +64,32 @@
 	margin: 0;
 }
 
+/* View More */
+.lnc-case[hidden] {
+	display: none;
+}
+
+.lnc-cases__more {
+	display: flex;
+	justify-content: center;
+	margin-top: 28px;
+}
+
+.lnc-cases__more-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	cursor: pointer;
+	background: #25797c;
+	color: #ffffff;
+	padding: 12px 28px;
+	border-radius: 999px;
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+	line-height: 1.2;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
 @media (max-width: 767px) {
 	.lnc-cases {
 		grid-template-columns: 1fr;
