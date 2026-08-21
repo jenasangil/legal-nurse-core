@@ -44,12 +44,25 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 	 */
 	private function get_page_options() {
 		$options = [];
-		$pages   = get_posts( [
-			'post_type'      => [ 'page', 'post' ],
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
+
+		// Only needed to populate the editor dropdown — skip on the front end,
+		// where render() uses saved IDs, not this list. Loading every page and
+		// post (and priming their term cache) was killing front-end requests.
+		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
+		$pages = get_posts( [
+			'post_type'              => [ 'page', 'post' ],
+			'post_status'            => 'publish',
+			'posts_per_page'         => 200,
+			'orderby'                => 'title',
+			'order'                  => 'ASC',
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		] );
 
 		foreach ( $pages as $p ) {
