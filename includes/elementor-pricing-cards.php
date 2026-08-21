@@ -47,6 +47,14 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	private function get_product_options() {
 		$options = [];
 
+		// Only needed to populate the editor dropdown — skip on the front end,
+		// where render() uses the saved product ID, not this list.
+		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
 		if ( ! function_exists( 'wc_get_products' ) ) {
 			return $options;
 		}
