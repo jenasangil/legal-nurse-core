@@ -162,6 +162,20 @@ function lnc_enqueue_fonts() {
 	);
 }
 
+// Preconnect to Google Fonts hosts so the font connection is opened early,
+// shaving latency off the render-blocking stylesheet request.
+add_filter( 'wp_resource_hints', 'lnc_fonts_resource_hints', 10, 2 );
+function lnc_fonts_resource_hints( $hints, $relation_type ) {
+	if ( 'preconnect' === $relation_type && wp_style_is( 'lnc-fonts', 'enqueued' ) ) {
+		$hints[] = [ 'href' => 'https://fonts.googleapis.com' ];
+		$hints[] = [
+			'href'        => 'https://fonts.gstatic.com',
+			'crossorigin' => 'anonymous',
+		];
+	}
+	return $hints;
+}
+
 // Register Social Share assets.
 add_action( 'wp_enqueue_scripts', 'lnc_register_social_share_assets' );
 add_action( 'elementor/preview/enqueue_styles', 'lnc_register_social_share_assets' );
