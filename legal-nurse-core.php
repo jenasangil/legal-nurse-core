@@ -170,15 +170,16 @@ function lnc_register_social_share_assets() {
 	wp_register_script( 'lnc-social-share', LNC_PLUGIN_URL . 'assets/js/social-share.js', [], LNC_VERSION, true );
 }
 
-// Enqueue the Pricing Cards stylesheet (frontend + Elementor editor preview).
-add_action( 'wp_enqueue_scripts', 'lnc_enqueue_pricing_cards_css' );
-add_action( 'elementor/preview/enqueue_styles', 'lnc_enqueue_pricing_cards_css' );
-function lnc_enqueue_pricing_cards_css() {
-	wp_enqueue_style(
+// Register the Pricing Cards stylesheet (loaded only when the widget is used).
+add_action( 'wp_enqueue_scripts', 'lnc_register_pricing_cards_css' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_pricing_cards_css' );
+function lnc_register_pricing_cards_css() {
+	$css = LNC_PLUGIN_DIR . 'assets/css/pricing-cards.css';
+	wp_register_style(
 		'lnc-pricing-cards',
 		LNC_PLUGIN_URL . 'assets/css/pricing-cards.css',
 		[],
-		LNC_VERSION
+		file_exists( $css ) ? filemtime( $css ) : LNC_VERSION
 	);
 }
 

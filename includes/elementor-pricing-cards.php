@@ -35,6 +35,10 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 		return [ 'pricing', 'card', 'plan', 'woocommerce', 'product', 'legal nurse' ];
 	}
 
+	public function get_style_depends() {
+		return [ 'lnc-pricing-cards' ];
+	}
+
 	/**
 	 * WooCommerce product options for the SELECT2 control.
 	 *
@@ -777,6 +781,8 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 	}
 
 	protected function render() {
+		wp_enqueue_style( 'lnc-pricing-cards' );
+
 		$settings = $this->get_settings_for_display();
 		$cards    = $this->get_cards( $settings );
 
