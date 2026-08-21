@@ -45,7 +45,16 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 	 */
 	private function get_page_options() {
 		$options = [ 0 => esc_html__( '— Select a parent page —', 'legal-nurse-core' ) ];
-		$pages   = get_pages( [ 'sort_column' => 'menu_order,post_title', 'number' => 500 ] );
+
+		// Only needed for the editor dropdown — skip on the front end, where
+		// render() uses the saved parent-page ID, not this list.
+		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
+		$pages = get_pages( [ 'sort_column' => 'menu_order,post_title', 'number' => 500 ] );
 
 		if ( ! is_array( $pages ) ) {
 			return $options;

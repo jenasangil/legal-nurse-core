@@ -52,6 +52,13 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 	private function get_loop_template_options() {
 		$options = [ 0 => esc_html__( '— Select a Loop template —', 'legal-nurse-core' ) ];
 
+		// Only needed for the editor dropdown — skip on the front end.
+		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
 		$templates = get_posts(
 			[
 				'post_type'      => 'elementor_library',
@@ -83,7 +90,15 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 	 */
 	private function get_category_options() {
 		$options = [];
-		$terms   = get_terms( [ 'taxonomy' => 'category', 'hide_empty' => false ] );
+
+		// Only needed for the editor dropdown — skip on the front end.
+		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
+		$terms = get_terms( [ 'taxonomy' => 'category', 'hide_empty' => false ] );
 
 		if ( is_wp_error( $terms ) ) {
 			return $options;

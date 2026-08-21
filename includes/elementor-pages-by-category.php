@@ -46,7 +46,15 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 
 	private function get_term_options( $taxonomy ) {
 		$options = [];
-		$terms   = get_terms( [ 'taxonomy' => $taxonomy, 'hide_empty' => false ] );
+
+		// Only needed for the editor dropdown — skip on the front end.
+		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
+		$terms = get_terms( [ 'taxonomy' => $taxonomy, 'hide_empty' => false ] );
 		if ( is_wp_error( $terms ) ) {
 			return $options;
 		}
