@@ -75,7 +75,18 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-trustpilot.php';
 	$widgets_manager->register( new LNC_Trustpilot_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-search-results.php';
+	$widgets_manager->register( new LNC_Search_Results_Widget() );
 } );
+
+// Register Search Results stylesheet (loaded only when the widget is used).
+add_action( 'wp_enqueue_scripts', 'lnc_register_search_results_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_search_results_assets' );
+function lnc_register_search_results_assets() {
+	$css = LNC_PLUGIN_DIR . 'assets/css/search-results.css';
+	wp_register_style( 'lnc-search-results', LNC_PLUGIN_URL . 'assets/css/search-results.css', [], file_exists( $css ) ? filemtime( $css ) : LNC_VERSION );
+}
 
 // Register the Trustpilot bootstrap script (hydrates .trustpilot-widget).
 add_action( 'wp_enqueue_scripts', 'lnc_register_trustpilot_assets' );

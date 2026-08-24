@@ -1,0 +1,48 @@
+/* Legal Nurse Core — Search Results */
+
+.lnc-search-results {
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+}
+
+.lnc-search-results__heading {
+	margin: 0 0 28px;
+	line-height: 1.25;
+}
+
+.lnc-search-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 32px;
+}
+
+.lnc-search-grid .e-loop-item,
+.lnc-search-grid .lnc-loop-item {
+	min-width: 0;
+}
+
+.lnc-search-results__message {
+	font-size: 16px;
+	line-height: 1.5;
+	color: #4a4a4a;
+	padding: 12px 0;
+}
+
+.lnc-search-results__pagination {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: center;
+	margin-top: 40px;
+}
+
+@media (max-width: 1024px) {
+	.lnc-search-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 767px) {
+	.lnc-search-grid {
+		grid-template-columns: 1fr;
+	}
+}
