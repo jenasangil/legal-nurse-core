@@ -48,7 +48,8 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		$options = [];
 
 		// Only needed for the editor dropdown — skip on the front end.
-		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+		$is_editor = is_admin()
+			|| \Elementor\Plugin::$instance->editor->is_edit_mode()
 			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! $is_editor ) {
 			return $options;

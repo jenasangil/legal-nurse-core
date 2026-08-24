@@ -48,7 +48,8 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 	private function get_loop_template_options() {
 		$options = [ 0 => esc_html__( '— Select a Loop template —', 'legal-nurse-core' ) ];
 
-		$is_editor = \Elementor\Plugin::$instance->editor->is_edit_mode()
+		$is_editor = is_admin()
+			|| \Elementor\Plugin::$instance->editor->is_edit_mode()
 			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! $is_editor ) {
 			return $options;
