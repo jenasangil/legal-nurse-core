@@ -226,10 +226,13 @@
 		var toggle = form.querySelector( '.lnc-loop-filter__search-toggle' );
 		var field  = form.querySelector( '.lnc-loop-filter__search-field' );
 
-		toggle.addEventListener( 'click', function () {
-			var open = form.classList.toggle( 'is-open' );
-			toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
-			if ( open ) {
+		// The icon is the submit button. Collapsed: first click expands (no
+		// submit). Open: it submits (empty submits are blocked below).
+		toggle.addEventListener( 'click', function ( e ) {
+			if ( ! form.classList.contains( 'is-open' ) ) {
+				e.preventDefault();
+				form.classList.add( 'is-open' );
+				toggle.setAttribute( 'aria-expanded', 'true' );
 				field.focus();
 			}
 		} );

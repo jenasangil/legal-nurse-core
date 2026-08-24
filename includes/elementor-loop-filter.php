@@ -638,7 +638,8 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 
 				<?php if ( $enable_search ) : ?>
 					<form class="lnc-loop-filter__search" action="<?php echo esc_url( $search_url ); ?>" method="get" role="search">
-						<button type="button" class="lnc-loop-filter__search-toggle" aria-label="<?php esc_attr_e( 'Open search', 'legal-nurse-core' ); ?>" aria-expanded="false">
+						<input type="search" class="lnc-loop-filter__search-field" name="<?php echo esc_attr( $search_param ); ?>" placeholder="<?php echo esc_attr( $search_ph ); ?>" autocomplete="off">
+						<button type="submit" class="lnc-loop-filter__search-toggle" aria-label="<?php echo esc_attr( $search_btn ? $search_btn : esc_html__( 'Search', 'legal-nurse-core' ) ); ?>" aria-expanded="false">
 							<?php
 							$s_icon = $settings['search_icon'] ?? [];
 							if ( ! empty( $s_icon['value'] ) ) {
@@ -648,8 +649,6 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 							}
 							?>
 						</button>
-						<input type="search" class="lnc-loop-filter__search-field" name="<?php echo esc_attr( $search_param ); ?>" placeholder="<?php echo esc_attr( $search_ph ); ?>" autocomplete="off">
-						<button type="submit" class="lnc-loop-filter__search-submit"><?php echo esc_html( $search_btn ); ?></button>
 					</form>
 				<?php endif; ?>
 
