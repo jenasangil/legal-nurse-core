@@ -300,8 +300,8 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 			[
 				'label'       => esc_html__( 'Query Parameter', 'legal-nurse-core' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
-				'default'     => 'sq',
-				'description' => esc_html__( 'URL parameter for the term (e.g. "sq" -> ?sq=keyword). Avoid the reserved "s" — WordPress hijacks it for its built-in search.', 'legal-nurse-core' ),
+				'default'     => 's',
+				'description' => esc_html__( 'URL parameter for the term (e.g. "s" -> ?s=keyword).', 'legal-nurse-core' ),
 				'condition'   => [ 'enable_search' => 'yes' ],
 			]
 		);
