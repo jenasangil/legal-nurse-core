@@ -321,6 +321,36 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		return [ 'em' => [], 'i' => [], 'strong' => [], 'b' => [], 'span' => [ 'class' => [] ], 'br' => [], 'a' => [ 'href' => [], 'target' => [] ] ];
 	}
 
+	/**
+	 * Keep only the author line — cut at the earliest natural break after it:
+	 * the end of an author link (</a>), a <br>, a </p>, or a line break.
+	 *
+	 * @param string $html Byline HTML (image already removed).
+	 * @return string
+	 */
+	private function author_line( $html ) {
+		$cut = null;
+
+		// After the first closing anchor (linked author).
+		if ( preg_match( '/<\/a>/i', $html, $m, PREG_OFFSET_CAPTURE ) ) {
+			$cut = $m[0][1] + strlen( $m[0][0] );
+		}
+
+		// Or the first block/line break (plain-text author on its own line).
+		if ( preg_match( '/<br\s*\/?>|<\/p>|\r\n|\n|\r/i', $html, $mb, PREG_OFFSET_CAPTURE ) ) {
+			$pos = $mb[0][1];
+			if ( null === $cut || $pos < $cut ) {
+				$cut = $pos;
+			}
+		}
+
+		if ( null !== $cut ) {
+			$html = substr( $html, 0, $cut );
+		}
+
+		return trim( $html );
+	}
+
 	protected function render() {
 		wp_enqueue_style( 'lnc-pages-by-category' );
 
@@ -412,10 +442,11 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 
 				$byline = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 				$byline = is_string( $byline ) ? trim( preg_replace( '/<img\b[^>]*>/i', '', $byline ) ) : '';
-				// Keep only up to the first closing </a> (the "by <author link>"),
-				// hiding the paragraph/links that follow it.
-				if ( '' !== $byline && preg_match( '/^.*?<\/a>/is', $byline, $bm ) ) {
-					$byline = trim( $bm[0] );
+				// Keep only the author line; hide the testimonial that follows.
+				// Cut at the earliest natural break: end of the author link
+				// (</a>), a <br>, a </p>, or a line break.
+				if ( '' !== $byline ) {
+					$byline = $this->author_line( $byline );
 				}
 
 				$url = get_permalink();
