@@ -634,13 +634,6 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 					<?php endforeach; ?>
 				</select>
 
-				<?php if ( $enable_sort ) : ?>
-					<select class="lnc-loop-filter__select lnc-loop-filter__sort" aria-label="<?php esc_attr_e( 'Sort by', 'legal-nurse-core' ); ?>">
-						<option value="recent"><?php echo esc_html( $settings['sort_recent_label'] ? $settings['sort_recent_label'] : esc_html__( 'Most Recent', 'legal-nurse-core' ) ); ?></option>
-						<option value="viewed"><?php echo esc_html( $settings['sort_viewed_label'] ? $settings['sort_viewed_label'] : esc_html__( 'Most Viewed', 'legal-nurse-core' ) ); ?></option>
-					</select>
-				<?php endif; ?>
-
 				<?php if ( $enable_search ) : ?>
 					<form class="lnc-loop-filter__search" action="<?php echo esc_url( $search_url ); ?>" method="get" role="search">
 						<button type="button" class="lnc-loop-filter__search-toggle" aria-label="<?php esc_attr_e( 'Open search', 'legal-nurse-core' ); ?>" aria-expanded="false">
@@ -656,6 +649,13 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 						<input type="search" class="lnc-loop-filter__search-field" name="<?php echo esc_attr( $search_param ); ?>" placeholder="<?php echo esc_attr( $search_ph ); ?>" autocomplete="off">
 						<button type="submit" class="lnc-loop-filter__search-submit"><?php echo esc_html( $search_btn ); ?></button>
 					</form>
+				<?php endif; ?>
+
+				<?php if ( $enable_sort ) : ?>
+					<select class="lnc-loop-filter__select lnc-loop-filter__sort" aria-label="<?php esc_attr_e( 'Sort by', 'legal-nurse-core' ); ?>">
+						<option value="recent"><?php echo esc_html( $settings['sort_recent_label'] ? $settings['sort_recent_label'] : esc_html__( 'Most Recent', 'legal-nurse-core' ) ); ?></option>
+						<option value="viewed"><?php echo esc_html( $settings['sort_viewed_label'] ? $settings['sort_viewed_label'] : esc_html__( 'Most Viewed', 'legal-nurse-core' ) ); ?></option>
+					</select>
 				<?php endif; ?>
 
 			</div>

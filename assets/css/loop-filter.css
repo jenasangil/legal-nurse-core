@@ -120,10 +120,18 @@
 	align-items: center;
 	justify-content: center;
 	border: 0;
-	background: transparent;
-	color: #1BA39C;
+	background: #1BA39C;
+	color: #fff;
 	cursor: pointer;
 	padding: 0;
+	transition: none;
+}
+
+/* No hover background change. */
+.lnc-loop-filter__search-toggle:hover,
+.lnc-loop-filter__search-toggle:focus {
+	background: #1BA39C;
+	color: #fff;
 }
 
 .lnc-loop-filter__search-toggle svg {
