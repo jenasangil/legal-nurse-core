@@ -412,10 +412,10 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 
 				$byline = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 				$byline = is_string( $byline ) ? trim( preg_replace( '/<img\b[^>]*>/i', '', $byline ) ) : '';
-				// Keep only the "by <author>" line: everything up to the first
-				// closing </a>, as plain text (drops the link and trailing copy).
+				// Keep only up to the first closing </a> (the "by <author link>"),
+				// hiding the paragraph/links that follow it.
 				if ( '' !== $byline && preg_match( '/^.*?<\/a>/is', $byline, $bm ) ) {
-					$byline = trim( wp_strip_all_tags( $bm[0] ) );
+					$byline = trim( $bm[0] );
 				}
 
 				$url = get_permalink();
