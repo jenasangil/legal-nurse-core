@@ -110,11 +110,32 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'check_icon',
+			'show_read_more',
 			[
-				'label'   => esc_html__( 'Bullet Icon', 'legal-nurse-core' ),
-				'type'    => \Elementor\Controls_Manager::ICONS,
-				'default' => [ 'value' => 'fas fa-check', 'library' => 'fa-solid' ],
+				'label'        => esc_html__( 'Show "Read the story"', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+			]
+		);
+
+		$this->add_control(
+			'read_more_label',
+			[
+				'label'     => esc_html__( '"Read More" Label', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::TEXT,
+				'default'   => esc_html__( 'Read the story', 'legal-nurse-core' ),
+				'condition' => [ 'show_read_more' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'read_more_icon',
+			[
+				'label'       => esc_html__( 'Read More Icon', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::ICONS,
+				'description' => esc_html__( 'Leave empty for a default → arrow, or choose an icon / upload an SVG.', 'legal-nurse-core' ),
+				'condition'   => [ 'show_read_more' => 'yes' ],
 			]
 		);
 
@@ -237,22 +258,60 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_responsive_control(
-			'item_spacing',
+			'columns',
 			[
-				'label'      => esc_html__( 'Item Spacing', 'legal-nurse-core' ),
-				'type'       => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
-				'default'    => [ 'size' => 18, 'unit' => 'px' ],
-				'selectors'  => [ '{{WRAPPER}} .lnc-pbc__item' => 'margin-bottom:{{SIZE}}{{UNIT}};' ],
+				'label'          => esc_html__( 'Columns', 'legal-nurse-core' ),
+				'type'           => \Elementor\Controls_Manager::SELECT,
+				'default'        => '3',
+				'tablet_default' => '2',
+				'mobile_default' => '1',
+				'options'        => [ '1' => '1', '2' => '2', '3' => '3', '4' => '4' ],
+				'selectors'      => [ '{{WRAPPER}} .lnc-pbc__list' => 'grid-template-columns:repeat({{VALUE}},1fr);' ],
 			]
 		);
 
-		$this->add_control( 'icon_color', [ 'label' => esc_html__( 'Bullet Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#d6006e', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__bullet' => 'color:{{VALUE}};' ] ] );
-		$this->add_control( 'title_color', [ 'label' => esc_html__( 'Title Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-pbc__title a' => 'color:{{VALUE}};' ] ] );
+		$this->add_responsive_control(
+			'grid_gap',
+			[
+				'label'      => esc_html__( 'Gap', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+				'default'    => [ 'size' => 32, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-pbc__list' => 'gap:{{SIZE}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control( 'card_bg', [ 'label' => esc_html__( 'Card Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-pbc__item' => 'background:{{VALUE}};' ] ] );
+
+		$this->add_responsive_control(
+			'card_padding',
+			[
+				'label'      => esc_html__( 'Card Padding', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em' ],
+				'default'    => [ 'top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 20, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-pbc__item' => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_control( 'card_border_left_width', [ 'label' => esc_html__( 'Left Border Width', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 16 ] ], 'default' => [ 'size' => 2, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-pbc__item' => 'border-left-style:solid;border-left-width:{{SIZE}}{{UNIT}};' ] ] );
+		$this->add_control( 'card_border_left_color', [ 'label' => esc_html__( 'Left Border Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__item' => 'border-left-color:{{VALUE}};' ] ] );
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Border::get_type(),
+			[ 'name' => 'card_border', 'label' => esc_html__( 'Full Border', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-pbc__item' ]
+		);
+
+		$this->add_control( 'card_radius', [ 'label' => esc_html__( 'Card Border Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}} .lnc-pbc__item' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
+
+		$this->add_control( 'title_color', [ 'label' => esc_html__( 'Title Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'separator' => 'before', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__title a' => 'color:{{VALUE}};' ] ] );
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'title_typography', 'label' => esc_html__( 'Title', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-pbc__title' ] );
 		$this->add_control( 'byline_color', [ 'label' => esc_html__( 'Byline Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#3a3a3a', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__byline' => 'color:{{VALUE}};' ] ] );
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'byline_typography', 'label' => esc_html__( 'Byline', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-pbc__byline' ] );
+
+		$this->add_control( 'read_more_color', [ 'label' => esc_html__( 'Read More Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'separator' => 'before', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__more' => 'color:{{VALUE}};' ], 'condition' => [ 'show_read_more' => 'yes' ] ] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'read_more_typography', 'label' => esc_html__( 'Read More', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-pbc__more', 'condition' => [ 'show_read_more' => 'yes' ] ] );
 
 		$this->end_controls_section();
 	}
@@ -318,15 +377,17 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		// Prebuild bullet icon.
-		$icon = $settings['check_icon'] ?? [];
-		ob_start();
-		if ( ! empty( $icon['value'] ) ) {
-			\Elementor\Icons_Manager::render_icon( $icon, [ 'aria-hidden' => 'true' ] );
-		} else {
-			echo '&#10003;';
+		$show_more  = 'yes' === ( $settings['show_read_more'] ?? 'yes' );
+		$more_label = $settings['read_more_label'] ? $settings['read_more_label'] : esc_html__( 'Read the story', 'legal-nurse-core' );
+
+		// Read-more arrow: chosen icon, else a default → glyph.
+		$more_icon  = $settings['read_more_icon'] ?? [];
+		$arrow_html = '&rarr;';
+		if ( ! empty( $more_icon['value'] ) ) {
+			ob_start();
+			\Elementor\Icons_Manager::render_icon( $more_icon, [ 'aria-hidden' => 'true' ] );
+			$arrow_html = ob_get_clean();
 		}
-		$bullet = ob_get_clean();
 
 		echo '<div class="lnc-pbc">';
 
@@ -352,12 +413,21 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 				$byline = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 				$byline = is_string( $byline ) ? trim( preg_replace( '/<img\b[^>]*>/i', '', $byline ) ) : '';
 
+				$url = get_permalink();
+
 				echo '<li class="lnc-pbc__item" data-terms="' . esc_attr( $data_terms ) . '">';
-				echo '<span class="lnc-pbc__bullet" aria-hidden="true">' . $bullet . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '<span class="lnc-pbc__content">';
-				printf( '<span class="lnc-pbc__title"><a href="%s">%s</a></span>', esc_url( get_permalink() ), esc_html( get_the_title() ) );
+				printf( '<span class="lnc-pbc__title"><a href="%s">%s</a></span>', esc_url( $url ), esc_html( get_the_title() ) );
 				if ( '' !== $byline ) {
 					echo '<span class="lnc-pbc__byline">' . wp_kses( $byline, $this->byline_tags() ) . '</span>';
+				}
+				if ( $show_more ) {
+					printf(
+						'<a class="lnc-pbc__more" href="%s"><span class="lnc-pbc__more-label">%s</span> <span class="lnc-pbc__more-arrow" aria-hidden="true">%s</span></a>',
+						esc_url( $url ),
+						esc_html( $more_label ),
+						$arrow_html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					);
 				}
 				echo '</span>';
 				echo '</li>';
