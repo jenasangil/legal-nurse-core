@@ -215,8 +215,50 @@
 		fetchPosts();
 	}
 
+	// Click-to-expand search (independent of the loop-grid filtering).
+	function initSearch( root ) {
+		var form = root.querySelector( '.lnc-loop-filter__search' );
+		if ( ! form || form.dataset.lncSearchInit === '1' ) {
+			return;
+		}
+		form.dataset.lncSearchInit = '1';
+
+		var toggle = form.querySelector( '.lnc-loop-filter__search-toggle' );
+		var field  = form.querySelector( '.lnc-loop-filter__search-field' );
+
+		toggle.addEventListener( 'click', function () {
+			var open = form.classList.toggle( 'is-open' );
+			toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+			if ( open ) {
+				field.focus();
+			}
+		} );
+
+		// Don't submit an empty query — just keep focus in the field.
+		form.addEventListener( 'submit', function ( e ) {
+			if ( ! field.value.trim() ) {
+				e.preventDefault();
+				if ( ! form.classList.contains( 'is-open' ) ) {
+					form.classList.add( 'is-open' );
+					toggle.setAttribute( 'aria-expanded', 'true' );
+				}
+				field.focus();
+			}
+		} );
+
+		document.addEventListener( 'keydown', function ( e ) {
+			if ( 'Escape' === e.key && form.classList.contains( 'is-open' ) ) {
+				form.classList.remove( 'is-open' );
+				toggle.setAttribute( 'aria-expanded', 'false' );
+			}
+		} );
+	}
+
 	function initAll( ctx ) {
-		( ctx || document ).querySelectorAll( '.lnc-loop-filter' ).forEach( initFilter );
+		( ctx || document ).querySelectorAll( '.lnc-loop-filter' ).forEach( function ( root ) {
+			initFilter( root );
+			initSearch( root );
+		} );
 	}
 
 	if ( document.readyState !== 'loading' ) {

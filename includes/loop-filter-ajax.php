@@ -15,18 +15,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'wp_enqueue_scripts', 'lnc_loop_filter_register_assets' );
 add_action( 'elementor/preview/enqueue_styles', 'lnc_loop_filter_register_assets' );
 function lnc_loop_filter_register_assets() {
+	$css = LNC_PLUGIN_DIR . 'assets/css/loop-filter.css';
+	$js  = LNC_PLUGIN_DIR . 'assets/js/loop-filter.js';
+
 	wp_register_style(
 		'lnc-loop-filter',
 		LNC_PLUGIN_URL . 'assets/css/loop-filter.css',
 		[],
-		LNC_VERSION
+		file_exists( $css ) ? filemtime( $css ) : LNC_VERSION
 	);
 
 	wp_register_script(
 		'lnc-loop-filter',
 		LNC_PLUGIN_URL . 'assets/js/loop-filter.js',
 		[],
-		LNC_VERSION,
+		file_exists( $js ) ? filemtime( $js ) : LNC_VERSION,
 		true
 	);
 

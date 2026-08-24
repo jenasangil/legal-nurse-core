@@ -259,6 +259,71 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'enable_search',
+			[
+				'label'        => esc_html__( 'Enable Search', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'separator'    => 'before',
+				'description'  => esc_html__( 'Show a click-to-expand search icon that sends the query to a results page.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
+			'search_icon',
+			[
+				'label'     => esc_html__( 'Search Icon', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::ICONS,
+				'default'   => [ 'value' => 'fas fa-search', 'library' => 'fa-solid' ],
+				'condition' => [ 'enable_search' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'search_results_url',
+			[
+				'label'       => esc_html__( 'Results Page URL', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::TEXT,
+				'default'     => '/blog-search-results/',
+				'placeholder' => '/blog-search-results/',
+				'description' => esc_html__( 'Where the search submits to.', 'legal-nurse-core' ),
+				'condition'   => [ 'enable_search' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'search_param',
+			[
+				'label'       => esc_html__( 'Query Parameter', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::TEXT,
+				'default'     => 's',
+				'description' => esc_html__( 'URL parameter for the term (e.g. "s" -> ?s=keyword).', 'legal-nurse-core' ),
+				'condition'   => [ 'enable_search' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'search_placeholder',
+			[
+				'label'     => esc_html__( 'Placeholder', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::TEXT,
+				'default'   => esc_html__( 'Search articles…', 'legal-nurse-core' ),
+				'condition' => [ 'enable_search' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'search_button_label',
+			[
+				'label'     => esc_html__( 'Button Label', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::TEXT,
+				'default'   => esc_html__( 'Search', 'legal-nurse-core' ),
+				'condition' => [ 'enable_search' => 'yes' ],
+			]
+		);
+
 		$this->end_controls_section();
 
 		$this->register_style_controls();
@@ -504,6 +569,12 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 		$views_key  = $settings['views_meta_key'] ? $settings['views_meta_key'] : 'post_views_count';
 		$enable_sort = 'yes' === ( $settings['enable_sort'] ?? 'yes' );
 
+		$enable_search  = 'yes' === ( $settings['enable_search'] ?? '' );
+		$search_url     = $settings['search_results_url'] ? $settings['search_results_url'] : '/blog-search-results/';
+		$search_param   = $settings['search_param'] ? sanitize_key( $settings['search_param'] ) : 's';
+		$search_ph      = $settings['search_placeholder'] ? $settings['search_placeholder'] : esc_html__( 'Search articles…', 'legal-nurse-core' );
+		$search_btn     = $settings['search_button_label'] ? $settings['search_button_label'] : esc_html__( 'Search', 'legal-nurse-core' );
+
 		$term_args = [
 			'taxonomy'   => $taxonomy,
 			'hide_empty' => 'yes' === ( $settings['hide_empty'] ?? 'yes' ),
@@ -568,6 +639,23 @@ class LNC_Loop_Filter_Widget extends \Elementor\Widget_Base {
 						<option value="recent"><?php echo esc_html( $settings['sort_recent_label'] ? $settings['sort_recent_label'] : esc_html__( 'Most Recent', 'legal-nurse-core' ) ); ?></option>
 						<option value="viewed"><?php echo esc_html( $settings['sort_viewed_label'] ? $settings['sort_viewed_label'] : esc_html__( 'Most Viewed', 'legal-nurse-core' ) ); ?></option>
 					</select>
+				<?php endif; ?>
+
+				<?php if ( $enable_search ) : ?>
+					<form class="lnc-loop-filter__search" action="<?php echo esc_url( $search_url ); ?>" method="get" role="search">
+						<button type="button" class="lnc-loop-filter__search-toggle" aria-label="<?php esc_attr_e( 'Open search', 'legal-nurse-core' ); ?>" aria-expanded="false">
+							<?php
+							$s_icon = $settings['search_icon'] ?? [];
+							if ( ! empty( $s_icon['value'] ) ) {
+								\Elementor\Icons_Manager::render_icon( $s_icon, [ 'aria-hidden' => 'true' ] );
+							} else {
+								echo '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
+							}
+							?>
+						</button>
+						<input type="search" class="lnc-loop-filter__search-field" name="<?php echo esc_attr( $search_param ); ?>" placeholder="<?php echo esc_attr( $search_ph ); ?>" autocomplete="off">
+						<button type="submit" class="lnc-loop-filter__search-submit"><?php echo esc_html( $search_btn ); ?></button>
+					</form>
 				<?php endif; ?>
 
 			</div>
