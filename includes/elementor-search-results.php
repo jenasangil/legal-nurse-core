@@ -290,7 +290,13 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			return;
 		}
 
-		echo '<div class="lnc-search-grid e-loop-grid">';
+		// The Loop Item template's CSS is normally enqueued by a Loop Grid widget.
+		// This page has none, so enqueue it here or the cards render unstyled.
+		if ( $template && class_exists( '\Elementor\Core\Files\CSS\Post' ) ) {
+			\Elementor\Core\Files\CSS\Post::create( $template )->enqueue();
+		}
+
+		echo '<div class="lnc-search-grid e-loop-grid elementor-grid">';
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			echo function_exists( 'lnc_loop_filter_render_item' )
