@@ -409,7 +409,7 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			$id    = get_the_ID();
 			$url   = get_permalink( $id );
 			// Strip inline tags (e.g. <em>, <sup>) so they don't show as text.
-			$title = wp_strip_all_tags( get_the_title( $id ) );
+			$title = wp_strip_all_tags( html_entity_decode( get_the_title( $id ), ENT_QUOTES ) );
 
 			$rbt    = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 			$byline = is_string( $rbt ) ? $rbt : '';

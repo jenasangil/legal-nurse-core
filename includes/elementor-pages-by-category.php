@@ -422,7 +422,8 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 
 				echo '<li class="lnc-pbc__item" data-terms="' . esc_attr( $data_terms ) . '">';
 				echo '<span class="lnc-pbc__content">';
-				printf( '<span class="lnc-pbc__title"><a href="%s">%s</a></span>', esc_url( $url ), esc_html( get_the_title() ) );
+				$pbc_title = wp_strip_all_tags( html_entity_decode( get_the_title(), ENT_QUOTES ) );
+				printf( '<span class="lnc-pbc__title"><a href="%s">%s</a></span>', esc_url( $url ), esc_html( $pbc_title ) );
 				if ( '' !== $byline ) {
 					echo '<span class="lnc-pbc__byline">' . wp_kses( $byline, $this->byline_tags() ) . '</span>';
 				}
