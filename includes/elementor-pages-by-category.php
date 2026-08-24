@@ -329,23 +329,15 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	private function author_line( $html ) {
-		$cut = null;
-
-		// After the first closing anchor (linked author).
+		// Linked author: keep everything up to and including the first </a>
+		// (so line breaks inside the anchor don't cut it short).
 		if ( preg_match( '/<\/a>/i', $html, $m, PREG_OFFSET_CAPTURE ) ) {
-			$cut = $m[0][1] + strlen( $m[0][0] );
+			return trim( substr( $html, 0, $m[0][1] + strlen( $m[0][0] ) ) );
 		}
 
-		// Or the first block/line break (plain-text author on its own line).
+		// Plain-text author: cut at the first block/line break before the body.
 		if ( preg_match( '/<br\s*\/?>|<\/p>|\r\n|\n|\r/i', $html, $mb, PREG_OFFSET_CAPTURE ) ) {
-			$pos = $mb[0][1];
-			if ( null === $cut || $pos < $cut ) {
-				$cut = $pos;
-			}
-		}
-
-		if ( null !== $cut ) {
-			$html = substr( $html, 0, $cut );
+			return trim( substr( $html, 0, $mb[0][1] ) );
 		}
 
 		return trim( $html );
