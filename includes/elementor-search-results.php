@@ -248,29 +248,29 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 
 		echo '<div class="lnc-search-results">';
 
-		if ( '' === $term ) {
-			echo '<div class="lnc-search-results__message">' . esc_html( $this->tokens( $settings['empty_query_text'] ?? '', '', 0 ) ) . '</div>';
-			echo '</div>';
-			return;
-		}
-
 		$paged = max(
 			1,
 			(int) ( get_query_var( 'paged' ) ? get_query_var( 'paged' ) : ( get_query_var( 'page' ) ? get_query_var( 'page' ) : ( isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1 ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		);
 
-		$query = new WP_Query(
-			[
-				'post_type'           => $post_type,
-				'post_status'         => 'publish',
-				's'                   => $term,
-				'posts_per_page'      => $ppp,
-				'paged'               => $paged,
-				'ignore_sticky_posts' => true,
-			]
-		);
+		$query_args = [
+			'post_type'           => $post_type,
+			'post_status'         => 'publish',
+			'posts_per_page'      => $ppp,
+			'paged'               => $paged,
+			'ignore_sticky_posts' => true,
+		];
 
-		if ( $settings['show_heading'] && 'yes' === $settings['show_heading'] && ! empty( $settings['heading_text'] ) ) {
+		// No term: show all posts (unfiltered). With a term: filter by search.
+		$has_term = ( '' !== $term );
+		if ( $has_term ) {
+			$query_args['s'] = $term;
+		}
+
+		$query = new WP_Query( $query_args );
+
+		// Heading only when there's a search term.
+		if ( $has_term && 'yes' === ( $settings['show_heading'] ?? '' ) && ! empty( $settings['heading_text'] ) ) {
 			echo '<h2 class="lnc-search-results__heading">'
 				. wp_kses_post( $this->tokens( $settings['heading_text'], $term, (int) $query->found_posts ) )
 				. '</h2>';
