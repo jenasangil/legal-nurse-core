@@ -269,6 +269,13 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 
 		$query = new WP_Query( $query_args );
 
+		// If a search plugin (Relevanssi) is active, run the search through it —
+		// its index replaces WordPress's default search, which otherwise returns
+		// nothing for secondary queries like this one.
+		if ( $has_term && function_exists( 'relevanssi_do_query' ) ) {
+			relevanssi_do_query( $query );
+		}
+
 		// Heading only when there's a search term.
 		if ( $has_term && 'yes' === ( $settings['show_heading'] ?? '' ) && ! empty( $settings['heading_text'] ) ) {
 			echo '<h2 class="lnc-search-results__heading">'
