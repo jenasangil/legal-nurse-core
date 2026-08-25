@@ -329,10 +329,11 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	private function author_line( $html ) {
-		// Linked author: keep everything up to and including the first </a>
-		// (so line breaks inside the anchor don't cut it short).
-		if ( preg_match( '/<\/a>/i', $html, $m, PREG_OFFSET_CAPTURE ) ) {
-			return trim( substr( $html, 0, $m[0][1] + strlen( $m[0][0] ) ) );
+		// Linked author at the start ("by <a>Author</a> …"): keep through that
+		// first </a>. The anchor must appear near the beginning so a trailing
+		// content link later in the text isn't mistaken for the author.
+		if ( preg_match( '/^\s*(?:by\b)?[^<]{0,60}<a\b[^>]*>.*?<\/a>/is', $html, $m ) ) {
+			return trim( $m[0] );
 		}
 
 		// Plain-text author: cut at the first block/line break before the body.
