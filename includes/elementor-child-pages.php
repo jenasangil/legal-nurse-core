@@ -317,18 +317,6 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		$this->add_responsive_control(
-			'image_spacing',
-			[
-				'label'      => esc_html__( 'Image Spacing', 'legal-nurse-core' ),
-				'type'       => \Elementor\Controls_Manager::SLIDER,
-				'size_units' => [ 'px' ],
-				'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
-				'default'    => [ 'size' => 0, 'unit' => 'px' ],
-				'selectors'  => [ '{{WRAPPER}} .lnc-childpage__image' => 'margin-bottom:{{SIZE}}{{UNIT}};' ],
-			]
-		);
-
 		$this->add_control(
 			'title_color',
 			[
