@@ -150,7 +150,8 @@ add_action( 'wp_enqueue_scripts', 'lnc_register_acf_content_assets' );
 add_action( 'elementor/preview/enqueue_styles', 'lnc_register_acf_content_assets' );
 function lnc_register_acf_content_assets() {
 	wp_register_style( 'lnc-acf-content', LNC_PLUGIN_URL . 'assets/css/acf-content.css', [], LNC_VERSION );
-	wp_register_style( 'lnc-child-pages', LNC_PLUGIN_URL . 'assets/css/child-pages.css', [], LNC_VERSION );
+	$cp_css = LNC_PLUGIN_DIR . 'assets/css/child-pages.css';
+	wp_register_style( 'lnc-child-pages', LNC_PLUGIN_URL . 'assets/css/child-pages.css', [], file_exists( $cp_css ) ? filemtime( $cp_css ) : LNC_VERSION );
 }
 
 // Register Comparison Table stylesheet.
