@@ -324,7 +324,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 				'type'       => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
-				'default'    => [ 'size' => 16, 'unit' => 'px' ],
+				'default'    => [ 'size' => 0, 'unit' => 'px' ],
 				'selectors'  => [ '{{WRAPPER}} .lnc-childpage__image' => 'margin-bottom:{{SIZE}}{{UNIT}};' ],
 			]
 		);

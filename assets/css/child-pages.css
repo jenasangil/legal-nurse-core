@@ -83,7 +83,7 @@
 
 .lnc-childpage__image {
 	display: block;
-	margin-bottom: 16px;
+	margin-bottom: 0;
 	line-height: 0;
 }
 
