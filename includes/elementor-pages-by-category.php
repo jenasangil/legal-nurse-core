@@ -91,6 +91,16 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'filter_label',
+			[
+				'label'       => esc_html__( 'Filter Label', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::TEXT,
+				'default'     => esc_html__( 'Filter by topic:', 'legal-nurse-core' ),
+				'description' => esc_html__( 'Text shown before the chips. Leave empty to hide.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
 			'all_label',
 			[
 				'label'   => esc_html__( '"View All" Label', 'legal-nurse-core' ),
@@ -412,14 +422,21 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 			$arrow_html = ob_get_clean();
 		}
 
+		$filter_label = $settings['filter_label'] ?? '';
+
 		echo '<div class="lnc-pbc">';
 
-		// Chips.
+		// Filter bar: optional label + chips.
+		echo '<div class="lnc-pbc__filter">';
+		if ( '' !== trim( (string) $filter_label ) ) {
+			echo '<span class="lnc-pbc__filter-label">' . esc_html( $filter_label ) . '</span>';
+		}
 		echo '<div class="lnc-pbc__chips">';
 		printf( '<button type="button" class="lnc-pbc__chip is-active" data-term="all">%s</button>', esc_html( $all_lbl ) );
 		foreach ( $terms as $term ) {
 			printf( '<button type="button" class="lnc-pbc__chip" data-term="%d">%s</button>', (int) $term->term_id, esc_html( $term->name ) );
 		}
+		echo '</div>';
 		echo '</div>';
 
 		// List.
