@@ -119,6 +119,18 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'exclude_ids',
+			[
+				'label'       => esc_html__( 'Exclude Pages', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SELECT2,
+				'multiple'    => true,
+				'label_block' => true,
+				'options'     => $this->get_page_options(),
+				'description' => esc_html__( 'Child pages to leave out of the list.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
 			'orderby',
 			[
 				'label'   => esc_html__( 'Order By', 'legal-nurse-core' ),
@@ -381,17 +393,22 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			$arrow_html = ob_get_clean();
 		}
 
-		$q = new WP_Query(
-			[
-				'post_type'      => 'page',
-				'post_parent'    => $parent,
-				'posts_per_page' => $number,
-				'orderby'        => $orderby,
-				'order'          => $order,
-				'post_status'    => 'publish',
-				'no_found_rows'  => true,
-			]
-		);
+		$exclude = array_filter( array_map( 'intval', (array) ( $settings['exclude_ids'] ?? [] ) ) );
+
+		$query_args = [
+			'post_type'      => 'page',
+			'post_parent'    => $parent,
+			'posts_per_page' => $number,
+			'orderby'        => $orderby,
+			'order'          => $order,
+			'post_status'    => 'publish',
+			'no_found_rows'  => true,
+		];
+		if ( ! empty( $exclude ) ) {
+			$query_args['post__not_in'] = $exclude;
+		}
+
+		$q = new WP_Query( $query_args );
 
 		if ( ! $q->have_posts() ) {
 			if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
