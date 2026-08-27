@@ -4,15 +4,16 @@
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 }
 
-/* Filter bar: label + chips. */
+/* Filter bar: label beside chips. */
 .lnc-pbc__filter {
 	display: flex;
 	align-items: center;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	gap: 16px;
 }
 
 .lnc-pbc__filter-label {
+	flex: 0 0 auto;
 	font-weight: 500;
 	color: #2a2926;
 	white-space: nowrap;
@@ -21,8 +22,10 @@
 /* Filter chips. */
 .lnc-pbc__chips {
 	display: flex;
+	flex: 1 1 auto;
 	flex-wrap: wrap;
 	gap: 10px;
+	min-width: 0;
 }
 
 .lnc-pbc__chip {
