@@ -23,6 +23,7 @@ require_once LNC_PLUGIN_DIR . 'includes/svg-support.php';
 require_once LNC_PLUGIN_DIR . 'includes/shortcodes.php';
 require_once LNC_PLUGIN_DIR . 'includes/loop-filter-ajax.php';
 require_once LNC_PLUGIN_DIR . 'includes/page-categories.php';
+require_once LNC_PLUGIN_DIR . 'includes/custom-schema.php';
 
 // Load Elementor extensions only after Elementor is ready.
 add_action( 'elementor/init', function () {
