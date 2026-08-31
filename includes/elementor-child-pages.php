@@ -232,14 +232,23 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 	private function register_style_controls() {
 		$this->start_controls_section( 'section_style', [ 'label' => esc_html__( 'Layout', 'legal-nurse-core' ), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
 
-		$this->add_control(
-			'center_content',
+		$this->add_responsive_control(
+			'align',
 			[
-				'label'        => esc_html__( 'Center Content', 'legal-nurse-core' ),
-				'type'         => \Elementor\Controls_Manager::SWITCHER,
-				'return_value' => 'yes',
-				'default'      => '',
-				'description'  => esc_html__( 'Center the image, title, excerpt, and Read More inside each card.', 'legal-nurse-core' ),
+				'label'                => esc_html__( 'Alignment', 'legal-nurse-core' ),
+				'type'                 => \Elementor\Controls_Manager::CHOOSE,
+				'options'              => [
+					'left'   => [ 'title' => esc_html__( 'Left', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-left' ],
+					'center' => [ 'title' => esc_html__( 'Center', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-center' ],
+					'right'  => [ 'title' => esc_html__( 'Right', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-right' ],
+				],
+				'default'              => 'left',
+				'selectors_dictionary' => [
+					'left'   => 'align-items:flex-start;text-align:left;',
+					'center' => 'align-items:center;text-align:center;',
+					'right'  => 'align-items:flex-end;text-align:right;',
+				],
+				'selectors'            => [ '{{WRAPPER}} .lnc-childpage__body' => '{{VALUE}}' ],
 			]
 		);
 
@@ -326,6 +335,15 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'title_hover_color',
+			[
+				'label'     => esc_html__( 'Title Hover Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .lnc-childpage__title a:hover' => 'color:{{VALUE}};' ],
+			]
+		);
+
 		$this->add_group_control(
 			\Elementor\Group_Control_Typography::get_type(),
 			[ 'name' => 'title_typography', 'label' => esc_html__( 'Title', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-childpage__title' ]
@@ -402,7 +420,6 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 		$words         = (int) ( $settings['excerpt_words'] ?? 0 );
 		$readmore      = $settings['readmore_text'] ? $settings['readmore_text'] : esc_html__( 'Read More', 'legal-nurse-core' );
 		$excerpt_tags  = [ 'em' => [], 'strong' => [], 'i' => [], 'b' => [], 'br' => [] ];
-		$center        = 'yes' === ( $settings['center_content'] ?? '' ) ? ' lnc-childpages--center' : '';
 
 		// Read-more icon (optional), rendered after the text.
 		$rm_icon      = $settings['readmore_icon'] ?? [];
@@ -413,7 +430,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			$rm_icon_html = ob_get_clean();
 		}
 
-		echo '<div class="lnc-childpages lnc-childpages--list' . esc_attr( $center ) . '">';
+		echo '<div class="lnc-childpages lnc-childpages--list">';
 
 		foreach ( $children as $page ) {
 			$id    = $page->ID;
@@ -421,6 +438,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			$title = get_the_title( $id );
 
 			echo '<article class="lnc-childpage">';
+			echo '<div class="lnc-childpage__inner">';
 
 			// Featured image before the title.
 			if ( $show_image && has_post_thumbnail( $id ) ) {
@@ -461,6 +479,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			}
 
 			echo '</div>'; // .lnc-childpage__body
+			echo '</div>'; // .lnc-childpage__inner
 			echo '</article>';
 		}
 

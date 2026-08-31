@@ -4,37 +4,23 @@
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 }
 
-/* Grid layout (cards) */
-.lnc-childpages--grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 24px;
-}
-
-.lnc-childpages--grid .lnc-childpage {
-	display: flex;
-	flex-direction: column;
-	padding: 24px;
-	background: #fff;
-	border-radius: 12px;
-}
-
 /* List layout (text left, image right, stacked rows) */
 .lnc-childpages--list {
 	display: flex;
 	flex-direction: column;
 }
 
-.lnc-childpages--list .lnc-childpage {
+/* The inner container holds the image + body row, its divider and spacing. */
+.lnc-childpage__inner {
 	display: flex;
 	flex-direction: row-reverse;
-	align-items: flex-start;
+	align-items: stretch;
 	gap: 32px;
-	padding: 28px 0;
-	border-bottom: 1px solid #e6e2d8;
+	padding-bottom: 32px;
+	border-bottom: 1.4px solid #E7E7E4;
 }
 
-.lnc-childpages--list .lnc-childpage:first-child {
+.lnc-childpages--list .lnc-childpage:first-child .lnc-childpage__inner {
 	padding-top: 0;
 }
 
@@ -54,33 +40,6 @@
 	flex-direction: column;
 }
 
-/* LIST: vertically center the image and text as a group; text stays left. */
-.lnc-childpages--list.lnc-childpages--center .lnc-childpage {
-	align-items: center;
-}
-
-/* GRID: center the card content horizontally. */
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage,
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__body {
-	align-items: center;
-	text-align: center;
-}
-
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__title,
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__text {
-	text-align: center;
-	width: 100%;
-}
-
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__image {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.lnc-childpages--grid.lnc-childpages--center .lnc-childpage__more {
-	align-self: center;
-}
-
 .lnc-childpage__image {
 	display: block;
 	margin-bottom: 0 !important;
@@ -89,7 +48,7 @@
 
 .lnc-childpage__image img {
 	width: 100%;
-	height: auto;
+	height: 100%;
 	display: block;
 	object-fit: cover;
 	border-radius: 24px;
@@ -122,7 +81,6 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	align-self: flex-start;
 	font-weight: 600;
 	text-decoration: none;
 	color: #25797c;
@@ -148,18 +106,13 @@
 	fill: currentColor;
 }
 
-@media (max-width: 1024px) {
-	.lnc-childpages--grid { grid-template-columns: repeat(2, 1fr); }
-}
-
 @media (max-width: 767px) {
-	.lnc-childpages--grid { grid-template-columns: 1fr; }
-
-	/* Stack the list rows on mobile: image on top, text below.
+	/* Stack the row on mobile: image on top, text below.
 	   !important overrides the Elementor Image Width control, whose
 	   wrapper-scoped rule otherwise keeps the fixed desktop width. */
-	.lnc-childpages--list .lnc-childpage {
+	.lnc-childpage__inner {
 		flex-direction: column;
+		align-items: stretch;
 		gap: 16px;
 	}
 
@@ -167,5 +120,9 @@
 		flex: 0 0 auto !important;
 		max-width: 100% !important;
 		width: 100% !important;
+	}
+
+	.lnc-childpage__image img {
+		height: auto;
 	}
 }
