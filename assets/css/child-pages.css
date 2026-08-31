@@ -16,7 +16,7 @@
 	flex-direction: row-reverse;
 	align-items: stretch;
 	gap: 32px;
-	padding-bottom: 32px;
+	margin-bottom: 32px;
 	padding-left: 24px;
 	border-left: 1.4px solid #77D1CE;
 }
