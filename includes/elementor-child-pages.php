@@ -452,7 +452,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			echo '<div class="lnc-childpage__body">';
 
 			printf(
-				'<h3 class="lnc-childpage__title"><a href="%s">%s</a></h3>',
+				'<h2 class="lnc-childpage__title"><a href="%s">%s</a></h2>',
 				esc_url( $url ),
 				esc_html( $title )
 			);
