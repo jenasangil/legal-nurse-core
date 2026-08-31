@@ -17,7 +17,8 @@
 	align-items: stretch;
 	gap: 32px;
 	padding-bottom: 32px;
-	border-bottom: 1.4px solid #E7E7E4;
+	padding-left: 24px;
+	border-left: 1.4px solid #77D1CE;
 }
 
 .lnc-childpages--list .lnc-childpage:first-child .lnc-childpage__inner {
