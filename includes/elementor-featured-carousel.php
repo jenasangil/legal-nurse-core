@@ -58,7 +58,7 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 		$pages = get_posts( [
 			'post_type'              => [ 'page', 'post' ],
 			'post_status'            => 'publish',
-			'posts_per_page'         => 200,
+			'posts_per_page'         => -1,
 			'orderby'                => 'title',
 			'order'                  => 'ASC',
 			'no_found_rows'          => true,
@@ -100,11 +100,9 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 		$repeater->add_control(
 			'selected_pages',
 			[
-				'label'       => esc_html__( 'Select Pages', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::SELECT2,
-				'multiple'    => true,
+				'label'       => esc_html__( 'Selected Pages', 'legal-nurse-core' ),
+				'type'        => 'sortable_pages',
 				'options'     => $this->get_page_options(),
-				'label_block' => true,
 			]
 		);
 
@@ -1084,12 +1082,17 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			$slug = sanitize_title( $cat['category_name'] );
 			$filters[ $slug ] = $cat['category_name'];
 
-			$page_ids = $cat['selected_pages'] ?? [];
-			if ( ! is_array( $page_ids ) ) {
+			$page_data = $cat['selected_pages'] ?? [];
+			if ( ! is_array( $page_data ) ) {
 				continue;
 			}
 
-			foreach ( $page_ids as $page_id ) {
+			foreach ( $page_data as $page ) {
+				$page_id = $page['id'] ?? null;
+				if ( ! $page_id ) {
+					continue;
+				}
+
 				$post = get_post( $page_id );
 				if ( ! $post ) {
 					continue;
