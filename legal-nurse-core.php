@@ -42,6 +42,23 @@ add_action( 'elementor/elements/categories_registered', function ( $elements_man
 	);
 } );
 
+// Register the custom Sortable Pages control.
+add_action( 'elementor/controls/register', function( $controls_manager ) {
+	require_once LNC_PLUGIN_DIR . 'includes/controls/control-sortable-pages.php';
+	$controls_manager->register( new \Control_Sortable_Pages() );
+} );
+
+// Enqueue the JS for the custom Sortable Pages control.
+add_action( 'elementor/editor/before_enqueue_scripts', function() {
+	wp_enqueue_script(
+		'sortable-pages-control',
+		LNC_PLUGIN_URL . 'assets/js/sortable-pages-control.js',
+		[ 'elementor-editor', 'jquery-ui-sortable' ],
+		LNC_VERSION,
+		true
+	);
+} );
+
 // Register widgets.
 add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-pricing-cards.php';
@@ -222,3 +239,4 @@ function lnc_register_featured_carousel_assets() {
 	wp_register_style( 'clnc-carousel', LNC_PLUGIN_URL . 'assets/css/clnc-carousel.css', [ 'swiper' ], filemtime( LNC_PLUGIN_DIR . 'assets/css/clnc-carousel.css' ) );
 	wp_register_script( 'clnc-carousel', LNC_PLUGIN_URL . 'assets/js/clnc-carousel.js', [ 'swiper-js' ], filemtime( LNC_PLUGIN_DIR . 'assets/js/clnc-carousel.js' ), true );
 }
+
