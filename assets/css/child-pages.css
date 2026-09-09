@@ -112,7 +112,7 @@
 	   !important overrides the Elementor Image Width control, whose
 	   wrapper-scoped rule otherwise keeps the fixed desktop width. */
 	.lnc-childpage__inner {
-		flex-direction: column;
+		flex-direction: column-reverse !important;
 		align-items: stretch;
 		gap: 16px;
 	}
