@@ -89,7 +89,7 @@
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 12px;
-	margin-top: auto;
+	margin-top: 24px;
 }
 
 /* Full-width buttons: stack and fill the card, with a 30px top margin. */
