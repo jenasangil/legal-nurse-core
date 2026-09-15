@@ -1,0 +1,55 @@
+/* Legal Nurse Core — Mentoring Table */
+
+.mentoring-table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid #e6e2d8;
+	border-radius: 12px;
+	overflow: hidden;
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+	color: #2a2926;
+	background: #ffffff;
+}
+
+.mentoring-table tr {
+	background: #ffffff;
+}
+
+.mentoring-table tr + tr {
+	border-top: 1px solid #e6e2d8;
+}
+
+.mentoring-table th,
+.mentoring-table td {
+	padding: 16px 20px;
+	text-align: left;
+	vertical-align: middle;
+	line-height: 1.4;
+}
+
+.mentoring-table th {
+	font-weight: 700;
+	white-space: nowrap;
+	width: 1%;
+}
+
+.mentoring-table td {
+	border-left: 1px solid #e6e2d8;
+}
+
+/* Highlighted plan row. */
+.mentoring-table tr.green {
+	background: #25797c;
+	color: #ffffff;
+}
+
+.mentoring-table tr.green td {
+	border-left-color: rgba(255, 255, 255, 0.35);
+}
+
+@media (max-width: 480px) {
+	.mentoring-table th,
+	.mentoring-table td {
+		padding: 12px 14px;
+	}
+}
