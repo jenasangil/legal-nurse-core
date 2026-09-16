@@ -78,6 +78,13 @@
 	flex: 1 1 auto;
 }
 
+/* Tablet and up: keep the text a comfortable measure. */
+@media (min-width: 768px) {
+	.lnc-childpage__text {
+		max-width: 800px;
+	}
+}
+
 .lnc-childpage__more {
 	display: inline-flex;
 	align-items: center;
