@@ -43,6 +43,20 @@
 	color: #4a4a4a;
 }
 
+.lnc-case__byline-img {
+	display: block;
+	margin-bottom: 12px;
+	line-height: 0;
+}
+
+.lnc-case__byline-img img {
+	width: 120px;
+	height: 120px;
+	object-fit: cover;
+	border-radius: 100%;
+	display: block;
+}
+
 .lnc-case__byline p {
 	margin: 6px 0 0;
 	font-size: 14px;

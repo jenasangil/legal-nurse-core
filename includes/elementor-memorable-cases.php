@@ -155,6 +155,28 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'show_image',
+			[
+				'label'        => esc_html__( 'Show Image', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'separator'    => 'before',
+				'description'  => esc_html__( 'Show the first image found in the byline field.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
+			'default_image',
+			[
+				'label'       => esc_html__( 'Default Image', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::MEDIA,
+				'description' => esc_html__( 'Used when the byline field has no image.', 'legal-nurse-core' ),
+				'condition'   => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
 			'show_title',
 			[
 				'label'        => esc_html__( 'Show Title', 'legal-nurse-core' ),
@@ -311,6 +333,69 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'image_heading',
+			[
+				'label'     => esc_html__( 'Image', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+				'condition' => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'image_width',
+			[
+				'label'      => esc_html__( 'Image Width', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range'      => [ 'px' => [ 'min' => 40, 'max' => 400 ], '%' => [ 'min' => 10, 'max' => 100 ] ],
+				'default'    => [ 'size' => 120, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'width:{{SIZE}}{{UNIT}};' ],
+				'condition'  => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'image_height',
+			[
+				'label'       => esc_html__( 'Image Height', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SLIDER,
+				'size_units'  => [ 'px' ],
+				'range'       => [ 'px' => [ 'min' => 0, 'max' => 400 ] ],
+				'default'     => [ 'size' => 120, 'unit' => 'px' ],
+				'description' => esc_html__( '0 = auto (keep aspect ratio).', 'legal-nurse-core' ),
+				'selectors'   => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'height:{{SIZE}}{{UNIT}};object-fit:cover;' ],
+				'condition'   => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'image_radius',
+			[
+				'label'      => esc_html__( 'Image Border Radius', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 200 ], '%' => [ 'min' => 0, 'max' => 100 ] ],
+				'default'    => [ 'size' => 100, 'unit' => '%' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'border-radius:{{SIZE}}{{UNIT}};' ],
+				'condition'  => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'image_spacing',
+			[
+				'label'      => esc_html__( 'Image Bottom Spacing', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::SLIDER,
+				'size_units' => [ 'px' ],
+				'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
+				'default'    => [ 'size' => 12, 'unit' => 'px' ],
+				'selectors'  => [ '{{WRAPPER}} .lnc-case__byline-img' => 'margin-bottom:{{SIZE}}{{UNIT}};' ],
+				'condition'  => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
 			'read_more_heading',
 			[
 				'label'     => esc_html__( 'Read Full Case', 'legal-nurse-core' ),
@@ -383,6 +468,9 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		$show_title     = 'yes' === ( $settings['show_title'] ?? 'yes' );
 		$show_read_more = 'yes' === ( $settings['show_read_more'] ?? 'yes' );
 		$read_label     = $settings['read_more_label'] ? $settings['read_more_label'] : esc_html__( 'Read full case', 'legal-nurse-core' );
+		$show_image     = 'yes' === ( $settings['show_image'] ?? 'yes' );
+		$default_image  = ! empty( $settings['default_image']['url'] ) ? $settings['default_image']['url'] : '';
+		$img_allowed    = [ 'img' => [ 'src' => [], 'srcset' => [], 'sizes' => [], 'alt' => [], 'width' => [], 'height' => [], 'class' => [], 'loading' => [] ] ];
 
 		// Read-more arrow: the chosen icon, else a default → glyph.
 		$icon      = $settings['read_more_icon'] ?? [];
@@ -431,6 +519,16 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			$rbt    = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 			$byline = is_string( $rbt ) ? $rbt : '';
 
+			// Pull the first image out of the field (before stripping images).
+			$img_html = '';
+			if ( $show_image ) {
+				if ( preg_match( '/<img\b[^>]*>/i', $byline, $im ) ) {
+					$img_html = $im[0];
+				} elseif ( '' !== $default_image ) {
+					$img_html = '<img src="' . esc_url( $default_image ) . '" alt="' . esc_attr( $title ) . '" loading="lazy">';
+				}
+			}
+
 			// Drop any images; keep only the first paragraph of the byline.
 			$byline = preg_replace( '/<img\b[^>]*>/i', '', $byline );
 			if ( preg_match( '/<p\b[^>]*>.*?<\/p>/is', $byline, $pm ) ) {
@@ -449,8 +547,15 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			}
 
 			$byline = trim( (string) $byline );
-			if ( '' !== $byline ) {
-				echo '<div class="lnc-case__byline">' . wp_kses( $byline, $this->byline_allowed_tags() ) . '</div>';
+			if ( '' !== $img_html || '' !== $byline ) {
+				echo '<div class="lnc-case__byline">';
+				if ( '' !== $img_html ) {
+					echo '<span class="lnc-case__byline-img">' . wp_kses( $img_html, $img_allowed ) . '</span>';
+				}
+				if ( '' !== $byline ) {
+					echo wp_kses( $byline, $this->byline_allowed_tags() );
+				}
+				echo '</div>';
 			}
 
 			if ( $show_read_more ) {
