@@ -98,16 +98,6 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
-			'meta_field',
-			[
-				'label'       => esc_html__( 'ACF Field', 'legal-nurse-core' ),
-				'type'        => \Elementor\Controls_Manager::TEXT,
-				'default'     => 'right_box_text',
-				'description' => esc_html__( 'ACF field holding the image + byline (its first image goes on the left).', 'legal-nurse-core' ),
-			]
-		);
-
-		$this->add_control(
 			'number',
 			[
 				'label'   => esc_html__( 'Max Items', 'legal-nurse-core' ),
@@ -464,7 +454,7 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		$number         = (int) ( $settings['number'] ?? 12 );
 		$orderby        = $settings['orderby'] ?? 'menu_order';
 		$order          = ( 'DESC' === ( $settings['order'] ?? 'ASC' ) ) ? 'DESC' : 'ASC';
-		$field          = $settings['meta_field'] ? $settings['meta_field'] : 'right_box_text';
+		$field          = 'case_author';
 		$show_title     = 'yes' === ( $settings['show_title'] ?? 'yes' );
 		$show_read_more = 'yes' === ( $settings['show_read_more'] ?? 'yes' );
 		$read_label     = $settings['read_more_label'] ? $settings['read_more_label'] : esc_html__( 'Read full case', 'legal-nurse-core' );
