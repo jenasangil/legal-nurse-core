@@ -50,6 +50,7 @@
 	display: block;
 	line-height: 0;
 	flex: 0 0 auto;
+	justify-content: space-between;
 }
 
 .lnc-case__byline-img img {
