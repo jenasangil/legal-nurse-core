@@ -389,7 +389,7 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 				'type'       => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'px' ],
 				'range'      => [ 'px' => [ 'min' => 0, 'max' => 60 ] ],
-				'default'    => [ 'size' => 12, 'unit' => 'px' ],
+				'default'    => [ 'size' => 0, 'unit' => 'px' ],
 				'selectors'  => [ '{{WRAPPER}} .lnc-case__byline-img' => 'margin-bottom:{{SIZE}}{{UNIT}};' ],
 				'condition'  => [ 'show_image' => 'yes' ],
 			]

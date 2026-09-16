@@ -38,6 +38,9 @@
 }
 
 .lnc-case__byline {
+	display: flex;
+	align-items: center;
+	gap: 12px;
 	font-size: 14px;
 	line-height: 1.4;
 	color: #4a4a4a;
@@ -45,8 +48,8 @@
 
 .lnc-case__byline-img {
 	display: block;
-	margin-bottom: 12px;
 	line-height: 0;
+	flex: 0 0 auto;
 }
 
 .lnc-case__byline-img img {
