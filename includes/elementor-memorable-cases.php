@@ -349,7 +349,7 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 				'type'       => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => [ 'px', '%' ],
 				'range'      => [ 'px' => [ 'min' => 40, 'max' => 400 ], '%' => [ 'min' => 10, 'max' => 100 ] ],
-				'default'    => [ 'size' => 120, 'unit' => 'px' ],
+				'default'    => [ 'size' => 48, 'unit' => 'px' ],
 				'selectors'  => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'width:{{SIZE}}{{UNIT}};' ],
 				'condition'  => [ 'show_image' => 'yes' ],
 			]
@@ -362,7 +362,7 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 				'type'        => \Elementor\Controls_Manager::SLIDER,
 				'size_units'  => [ 'px' ],
 				'range'       => [ 'px' => [ 'min' => 0, 'max' => 400 ] ],
-				'default'     => [ 'size' => 120, 'unit' => 'px' ],
+				'default'     => [ 'size' => 48, 'unit' => 'px' ],
 				'description' => esc_html__( '0 = auto (keep aspect ratio).', 'legal-nurse-core' ),
 				'selectors'   => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'height:{{SIZE}}{{UNIT}};object-fit:cover;' ],
 				'condition'   => [ 'show_image' => 'yes' ],
@@ -519,11 +519,11 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			$rbt    = function_exists( 'get_field' ) ? get_field( $field, $id ) : '';
 			$byline = is_string( $rbt ) ? $rbt : '';
 
-			// Pull the first image out of the field (before stripping images).
+			// Image: the page's featured image, else the default image.
 			$img_html = '';
 			if ( $show_image ) {
-				if ( preg_match( '/<img\b[^>]*>/i', $byline, $im ) ) {
-					$img_html = $im[0];
+				if ( has_post_thumbnail( $id ) ) {
+					$img_html = get_the_post_thumbnail( $id, 'medium', [ 'alt' => esc_attr( $title ), 'loading' => 'lazy' ] );
 				} elseif ( '' !== $default_image ) {
 					$img_html = '<img src="' . esc_url( $default_image ) . '" alt="' . esc_attr( $title ) . '" loading="lazy">';
 				}
