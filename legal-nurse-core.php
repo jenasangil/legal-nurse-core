@@ -99,7 +99,18 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-mentoring-table.php';
 	$widgets_manager->register( new LNC_Mentoring_Table_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-category-list.php';
+	$widgets_manager->register( new LNC_Category_List_Widget() );
 } );
+
+// Register Category List stylesheet (uses the Loop Filter script/handler).
+add_action( 'wp_enqueue_scripts', 'lnc_register_category_list_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_category_list_assets' );
+function lnc_register_category_list_assets() {
+	$css = LNC_PLUGIN_DIR . 'assets/css/category-list.css';
+	wp_register_style( 'lnc-category-list', LNC_PLUGIN_URL . 'assets/css/category-list.css', [ 'lnc-loop-filter' ], file_exists( $css ) ? filemtime( $css ) : LNC_VERSION );
+}
 
 // Register Mentoring Table stylesheet (loaded only when the widget is used).
 add_action( 'wp_enqueue_scripts', 'lnc_register_mentoring_table_assets' );

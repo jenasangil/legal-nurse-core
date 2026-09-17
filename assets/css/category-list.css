@@ -1,0 +1,40 @@
+/* Legal Nurse Core — Category List (vertical loop filter) */
+
+.lnc-catlist {
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+}
+
+.lnc-catlist .lnc-loop-filter__inner {
+	display: block;
+}
+
+.lnc-catlist__heading {
+	font-family: "Wix Madefor Display", "Wix Madefor Text", sans-serif;
+	font-size: 22px;
+	font-weight: 700;
+	color: #2a2926;
+	margin: 0 0 16px;
+}
+
+/* Stack the category buttons vertically, overriding the horizontal bar —
+   including the loop-filter mobile rule that hides the bar. */
+.lnc-catlist .lnc-loop-filter__bar {
+	display: flex !important;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 14px;
+	flex-wrap: nowrap;
+}
+
+.lnc-catlist .lnc-loop-filter__btn {
+	width: auto;
+	padding: 0 0 2px;
+	text-align: left;
+	color: #2a2926;
+	line-height: 1.3;
+}
+
+.lnc-catlist .lnc-loop-filter__btn.is-active {
+	color: #1BA39C;
+	box-shadow: inset 0 -2px 0 0 #1BA39C;
+}
