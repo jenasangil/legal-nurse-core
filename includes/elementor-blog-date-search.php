@@ -153,10 +153,10 @@ class LNC_Blog_Date_Search_Widget extends \Elementor\Widget_Base {
 			[
 				'name'     => 'input_border_group',
 				'label'    => esc_html__( 'Input Border', 'legal-nurse-core' ),
-				'selector' => '{{WRAPPER}} .lnc-datesearch__input',
+				'selector' => '{{WRAPPER}} .lnc-datesearch__field input',
 			]
 		);
-		$this->add_control( 'input_radius', [ 'label' => esc_html__( 'Input Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__input' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
+		$this->add_control( 'input_radius', [ 'label' => esc_html__( 'Input Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__field input' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
 		$this->add_control( 'icon_color', [ 'label' => esc_html__( 'Calendar Icon Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#8a8a8a', 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__icon' => 'color:{{VALUE}};' ] ] );
 
 		$this->add_control( 'btn_heading', [ 'label' => esc_html__( 'Button', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before' ] );
