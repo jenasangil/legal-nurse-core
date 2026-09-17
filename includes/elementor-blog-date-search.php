@@ -136,7 +136,16 @@ class LNC_Blog_Date_Search_Widget extends \Elementor\Widget_Base {
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'heading_typography', 'label' => esc_html__( 'Heading', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-datesearch__heading', 'condition' => [ 'show_heading' => 'yes' ] ] );
 
 		$this->add_control( 'label_color', [ 'label' => esc_html__( 'Label Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__label' => 'color:{{VALUE}};' ], 'separator' => 'before' ] );
+		$this->add_group_control(
+			\Elementor\Group_Control_Border::get_type(),
+			[
+				'name'     => 'field_border_group',
+				'label'    => esc_html__( 'Field Border', 'legal-nurse-core' ),
+				'selector' => '{{WRAPPER}} .lnc-datesearch__field',
+			]
+		);
 		$this->add_control( 'field_border', [ 'label' => esc_html__( 'Field Border Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#e6e2d8', 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__field' => 'border-color:{{VALUE}};' ] ] );
+		$this->add_responsive_control( 'field_padding', [ 'label' => esc_html__( 'Field Padding', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__input' => 'padding:{{TOP}}{{UNIT}} 44px {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 		$this->add_control( 'field_radius', [ 'label' => esc_html__( 'Field Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'default' => [ 'size' => 10, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__field' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
 		$this->add_control( 'icon_color', [ 'label' => esc_html__( 'Calendar Icon Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#8a8a8a', 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__icon' => 'color:{{VALUE}};' ] ] );
 
