@@ -323,6 +323,33 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'hover_heading',
+			[
+				'label'     => esc_html__( 'Card Hover', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::HEADING,
+				'separator' => 'before',
+			]
+		);
+
+		$this->add_control(
+			'title_hover_color',
+			[
+				'label'     => esc_html__( 'Title Hover Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .lnc-case:hover .lnc-case__title a' => 'color:{{VALUE}};' ],
+			]
+		);
+
+		$this->add_control(
+			'byline_hover_color',
+			[
+				'label'     => esc_html__( 'Byline Hover Color', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ '{{WRAPPER}} .lnc-case:hover .lnc-case__byline' => 'color:{{VALUE}};' ],
+			]
+		);
+
+		$this->add_control(
 			'image_heading',
 			[
 				'label'     => esc_html__( 'Image', 'legal-nurse-core' ),
