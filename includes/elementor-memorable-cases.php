@@ -551,6 +551,11 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 			if ( preg_match( '/<p\b[^>]*>.*?<\/p>/is', $byline, $pm ) ) {
 				$byline = $pm[0];
 			}
+			// Drop <p> wrappers and prefix with "by " (unless already present).
+			$byline = trim( preg_replace( '#</?p\b[^>]*>#i', '', (string) $byline ) );
+			if ( '' !== $byline && 0 !== stripos( wp_strip_all_tags( $byline ), 'by ' ) ) {
+				$byline = 'by ' . $byline;
+			}
 
 			echo '<article class="lnc-case">';
 
