@@ -147,6 +147,16 @@ class LNC_Blog_Date_Search_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'field_border', [ 'label' => esc_html__( 'Field Border Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#e6e2d8', 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__field' => 'border-color:{{VALUE}};' ] ] );
 		$this->add_responsive_control( 'field_padding', [ 'label' => esc_html__( 'Field Padding', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__input' => 'padding:{{TOP}}{{UNIT}} 44px {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 		$this->add_control( 'field_radius', [ 'label' => esc_html__( 'Field Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'default' => [ 'size' => 10, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__field' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Border::get_type(),
+			[
+				'name'     => 'input_border_group',
+				'label'    => esc_html__( 'Input Border', 'legal-nurse-core' ),
+				'selector' => '{{WRAPPER}} .lnc-datesearch__input',
+			]
+		);
+		$this->add_control( 'input_radius', [ 'label' => esc_html__( 'Input Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 40 ] ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__input' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
 		$this->add_control( 'icon_color', [ 'label' => esc_html__( 'Calendar Icon Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#8a8a8a', 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__icon' => 'color:{{VALUE}};' ] ] );
 
 		$this->add_control( 'btn_heading', [ 'label' => esc_html__( 'Button', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before' ] );
