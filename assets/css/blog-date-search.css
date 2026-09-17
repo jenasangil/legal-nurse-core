@@ -1,0 +1,102 @@
+/* Legal Nurse Core — Blog Date Search */
+
+.lnc-datesearch {
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.lnc-datesearch__heading {
+	font-family: "Wix Madefor Display", "Wix Madefor Text", sans-serif;
+	font-size: 22px;
+	font-weight: 700;
+	color: #2a2926;
+	margin: 0 0 2px;
+}
+
+.lnc-datesearch__group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.lnc-datesearch__label {
+	font-size: 16px;
+	font-weight: 500;
+	color: #2a2926;
+}
+
+.lnc-datesearch__field {
+	position: relative;
+	display: flex;
+	align-items: center;
+	border: 1px solid #e6e2d8;
+	border-radius: 10px;
+	background: #ffffff;
+}
+
+.lnc-datesearch__input {
+	flex: 1 1 auto;
+	min-width: 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	font: inherit;
+	color: #2a2926;
+	padding: 12px 44px 12px 16px;
+	border-radius: inherit;
+}
+
+/* Hide the native calendar icon; use our own. */
+.lnc-datesearch__input::-webkit-calendar-picker-indicator {
+	opacity: 0;
+	cursor: pointer;
+}
+
+.lnc-datesearch__icon {
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	background: transparent;
+	color: #8a8a8a;
+	cursor: pointer;
+	padding: 0;
+	line-height: 0;
+	pointer-events: none;
+}
+
+.lnc-datesearch__icon svg {
+	width: 20px;
+	height: 20px;
+}
+
+.lnc-datesearch__icon i {
+	font-size: 18px;
+}
+
+.lnc-datesearch__submit {
+	margin-top: 6px;
+	border: 0;
+	cursor: pointer;
+	background: #1f6f72;
+	color: #ffffff;
+	font-weight: 600;
+	padding: 14px 24px;
+	border-radius: 999px;
+	transition: opacity 0.15s ease;
+}
+
+.lnc-datesearch__submit:hover {
+	opacity: 0.92;
+}
+
+.lnc-datesearch.is-loading {
+	opacity: 0.7;
+	pointer-events: none;
+}

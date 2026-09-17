@@ -102,7 +102,20 @@ add_action( 'elementor/widgets/register', function ( $widgets_manager ) {
 
 	require_once LNC_PLUGIN_DIR . 'includes/elementor-category-list.php';
 	$widgets_manager->register( new LNC_Category_List_Widget() );
+
+	require_once LNC_PLUGIN_DIR . 'includes/elementor-blog-date-search.php';
+	$widgets_manager->register( new LNC_Blog_Date_Search_Widget() );
 } );
+
+// Register Blog Date Search assets (uses the Loop Filter AJAX handler).
+add_action( 'wp_enqueue_scripts', 'lnc_register_blog_date_search_assets' );
+add_action( 'elementor/preview/enqueue_styles', 'lnc_register_blog_date_search_assets' );
+function lnc_register_blog_date_search_assets() {
+	$css = LNC_PLUGIN_DIR . 'assets/css/blog-date-search.css';
+	$js  = LNC_PLUGIN_DIR . 'assets/js/blog-date-search.js';
+	wp_register_style( 'lnc-blog-date-search', LNC_PLUGIN_URL . 'assets/css/blog-date-search.css', [], file_exists( $css ) ? filemtime( $css ) : LNC_VERSION );
+	wp_register_script( 'lnc-blog-date-search', LNC_PLUGIN_URL . 'assets/js/blog-date-search.js', [ 'lnc-loop-filter' ], file_exists( $js ) ? filemtime( $js ) : LNC_VERSION, true );
+}
 
 // Register Category List stylesheet (uses the Loop Filter script/handler).
 add_action( 'wp_enqueue_scripts', 'lnc_register_category_list_assets' );

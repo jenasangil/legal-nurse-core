@@ -76,6 +76,21 @@ function lnc_loop_filter_ajax() {
 		'no_found_rows'       => false,
 	];
 
+	// Optional date range (YYYY-MM-DD) from the Blog Date Search widget.
+	$date_start = isset( $_POST['date_start'] ) ? sanitize_text_field( wp_unslash( $_POST['date_start'] ) ) : '';
+	$date_end   = isset( $_POST['date_end'] ) ? sanitize_text_field( wp_unslash( $_POST['date_end'] ) ) : '';
+	$date_query = [];
+	if ( '' !== $date_start ) {
+		$date_query['after'] = $date_start;
+	}
+	if ( '' !== $date_end ) {
+		$date_query['before'] = $date_end;
+	}
+	if ( ! empty( $date_query ) ) {
+		$date_query['inclusive'] = true;
+		$args['date_query']      = [ $date_query ];
+	}
+
 	if ( 'all' !== $term && is_numeric( $term ) ) {
 		// A specific category was chosen.
 		$args['tax_query'] = [
