@@ -79,6 +79,27 @@ class LNC_Category_List_Widget extends \Elementor\Widget_Base {
 		return $options;
 	}
 
+	/** Category term options for the exclude selector (editor-only query). */
+	private function get_term_options() {
+		$options = [];
+
+		$is_editor = is_admin()
+			|| \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| ( isset( $_GET['action'] ) && 'elementor' === $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( ! $is_editor ) {
+			return $options;
+		}
+
+		$terms = get_terms( [ 'taxonomy' => 'category', 'hide_empty' => false ] );
+		if ( is_wp_error( $terms ) ) {
+			return $options;
+		}
+		foreach ( $terms as $term ) {
+			$options[ $term->term_id ] = $term->name;
+		}
+		return $options;
+	}
+
 	protected function register_controls() {
 
 		$this->start_controls_section( 'section_content', [ 'label' => esc_html__( 'Filter Settings', 'legal-nurse-core' ) ] );
@@ -164,6 +185,18 @@ class LNC_Category_List_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'exclude_ids',
+			[
+				'label'       => esc_html__( 'Exclude Categories', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::SELECT2,
+				'multiple'    => true,
+				'label_block' => true,
+				'options'     => $this->get_term_options(),
+				'description' => esc_html__( 'Categories to leave out of the list (e.g. Uncategorized).', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
 			'hide_empty',
 			[
 				'label'        => esc_html__( 'Hide Empty Categories', 'legal-nurse-core' ),
@@ -232,14 +265,18 @@ class LNC_Category_List_Widget extends \Elementor\Widget_Base {
 		$orderby   = 'count' === ( $settings['orderby'] ?? 'name' ) ? 'count' : 'name';
 		$order     = 'count' === $orderby ? 'DESC' : 'ASC';
 
-		$terms = get_terms(
-			[
-				'taxonomy'   => $taxonomy,
-				'hide_empty' => 'yes' === ( $settings['hide_empty'] ?? 'yes' ),
-				'orderby'    => $orderby,
-				'order'      => $order,
-			]
-		);
+		$term_args = [
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => 'yes' === ( $settings['hide_empty'] ?? 'yes' ),
+			'orderby'    => $orderby,
+			'order'      => $order,
+		];
+		$exclude = array_filter( array_map( 'intval', (array) ( $settings['exclude_ids'] ?? [] ) ) );
+		if ( ! empty( $exclude ) ) {
+			$term_args['exclude'] = $exclude;
+		}
+
+		$terms = get_terms( $term_args );
 		if ( is_wp_error( $terms ) ) {
 			$terms = [];
 		}
