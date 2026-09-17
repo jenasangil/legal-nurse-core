@@ -211,8 +211,8 @@ class LNC_Category_List_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_tab();
 
 		$this->start_controls_tab( 'item_active', [ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ] );
-		$this->add_control( 'item_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1BA39C', 'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'color:{{VALUE}};' ] ] );
-		$this->add_control( 'item_border_a', [ 'label' => esc_html__( 'Underline', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1BA39C', 'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'box-shadow:inset 0 -2px 0 0 {{VALUE}};' ] ] );
+		$this->add_control( 'item_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'item_border_a', [ 'label' => esc_html__( 'Underline', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'box-shadow:inset 0 -2px 0 0 {{VALUE}};' ] ] );
 		$this->end_controls_tab();
 
 		$this->end_controls_tabs();
