@@ -34,7 +34,8 @@
 	color: inherit;
 }
 
-.lnc-case__title a:hover {
+.lnc-case__title a:hover,
+.lnc-case:hover .lnc-case__title a {
 	text-decoration: underline;
 }
 
