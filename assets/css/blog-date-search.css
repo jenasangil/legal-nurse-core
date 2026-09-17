@@ -63,7 +63,8 @@
 	align-items: center;
 	justify-content: center;
 	border: 0;
-	background: unset;
+	background: none !important;
+	background-color: transparent !important;
 	color: #8a8a8a;
 	cursor: pointer;
 	padding: 0;
