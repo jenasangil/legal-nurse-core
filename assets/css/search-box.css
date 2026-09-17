@@ -1,0 +1,61 @@
+/* Legal Nurse Core — Search Box */
+
+.lnc-searchbox {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #ffffff;
+	border: 1px solid #e6e2d8;
+	border-radius: 10px;
+	padding: 14px 18px;
+	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+}
+
+.lnc-searchbox--iconright {
+	flex-direction: row;
+}
+
+.lnc-searchbox__icon {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	background: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	color: #9a9a92;
+	line-height: 0;
+}
+
+.lnc-searchbox__icon svg {
+	width: 18px;
+	height: 18px;
+}
+
+.lnc-searchbox__icon i {
+	font-size: 18px;
+}
+
+.lnc-searchbox__input {
+	flex: 1 1 auto;
+	min-width: 0;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	font: inherit;
+	color: #2a2926;
+	padding: 0;
+}
+
+.lnc-searchbox__input::placeholder {
+	color: #9a9a92;
+	opacity: 1;
+}
+
+/* Hide the native search field clear/decoration for a clean look. */
+.lnc-searchbox__input::-webkit-search-decoration,
+.lnc-searchbox__input::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+}
