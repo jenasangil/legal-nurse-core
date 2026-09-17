@@ -15,10 +15,6 @@
 			config = {};
 		}
 
-		if ( ! config.target ) {
-			return;
-		}
-
 		var state = { term: 'all', sort: 'recent', page: 1 };
 
 		var buttons  = root.querySelectorAll( '.lnc-loop-filter__btn' );
