@@ -100,7 +100,7 @@ class LNC_Search_Box_Widget extends \Elementor\Widget_Base {
 	private function register_style_controls() {
 		$this->start_controls_section( 'section_style', [ 'label' => esc_html__( 'Style', 'legal-nurse-core' ), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
 
-		$this->add_control( 'field_bg', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-searchbox' => 'background:{{VALUE}};' ] ] );
+		$this->add_control( 'field_bg', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-searchbox__input' => 'background:{{VALUE}};' ] ] );
 		$this->add_control( 'text_color', [ 'label' => esc_html__( 'Text Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#2a2926', 'selectors' => [ '{{WRAPPER}} .lnc-searchbox__input' => 'color:{{VALUE}};' ] ] );
 		$this->add_control( 'placeholder_color', [ 'label' => esc_html__( 'Placeholder Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#9a9a92', 'selectors' => [ '{{WRAPPER}} .lnc-searchbox__input::placeholder' => 'color:{{VALUE}};opacity:1;' ] ] );
 		$this->add_control( 'icon_color', [ 'label' => esc_html__( 'Icon Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#9a9a92', 'selectors' => [ '{{WRAPPER}} .lnc-searchbox__icon' => 'color:{{VALUE}};' ] ] );
@@ -109,13 +109,13 @@ class LNC_Search_Box_Widget extends \Elementor\Widget_Base {
 
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'text_typography', 'selector' => '{{WRAPPER}} .lnc-searchbox__input' ] );
 
-		$this->add_group_control( \Elementor\Group_Control_Border::get_type(), [ 'name' => 'field_border', 'selector' => '{{WRAPPER}} .lnc-searchbox' ] );
+		$this->add_group_control( \Elementor\Group_Control_Border::get_type(), [ 'name' => 'field_border', 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-searchbox__input' ] );
 
-		$this->add_control( 'field_radius', [ 'label' => esc_html__( 'Border Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 50 ] ], 'default' => [ 'size' => 10, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-searchbox' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
+		$this->add_control( 'field_border_color', [ 'label' => esc_html__( 'Border Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#e6e2d8', 'selectors' => [ '{{WRAPPER}} .lnc-searchbox__input' => 'border-color:{{VALUE}};' ] ] );
 
-		$this->add_responsive_control( 'field_padding', [ 'label' => esc_html__( 'Padding', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'default' => [ 'top' => 14, 'right' => 18, 'bottom' => 14, 'left' => 18, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-searchbox' => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
+		$this->add_control( 'field_radius', [ 'label' => esc_html__( 'Border Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 50 ] ], 'default' => [ 'size' => 10, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-searchbox__input' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
 
-		$this->add_responsive_control( 'icon_gap', [ 'label' => esc_html__( 'Icon Gap', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 30 ] ], 'default' => [ 'size' => 12, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-searchbox' => 'gap:{{SIZE}}{{UNIT}};' ] ] );
+		$this->add_responsive_control( 'field_padding', [ 'label' => esc_html__( 'Padding', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::DIMENSIONS, 'size_units' => [ 'px', 'em' ], 'default' => [ 'top' => 14, 'right' => 18, 'bottom' => 14, 'left' => 18, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-searchbox--iconleft .lnc-searchbox__input' => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} 46px;', '{{WRAPPER}} .lnc-searchbox--iconright .lnc-searchbox__input' => 'padding:{{TOP}}{{UNIT}} 46px {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ] ] );
 
 		$this->end_controls_section();
 	}
@@ -137,19 +137,16 @@ class LNC_Search_Box_Widget extends \Elementor\Widget_Base {
 		}
 		$icon_html = '<button type="submit" class="lnc-searchbox__icon" aria-label="' . esc_attr__( 'Search', 'legal-nurse-core' ) . '">' . ob_get_clean() . '</button>';
 
-		echo '<form class="lnc-searchbox' . ( $rightp ? ' lnc-searchbox--iconright' : '' ) . '" action="' . esc_url( $url ) . '" method="get" role="search">';
-		if ( ! $rightp ) {
-			echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
+		$modifier = $rightp ? 'lnc-searchbox--iconright' : 'lnc-searchbox--iconleft';
+
+		echo '<form class="lnc-searchbox ' . esc_attr( $modifier ) . '" action="' . esc_url( $url ) . '" method="get" role="search">';
 		printf(
 			'<input type="search" class="lnc-searchbox__input" name="%s" placeholder="%s" aria-label="%s" autocomplete="off">',
 			esc_attr( $param ),
 			esc_attr( $ph ),
 			esc_attr( $ph )
 		);
-		if ( $rightp ) {
-			echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
+		echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '</form>';
 	}
 }

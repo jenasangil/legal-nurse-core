@@ -1,22 +1,38 @@
 /* Legal Nurse Core — Search Box */
 
 .lnc-searchbox {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	background: #ffffff;
-	border: 1px solid #e6e2d8;
-	border-radius: 10px;
-	padding: 14px 18px;
+	position: relative;
+	display: block;
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
 }
 
-.lnc-searchbox--iconright {
-	flex-direction: row;
+.lnc-searchbox__input {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid #e6e2d8;
+	border-radius: 10px;
+	background: #ffffff;
+	color: #2a2926;
+	font: inherit;
+	outline: 0;
+	padding: 14px 18px;
 }
 
+.lnc-searchbox__input::placeholder {
+	color: #9a9a92;
+	opacity: 1;
+}
+
+.lnc-searchbox__input::-webkit-search-decoration,
+.lnc-searchbox__input::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+}
+
+/* Icon sits inside the input. */
 .lnc-searchbox__icon {
-	flex: 0 0 auto;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -38,24 +54,19 @@
 	font-size: 18px;
 }
 
-.lnc-searchbox__input {
-	flex: 1 1 auto;
-	min-width: 0;
-	border: 0;
-	outline: 0;
-	background: transparent;
-	font: inherit;
-	color: #2a2926;
-	padding: 0;
+/* Reserve room for the icon on its side. */
+.lnc-searchbox--iconleft .lnc-searchbox__icon {
+	left: 16px;
 }
 
-.lnc-searchbox__input::placeholder {
-	color: #9a9a92;
-	opacity: 1;
+.lnc-searchbox--iconleft .lnc-searchbox__input {
+	padding-left: 46px;
 }
 
-/* Hide the native search field clear/decoration for a clean look. */
-.lnc-searchbox__input::-webkit-search-decoration,
-.lnc-searchbox__input::-webkit-search-cancel-button {
-	-webkit-appearance: none;
+.lnc-searchbox--iconright .lnc-searchbox__icon {
+	right: 16px;
+}
+
+.lnc-searchbox--iconright .lnc-searchbox__input {
+	padding-right: 46px;
 }
