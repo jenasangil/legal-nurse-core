@@ -240,6 +240,8 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 
 		$card_sel     = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con';
 		$card_pad_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con > .e-con';
+		// Content blocks only — every inner block except the first (the featured image).
+		$content_pad_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con > .e-con:not(:first-child)';
 
 		$this->add_control(
 			'card_bg',
@@ -257,6 +259,17 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors'  => [ $card_pad_sel => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'content_padding',
+			[
+				'label'       => esc_html__( 'Content Padding', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units'  => [ 'px', 'em', '%' ],
+				'description' => esc_html__( 'Padding on the text content only (excludes the featured image).', 'legal-nurse-core' ),
+				'selectors'   => [ $content_pad_sel => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;' ],
 			]
 		);
 
