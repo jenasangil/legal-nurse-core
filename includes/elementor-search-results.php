@@ -337,8 +337,8 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			'type'       => \Elementor\Controls_Manager::SLIDER,
 			'size_units' => [ 'px' ],
 			'range'      => [ 'px' => [ 'min' => 28, 'max' => 80 ] ],
-			'default'    => [ 'size' => 44, 'unit' => 'px' ],
-			'selectors'  => [ $pg => 'min-width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};' ],
+			'default'    => [ 'size' => 40, 'unit' => 'px' ],
+			'selectors'  => [ $pg => 'width:{{SIZE}}{{UNIT}};' ],
 		] );
 
 		$this->add_responsive_control( 'pg_gap', [

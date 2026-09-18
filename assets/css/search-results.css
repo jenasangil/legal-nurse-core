@@ -69,9 +69,8 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 44px;
-	height: 44px;
-	padding: 0 12px;
+	width: 40px;
+	padding: 10px 0;
 	border: 1px solid #25797c;
 	border-radius: 999px;
 	color: #25797c;
