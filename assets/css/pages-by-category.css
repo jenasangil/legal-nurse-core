@@ -76,6 +76,8 @@
 .lnc-pbc__content {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
+	flex: 1 1 auto;
 	min-width: 0;
 }
 
