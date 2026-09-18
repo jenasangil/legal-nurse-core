@@ -423,6 +423,12 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'pg_border', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'border-color:{{VALUE}};' ] ] );
 		$this->end_controls_tab();
 
+		$this->start_controls_tab( 'pg_hover', [ 'label' => esc_html__( 'Hover', 'legal-nurse-core' ) ] );
+		$this->add_control( 'pg_color_h', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers:not(.current):hover' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_bg_h', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#e3f2f1', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers:not(.current):hover' => 'background:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_border_h', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers:not(.current):hover' => 'border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
 		$this->start_controls_tab( 'pg_active', [ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ] );
 		$this->add_control( 'pg_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers.current' => 'color:{{VALUE}};' ] ] );
 		$this->add_control( 'pg_bg_a', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1f6f72', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers.current' => 'background:{{VALUE}};border-color:{{VALUE}};' ] ] );
