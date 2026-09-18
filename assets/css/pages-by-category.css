@@ -162,3 +162,44 @@
 		justify-content: center;
 	}
 }
+
+/* Pagination — numbered circles */
+.lnc-pbc__pagination {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 32px;
+}
+
+.lnc-pbc__pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border: 1px solid #25797c;
+	border-radius: 100%;
+	color: #25797c;
+	background: #ffffff;
+	text-decoration: none;
+	line-height: 1;
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.lnc-pbc__pagination a.page-numbers:hover {
+	background: #e3f2f1;
+}
+
+.lnc-pbc__pagination .page-numbers.current {
+	background: #1f6f72;
+	border-color: #1f6f72;
+	color: #ffffff;
+}
+
+.lnc-pbc__pagination .page-numbers.dots {
+	border-color: transparent;
+	background: transparent;
+	color: inherit;
+}

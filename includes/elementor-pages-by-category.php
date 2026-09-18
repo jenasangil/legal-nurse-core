@@ -21,7 +21,7 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'LN - Pages by Category', 'legal-nurse-core' );
+		return esc_html__( 'LN - Consultant Stories', 'legal-nurse-core' );
 	}
 
 	public function get_icon() {
@@ -157,6 +157,30 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 				'default'     => 0,
 				'min'         => 0,
 				'description' => esc_html__( '0 = all pages in the selected categories.', 'legal-nurse-core' ),
+				'condition'   => [ 'enable_pagination!' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'enable_pagination',
+			[
+				'label'        => esc_html__( 'Enable Pagination', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => '',
+				'description'  => esc_html__( 'Split the list into pages with numbered navigation.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
+			'per_page',
+			[
+				'label'     => esc_html__( 'Per Page', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::NUMBER,
+				'default'   => 9,
+				'min'       => 1,
+				'max'       => 48,
+				'condition' => [ 'enable_pagination' => 'yes' ],
 			]
 		);
 
@@ -324,6 +348,83 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'read_more_typography', 'label' => esc_html__( 'Read More', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-pbc__more', 'condition' => [ 'show_read_more' => 'yes' ] ] );
 
 		$this->end_controls_section();
+
+		// Pagination style.
+		$this->start_controls_section(
+			'section_pagination',
+			[
+				'label'     => esc_html__( 'Pagination', 'legal-nurse-core' ),
+				'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
+				'condition' => [ 'enable_pagination' => 'yes' ],
+			]
+		);
+
+		$this->add_responsive_control( 'pg_align', [
+			'label'     => esc_html__( 'Alignment', 'legal-nurse-core' ),
+			'type'      => \Elementor\Controls_Manager::CHOOSE,
+			'options'   => [
+				'flex-start' => [ 'title' => esc_html__( 'Left', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-left' ],
+				'center'     => [ 'title' => esc_html__( 'Center', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-center' ],
+				'flex-end'   => [ 'title' => esc_html__( 'Right', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-right' ],
+			],
+			'default'   => 'center',
+			'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination' => 'justify-content:{{VALUE}};' ],
+		] );
+
+		$this->add_responsive_control( 'pg_size', [
+			'label'      => esc_html__( 'Item Size', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 24, 'max' => 72 ] ],
+			'default'    => [ 'size' => 44, 'unit' => 'px' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'pg_gap', [
+			'label'      => esc_html__( 'Gap', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
+			'default'    => [ 'size' => 10, 'unit' => 'px' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-pbc__pagination' => 'gap:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'pg_typography', 'selector' => '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' ] );
+
+		$this->add_responsive_control( 'pg_top', [
+			'label'      => esc_html__( 'Top Spacing', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 80 ] ],
+			'default'    => [ 'size' => 32, 'unit' => 'px' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-pbc__pagination' => 'margin-top:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->start_controls_tabs( 'pg_tabs' );
+
+		$this->start_controls_tab( 'pg_normal', [ 'label' => esc_html__( 'Normal', 'legal-nurse-core' ) ] );
+		$this->add_control( 'pg_color', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_bg', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'background:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_border', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'pg_active', [ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ] );
+		$this->add_control( 'pg_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers.current' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_bg_a', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1f6f72', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers.current' => 'background:{{VALUE}};border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->add_control( 'pg_radius', [
+			'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 50 ], '%' => [ 'min' => 0, 'max' => 100 ] ],
+			'default'    => [ 'size' => 100, 'unit' => '%' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'border-radius:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->end_controls_section();
 	}
 
 	/** Byline HTML allowed tags. */
@@ -391,24 +492,34 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		}
 		$term_ids = wp_list_pluck( $terms, 'term_id' );
 
+		// Pagination.
+		$paginate = 'yes' === ( $settings['enable_pagination'] ?? '' );
+		$per_page = (int) ( $settings['per_page'] ?? 9 );
+		$paged    = 1;
+		if ( $paginate ) {
+			$paged = isset( $_GET['cs_page'] ) ? max( 1, absint( $_GET['cs_page'] ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
 		// Pages in those categories.
-		$pages = new WP_Query(
-			[
-				'post_type'      => 'page',
-				'post_status'    => 'publish',
-				'posts_per_page' => $number > 0 ? $number : -1,
-				'orderby'        => $orderby,
-				'order'          => $order,
-				'no_found_rows'  => true,
-				'tax_query'      => [
-					[
-						'taxonomy' => $taxonomy,
-						'field'    => 'term_id',
-						'terms'    => $term_ids,
-					],
+		$query_args = [
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => $paginate ? ( $per_page > 0 ? $per_page : 9 ) : ( $number > 0 ? $number : -1 ),
+			'orderby'        => $orderby,
+			'order'          => $order,
+			'no_found_rows'  => ! $paginate,
+			'tax_query'      => [
+				[
+					'taxonomy' => $taxonomy,
+					'field'    => 'term_id',
+					'terms'    => $term_ids,
 				],
-			]
-		);
+			],
+		];
+		if ( $paginate ) {
+			$query_args['paged'] = $paged;
+		}
+		$pages = new WP_Query( $query_args );
 
 		$show_more  = 'yes' === ( $settings['show_read_more'] ?? 'yes' );
 		$more_label = $settings['read_more_label'] ? $settings['read_more_label'] : esc_html__( 'Read the story', 'legal-nurse-core' );
@@ -482,6 +593,28 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		}
 		wp_reset_postdata();
 		echo '</ul>';
+
+		// Numbered pagination.
+		if ( $paginate && (int) $pages->max_num_pages > 1 ) {
+			$big   = 999999999;
+			$links = paginate_links(
+				[
+					'base'      => str_replace( $big, '%#%', esc_url( add_query_arg( 'cs_page', $big ) ) ),
+					'format'    => '',
+					'current'   => $paged,
+					'total'     => (int) $pages->max_num_pages,
+					'type'      => 'plain',
+					'mid_size'  => 1,
+					'end_size'  => 1,
+					'prev_next' => false,
+				]
+			);
+			if ( $links ) {
+				echo '<nav class="lnc-pbc__pagination" aria-label="' . esc_attr__( 'Pagination', 'legal-nurse-core' ) . '">'
+					. $links // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					. '</nav>';
+			}
+		}
 
 		echo '</div>';
 	}
