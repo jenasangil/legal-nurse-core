@@ -19,18 +19,18 @@
 		var endEl   = root.querySelector( '.lnc-datesearch__end' );
 		var submit  = root.querySelector( '.lnc-datesearch__submit' );
 
-		// Calendar icon buttons open the native picker for their field.
+		// Clicking anywhere on the field (input or icon) opens the date picker.
 		root.querySelectorAll( '.lnc-datesearch__field' ).forEach( function ( field ) {
 			var input = field.querySelector( 'input[type="date"]' );
-			var icon  = field.querySelector( '.lnc-datesearch__icon' );
-			if ( icon && input ) {
-				icon.addEventListener( 'click', function () {
-					if ( typeof input.showPicker === 'function' ) {
-						try { input.showPicker(); return; } catch ( e ) {}
-					}
-					input.focus();
-				} );
+			if ( ! input ) {
+				return;
 			}
+			field.addEventListener( 'click', function () {
+				if ( typeof input.showPicker === 'function' ) {
+					try { input.showPicker(); return; } catch ( e ) {}
+				}
+				input.focus();
+			} );
 		} );
 
 		function resolveContainer() {
