@@ -105,6 +105,15 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'default_image',
+			[
+				'label'       => esc_html__( 'Default Image', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::MEDIA,
+				'description' => esc_html__( 'Shown when a result has no featured image.', 'legal-nurse-core' ),
+			]
+		);
+
+		$this->add_control(
 			'post_type',
 			[
 				'label'   => esc_html__( 'Post Type', 'legal-nurse-core' ),
@@ -229,14 +238,14 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		$card_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item';
+		$card_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor';
 
 		$this->add_control(
 			'card_bg',
 			[
 				'label'     => esc_html__( 'Card Background', 'legal-nurse-core' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
-				'selectors' => [ $card_sel => 'background-color:{{VALUE}};' ],
+				'selectors' => [ $card_sel => 'background-color:{{VALUE}} !important;background-image:none !important;' ],
 			]
 		);
 
@@ -376,6 +385,17 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			\Elementor\Core\Files\CSS\Post::create( $template )->enqueue();
 		}
 
+		// Fall back to a default featured image when a post has none, so the
+		// Loop Item template's featured-image element still renders.
+		$default_thumb_id = ! empty( $settings['default_image']['id'] ) ? (int) $settings['default_image']['id'] : 0;
+		$thumb_filter     = null;
+		if ( $default_thumb_id ) {
+			$thumb_filter = static function ( $thumbnail_id ) use ( $default_thumb_id ) {
+				return $thumbnail_id ? $thumbnail_id : $default_thumb_id;
+			};
+			add_filter( 'post_thumbnail_id', $thumb_filter, 10, 1 );
+		}
+
 		echo '<div class="lnc-search-grid e-loop-grid elementor-grid">';
 		while ( $query->have_posts() ) {
 			$query->the_post();
@@ -384,6 +404,10 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 				: '';
 		}
 		echo '</div>';
+
+		if ( $thumb_filter ) {
+			remove_filter( 'post_thumbnail_id', $thumb_filter, 10 );
+		}
 
 		$this->render_pagination( $paged, (int) $query->max_num_pages, $param, $term );
 
