@@ -300,6 +300,93 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 		$this->add_responsive_control( 'count_spacing', [ 'label' => esc_html__( 'Count Spacing', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ], 'default' => [ 'size' => 24, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-search-results__count' => 'margin-bottom:{{SIZE}}{{UNIT}};' ], 'condition' => [ 'show_count' => 'yes' ] ] );
 
 		$this->end_controls_section();
+
+		// ---- Pagination style ----
+		$this->start_controls_section( 'section_pg_style', [ 'label' => esc_html__( 'Pagination', 'legal-nurse-core' ), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
+
+		$pg = '{{WRAPPER}} .lnc-search-results__pagination .page-numbers';
+
+		$this->add_responsive_control( 'pg_align', [
+			'label'     => esc_html__( 'Alignment', 'legal-nurse-core' ),
+			'type'      => \Elementor\Controls_Manager::CHOOSE,
+			'options'   => [
+				'flex-start' => [ 'title' => esc_html__( 'Left', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-left' ],
+				'center'     => [ 'title' => esc_html__( 'Center', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-center' ],
+				'flex-end'   => [ 'title' => esc_html__( 'Right', 'legal-nurse-core' ), 'icon' => 'eicon-text-align-right' ],
+			],
+			'default'   => 'center',
+			'selectors' => [ '{{WRAPPER}} .lnc-search-results__pagination' => 'justify-content:{{VALUE}};' ],
+		] );
+
+		$this->add_responsive_control( 'pg_size', [
+			'label'      => esc_html__( 'Item Size', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 28, 'max' => 80 ] ],
+			'default'    => [ 'size' => 44, 'unit' => 'px' ],
+			'selectors'  => [ $pg => 'min-width:{{SIZE}}{{UNIT}};height:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_responsive_control( 'pg_gap', [
+			'label'      => esc_html__( 'Gap', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 40 ] ],
+			'default'    => [ 'size' => 10, 'unit' => 'px' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-search-results__pagination' => 'gap:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'pg_typography', 'selector' => $pg ] );
+
+		$this->add_responsive_control( 'pg_top', [
+			'label'      => esc_html__( 'Top Spacing', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 120 ] ],
+			'default'    => [ 'size' => 40, 'unit' => 'px' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-search-results__pagination' => 'margin-top:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->add_control( 'pg_border_width', [
+			'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 6, 'step' => 0.1 ] ],
+			'default'    => [ 'size' => 1, 'unit' => 'px' ],
+			'selectors'  => [ $pg => 'border-width:{{SIZE}}{{UNIT}};border-style:solid;' ],
+		] );
+
+		$this->add_responsive_control( 'pg_radius', [
+			'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px', '%' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 50 ], '%' => [ 'min' => 0, 'max' => 100 ] ],
+			'default'    => [ 'size' => 100, 'unit' => '%' ],
+			'selectors'  => [ $pg => 'border-radius:{{SIZE}}{{UNIT}};' ],
+		] );
+
+		$this->start_controls_tabs( 'pg_tabs' );
+
+		$this->start_controls_tab( 'pg_normal', [ 'label' => esc_html__( 'Normal', 'legal-nurse-core' ) ] );
+		$this->add_control( 'pg_color', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ $pg => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_bg', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ $pg => 'background:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_border', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#25797c', 'selectors' => [ $pg => 'border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'pg_hover', [ 'label' => esc_html__( 'Hover', 'legal-nurse-core' ) ] );
+		$this->add_control( 'pg_color_h', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-search-results__pagination a.page-numbers:hover' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_bg_h', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#e3f2f1', 'selectors' => [ '{{WRAPPER}} .lnc-search-results__pagination a.page-numbers:hover' => 'background:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_border_h', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-search-results__pagination a.page-numbers:hover' => 'border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->start_controls_tab( 'pg_active', [ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ] );
+		$this->add_control( 'pg_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#ffffff', 'selectors' => [ '{{WRAPPER}} .lnc-search-results__pagination .page-numbers.current' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'pg_bg_a', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1f6f72', 'selectors' => [ '{{WRAPPER}} .lnc-search-results__pagination .page-numbers.current' => 'background:{{VALUE}};border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->end_controls_section();
 	}
 
 	/** Replace {term} and {count} tokens. */

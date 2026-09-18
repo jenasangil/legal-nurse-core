@@ -42,9 +42,42 @@
 .lnc-search-results__pagination {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 8px;
+	align-items: center;
+	gap: 10px;
 	justify-content: center;
 	margin-top: 40px;
+}
+
+.lnc-search-results__pagination .page-numbers {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 44px;
+	height: 44px;
+	padding: 0 12px;
+	border: 1px solid #25797c;
+	border-radius: 100%;
+	color: #25797c;
+	background: #ffffff;
+	text-decoration: none;
+	line-height: 1;
+	transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.lnc-search-results__pagination a.page-numbers:hover {
+	background: #e3f2f1;
+}
+
+.lnc-search-results__pagination .page-numbers.current {
+	background: #1f6f72;
+	border-color: #1f6f72;
+	color: #ffffff;
+}
+
+.lnc-search-results__pagination .page-numbers.dots {
+	border-color: transparent;
+	background: transparent;
+	color: inherit;
 }
 
 @media (max-width: 1024px) {
