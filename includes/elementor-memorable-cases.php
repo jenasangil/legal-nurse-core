@@ -381,8 +381,24 @@ class LNC_Memorable_Cases_Widget extends \Elementor\Widget_Base {
 				'range'       => [ 'px' => [ 'min' => 0, 'max' => 400 ] ],
 				'default'     => [ 'size' => 48, 'unit' => 'px' ],
 				'description' => esc_html__( '0 = auto (keep aspect ratio).', 'legal-nurse-core' ),
-				'selectors'   => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'height:{{SIZE}}{{UNIT}};object-fit:cover;' ],
+				'selectors'   => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'height:{{SIZE}}{{UNIT}};' ],
 				'condition'   => [ 'show_image' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'image_fit',
+			[
+				'label'     => esc_html__( 'Image Fit', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::SELECT,
+				'default'   => 'cover',
+				'options'   => [
+					'cover'   => esc_html__( 'Cover', 'legal-nurse-core' ),
+					'contain' => esc_html__( 'Contain', 'legal-nurse-core' ),
+					'fill'    => esc_html__( 'Fill', 'legal-nurse-core' ),
+				],
+				'selectors' => [ '{{WRAPPER}} .lnc-case__byline-img img' => 'object-fit:{{VALUE}};' ],
+				'condition' => [ 'show_image' => 'yes' ],
 			]
 		);
 
