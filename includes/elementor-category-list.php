@@ -21,7 +21,7 @@ class LNC_Category_List_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_title() {
-		return esc_html__( 'LN - Category List', 'legal-nurse-core' );
+		return esc_html__( 'LN - Blog Category Filter', 'legal-nurse-core' );
 	}
 
 	public function get_icon() {
@@ -246,6 +246,20 @@ class LNC_Category_List_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_tab( 'item_active', [ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ] );
 		$this->add_control( 'item_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'color:{{VALUE}};' ] ] );
 		$this->add_control( 'item_border_a', [ 'label' => esc_html__( 'Underline', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'box-shadow:inset 0 -2px 0 0 {{VALUE}};' ] ] );
+		$this->add_control( 'item_weight_a', [
+			'label'     => esc_html__( 'Font Weight', 'legal-nurse-core' ),
+			'type'      => \Elementor\Controls_Manager::SELECT,
+			'default'   => '',
+			'options'   => [
+				''    => esc_html__( 'Default', 'legal-nurse-core' ),
+				'400' => esc_html__( 'Normal (400)', 'legal-nurse-core' ),
+				'500' => '500',
+				'600' => '600',
+				'700' => esc_html__( 'Bold (700)', 'legal-nurse-core' ),
+				'800' => '800',
+			],
+			'selectors' => [ '{{WRAPPER}} .lnc-catlist .lnc-loop-filter__btn.is-active' => 'font-weight:{{VALUE}};' ],
+		] );
 		$this->end_controls_tab();
 
 		$this->end_controls_tabs();

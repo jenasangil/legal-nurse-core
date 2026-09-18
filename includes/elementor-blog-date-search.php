@@ -155,6 +155,10 @@ class LNC_Blog_Date_Search_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'btn_bg', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#1f6f72', 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__submit' => 'background:{{VALUE}};' ] ] );
 		$this->add_control( 'btn_radius', [ 'label' => esc_html__( 'Border Radius', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 50 ] ], 'default' => [ 'size' => 999, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__submit' => 'border-radius:{{SIZE}}{{UNIT}};' ] ] );
 
+		$this->add_control( 'btn_hover_heading', [ 'label' => esc_html__( 'Hover', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::HEADING, 'separator' => 'before' ] );
+		$this->add_control( 'btn_color_h', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__submit:hover' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'btn_bg_h', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-datesearch__submit:hover' => 'background:{{VALUE}};' ] ] );
+
 		$this->end_controls_section();
 	}
 
