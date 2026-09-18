@@ -374,8 +374,8 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			'label'      => esc_html__( 'Border Radius', 'legal-nurse-core' ),
 			'type'       => \Elementor\Controls_Manager::SLIDER,
 			'size_units' => [ 'px', '%' ],
-			'range'      => [ 'px' => [ 'min' => 0, 'max' => 50 ], '%' => [ 'min' => 0, 'max' => 100 ] ],
-			'default'    => [ 'size' => 100, 'unit' => '%' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 999 ], '%' => [ 'min' => 0, 'max' => 100 ] ],
+			'default'    => [ 'size' => 999, 'unit' => 'px' ],
 			'selectors'  => [ $pg => 'border-radius:{{SIZE}}{{UNIT}};' ],
 		] );
 
