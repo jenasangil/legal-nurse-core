@@ -22,9 +22,26 @@
 	gap: 32px;
 }
 
+.lnc-search-grid {
+	align-items: stretch;
+}
+
 .lnc-search-grid .e-loop-item,
 .lnc-search-grid .lnc-loop-item {
 	min-width: 0;
+}
+
+/* Make every card fill its grid row so heights match. */
+.lnc-search-grid .lnc-loop-item,
+.lnc-search-grid .lnc-loop-item > .elementor,
+.lnc-search-grid .lnc-loop-item > .elementor > .e-con {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.lnc-search-grid .lnc-loop-item > .elementor > .e-con {
+	flex: 1 1 auto;
 }
 
 /* Hide the Read More button coming from the Loop Item template. */
