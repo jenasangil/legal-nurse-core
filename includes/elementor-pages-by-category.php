@@ -400,6 +400,15 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 			'selectors'  => [ '{{WRAPPER}} .lnc-pbc__pagination' => 'margin-top:{{SIZE}}{{UNIT}};' ],
 		] );
 
+		$this->add_control( 'pg_border_width', [
+			'label'      => esc_html__( 'Border Width', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 8, 'step' => 0.1 ] ],
+			'default'    => [ 'size' => 1, 'unit' => 'px' ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-pbc__pagination .page-numbers' => 'border-style:solid;border-width:{{SIZE}}{{UNIT}};' ],
+		] );
+
 		$this->start_controls_tabs( 'pg_tabs' );
 
 		$this->start_controls_tab( 'pg_normal', [ 'label' => esc_html__( 'Normal', 'legal-nurse-core' ) ] );
