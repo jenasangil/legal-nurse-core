@@ -520,8 +520,7 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 				'add_args'  => [ $param => rawurlencode( $term ) ],
 				'mid_size'  => 1,
 				'end_size'  => 1,
-				'prev_text' => '&laquo; ' . esc_html__( 'Previous', 'legal-nurse-core' ),
-				'next_text' => esc_html__( 'Next', 'legal-nurse-core' ) . ' &raquo;',
+				'prev_next' => false,
 			]
 		);
 
