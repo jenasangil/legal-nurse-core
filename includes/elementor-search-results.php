@@ -229,6 +229,37 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$card_sel = '{{WRAPPER}} .lnc-search-grid > .e-loop-item, {{WRAPPER}} .lnc-search-grid > .lnc-loop-item, {{WRAPPER}} .lnc-search-grid > .elementor';
+
+		$this->add_control(
+			'card_bg',
+			[
+				'label'     => esc_html__( 'Card Background', 'legal-nurse-core' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [ $card_sel => 'background-color:{{VALUE}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'card_padding',
+			[
+				'label'      => esc_html__( 'Card Padding', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', 'em', '%' ],
+				'selectors'  => [ $card_sel => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};' ],
+			]
+		);
+
+		$this->add_responsive_control(
+			'card_radius',
+			[
+				'label'      => esc_html__( 'Card Border Radius', 'legal-nurse-core' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+				'selectors'  => [ $card_sel => 'border-radius:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};overflow:hidden;' ],
+			]
+		);
+
 		$this->add_control(
 			'heading_color',
 			[
