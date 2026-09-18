@@ -70,6 +70,7 @@
 	align-items: center;
 	justify-content: center;
 	width: 40px;
+	min-width: 0;
 	padding: 10px 0;
 	border: 1px solid #25797c;
 	border-radius: 999px;
