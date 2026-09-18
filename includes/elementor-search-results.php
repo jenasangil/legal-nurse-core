@@ -238,7 +238,7 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		$card_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor';
+		$card_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con';
 
 		$this->add_control(
 			'card_bg',
