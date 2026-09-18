@@ -27,6 +27,11 @@
 	min-width: 0;
 }
 
+/* Hide the Read More button coming from the Loop Item template. */
+.lnc-search-grid .elementor-widget-button {
+	display: none !important;
+}
+
 .lnc-search-results__message {
 	font-size: 16px;
 	line-height: 1.5;
