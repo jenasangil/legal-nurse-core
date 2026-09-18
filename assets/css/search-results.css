@@ -9,6 +9,13 @@
 	line-height: 1.25;
 }
 
+.lnc-search-results__count {
+	margin: 0 0 24px;
+	font-size: 15px;
+	line-height: 1.4;
+	color: #6a6a63;
+}
+
 .lnc-search-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);

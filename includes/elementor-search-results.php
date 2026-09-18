@@ -146,6 +146,39 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 		);
 
 		$this->add_control(
+			'heading_text_empty',
+			[
+				'label'       => esc_html__( 'Heading (No Term)', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::TEXT,
+				'default'     => esc_html__( 'Search Results', 'legal-nurse-core' ),
+				'description' => esc_html__( 'Heading shown when there is no search term.', 'legal-nurse-core' ),
+				'condition'   => [ 'show_heading' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
+			'show_count',
+			[
+				'label'        => esc_html__( 'Show Result Count', 'legal-nurse-core' ),
+				'type'         => \Elementor\Controls_Manager::SWITCHER,
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'separator'    => 'before',
+			]
+		);
+
+		$this->add_control(
+			'count_text',
+			[
+				'label'       => esc_html__( 'Count Text', 'legal-nurse-core' ),
+				'type'        => \Elementor\Controls_Manager::TEXT,
+				'default'     => esc_html__( 'About {count} results', 'legal-nurse-core' ),
+				'description' => esc_html__( 'Use {count} for the number of results and {term} for the search term.', 'legal-nurse-core' ),
+				'condition'   => [ 'show_count' => 'yes' ],
+			]
+		);
+
+		$this->add_control(
 			'no_results_text',
 			[
 				'label'   => esc_html__( 'No Results Text', 'legal-nurse-core' ),
@@ -222,6 +255,10 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
+		$this->add_control( 'count_color', [ 'label' => esc_html__( 'Count Color', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#6a6a63', 'separator' => 'before', 'selectors' => [ '{{WRAPPER}} .lnc-search-results__count' => 'color:{{VALUE}};' ], 'condition' => [ 'show_count' => 'yes' ] ] );
+		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'count_typography', 'label' => esc_html__( 'Count', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-search-results__count', 'condition' => [ 'show_count' => 'yes' ] ] );
+		$this->add_responsive_control( 'count_spacing', [ 'label' => esc_html__( 'Count Spacing', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::SLIDER, 'size_units' => [ 'px' ], 'range' => [ 'px' => [ 'min' => 0, 'max' => 60 ] ], 'default' => [ 'size' => 24, 'unit' => 'px' ], 'selectors' => [ '{{WRAPPER}} .lnc-search-results__count' => 'margin-bottom:{{SIZE}}{{UNIT}};' ], 'condition' => [ 'show_count' => 'yes' ] ] );
+
 		$this->end_controls_section();
 	}
 
@@ -276,11 +313,23 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			relevanssi_do_query( $query );
 		}
 
-		// Heading only when there's a search term.
-		if ( $has_term && 'yes' === ( $settings['show_heading'] ?? '' ) && ! empty( $settings['heading_text'] ) ) {
-			echo '<h2 class="lnc-search-results__heading">'
-				. wp_kses_post( $this->tokens( $settings['heading_text'], $term, (int) $query->found_posts ) )
-				. '</h2>';
+		$found = (int) $query->found_posts;
+
+		// Heading (uses the "no term" variant when there's no search term).
+		if ( 'yes' === ( $settings['show_heading'] ?? '' ) ) {
+			$heading = $has_term ? ( $settings['heading_text'] ?? '' ) : ( $settings['heading_text_empty'] ?? '' );
+			if ( '' !== trim( (string) $heading ) ) {
+				echo '<h2 class="lnc-search-results__heading">'
+					. wp_kses_post( $this->tokens( $heading, $term, $found ) )
+					. '</h2>';
+			}
+		}
+
+		// Result count line.
+		if ( 'yes' === ( $settings['show_count'] ?? '' ) && ! empty( $settings['count_text'] ) ) {
+			echo '<div class="lnc-search-results__count">'
+				. wp_kses_post( $this->tokens( $settings['count_text'], $term, $found ) )
+				. '</div>';
 		}
 
 		if ( ! $query->have_posts() ) {
