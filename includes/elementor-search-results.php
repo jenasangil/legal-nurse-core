@@ -238,7 +238,8 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 			]
 		);
 
-		$card_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con';
+		$card_sel     = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con';
+		$card_pad_sel = '{{WRAPPER}} .lnc-search-grid .lnc-loop-item > .elementor > .e-con > .e-con';
 
 		$this->add_control(
 			'card_bg',
@@ -255,7 +256,7 @@ class LNC_Search_Results_Widget extends \Elementor\Widget_Base {
 				'label'      => esc_html__( 'Card Padding', 'legal-nurse-core' ),
 				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
-				'selectors'  => [ $card_sel => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;' ],
+				'selectors'  => [ $card_pad_sel => 'padding:{{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;' ],
 			]
 		);
 
