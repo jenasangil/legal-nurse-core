@@ -1,4 +1,4 @@
-/* Legal Nurse Core — Pages by Category chip filtering */
+/* Legal Nurse Core — Consultant Stories (chip filter; AJAX when paginated) */
 ( function () {
 	'use strict';
 
@@ -9,24 +9,106 @@
 		root.dataset.lncPbcInit = '1';
 
 		var chips = root.querySelectorAll( '.lnc-pbc__chip' );
-		var items = root.querySelectorAll( '.lnc-pbc__item' );
+		var list  = root.querySelector( '.lnc-pbc__list' );
+		var pager = root.querySelector( '.lnc-pbc__pagination' );
+		var ajaxEl = root.querySelector( '.lnc-pbc__ajax' );
 
+		var config = null;
+		if ( ajaxEl ) {
+			try { config = JSON.parse( ajaxEl.getAttribute( 'data-config' ) || 'null' ); } catch ( e ) { config = null; }
+		}
+
+		function setActiveChip( chip ) {
+			for ( var j = 0; j < chips.length; j++ ) {
+				chips[ j ].classList.remove( 'is-active' );
+			}
+			chip.classList.add( 'is-active' );
+		}
+
+		/* -------- Client-side filter (no pagination) -------- */
 		function applyFilter( term ) {
+			var items = list.querySelectorAll( '.lnc-pbc__item' );
 			for ( var i = 0; i < items.length; i++ ) {
-				var item = items[ i ];
-				var terms = ( item.getAttribute( 'data-terms' ) || '' ).split( /\s+/ );
+				var terms = ( items[ i ].getAttribute( 'data-terms' ) || '' ).split( /\s+/ );
 				var show = ( term === 'all' ) || terms.indexOf( term ) !== -1;
-				item.classList.toggle( 'is-hidden', ! show );
+				items[ i ].classList.toggle( 'is-hidden', ! show );
 			}
 		}
 
+		/* -------- AJAX filter + pagination -------- */
+		var state = { term: 'all', page: 1 };
+
+		function fetchAjax() {
+			if ( ! config || ! window.lncPbc || ! window.lncPbc.ajaxUrl ) {
+				return;
+			}
+			root.classList.add( 'is-loading' );
+
+			var body = new URLSearchParams();
+			body.append( 'action', 'lnc_pbc' );
+			body.append( 'nonce', config.nonce );
+			body.append( 'taxonomy', config.taxonomy );
+			body.append( 'term', state.term );
+			body.append( 'page', state.page );
+			body.append( 'per_page', config.perPage );
+			body.append( 'orderby', config.orderby );
+			body.append( 'order', config.order );
+			body.append( 'field', config.field );
+			body.append( 'show_more', config.showMore );
+			body.append( 'more_label', config.moreLabel );
+			body.append( 'icon_value', config.moreIcon ? config.moreIcon.value : '' );
+			body.append( 'icon_library', config.moreIcon ? config.moreIcon.library : '' );
+			( config.termIds || [] ).forEach( function ( id ) {
+				body.append( 'term_ids[]', id );
+			} );
+
+			fetch( window.lncPbc.ajaxUrl, {
+				method: 'POST',
+				credentials: 'same-origin',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: body.toString()
+			} )
+				.then( function ( r ) { return r.json(); } )
+				.then( function ( res ) {
+					if ( res && res.success ) {
+						list.innerHTML = res.data.html || '';
+						if ( pager ) {
+							pager.innerHTML = res.data.pagination || '';
+						}
+					}
+				} )
+				.catch( function () {} )
+				.finally( function () { root.classList.remove( 'is-loading' ); } );
+		}
+
+		// Chip clicks.
 		for ( var c = 0; c < chips.length; c++ ) {
 			chips[ c ].addEventListener( 'click', function () {
-				for ( var j = 0; j < chips.length; j++ ) {
-					chips[ j ].classList.remove( 'is-active' );
+				setActiveChip( this );
+				var term = this.getAttribute( 'data-term' ) || 'all';
+				if ( config ) {
+					state.term = term;
+					state.page = 1; // new filter resets to page 1
+					fetchAjax();
+				} else {
+					applyFilter( term );
 				}
-				this.classList.add( 'is-active' );
-				applyFilter( this.getAttribute( 'data-term' ) || 'all' );
+			} );
+		}
+
+		// Pagination clicks (AJAX mode) — delegated.
+		if ( config && pager ) {
+			pager.addEventListener( 'click', function ( e ) {
+				var btn = e.target.closest( '.page-numbers[data-page]' );
+				if ( ! btn ) {
+					return;
+				}
+				var p = parseInt( btn.getAttribute( 'data-page' ), 10 );
+				if ( p > 0 && p !== state.page ) {
+					state.page = p;
+					fetchAjax();
+					root.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+				}
 			} );
 		}
 	}
@@ -43,7 +125,6 @@
 		initAll( document );
 	} );
 
-	// Elementor frontend (editor preview + optimized front end).
 	if ( window.jQuery ) {
 		window.jQuery( window ).on( 'elementor/frontend/init', function () {
 			if ( window.elementorFrontend && window.elementorFrontend.hooks ) {
