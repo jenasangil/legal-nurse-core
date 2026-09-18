@@ -58,7 +58,7 @@
 .lnc-case__byline-img img {
 	width: 48px;
 	height: 48px;
-	object-fit: cover;
+	object-fit: contain;
 	border-radius: 100%;
 	display: block;
 }
