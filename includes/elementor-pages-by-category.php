@@ -254,6 +254,12 @@ class LNC_Pages_By_Category_Widget extends \Elementor\Widget_Base {
 		$this->add_control( 'chip_border', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#e6b7cd', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__chip' => 'border-color:{{VALUE}};' ] ] );
 		$this->end_controls_tab();
 
+		$this->start_controls_tab( 'chip_hover', [ 'label' => esc_html__( 'Hover', 'legal-nurse-core' ) ] );
+		$this->add_control( 'chip_color_h', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-pbc__chip:hover' => 'color:{{VALUE}};' ] ] );
+		$this->add_control( 'chip_bg_h', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#f6e7ee', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__chip:hover' => 'background:{{VALUE}};' ] ] );
+		$this->add_control( 'chip_border_h', [ 'label' => esc_html__( 'Border', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'selectors' => [ '{{WRAPPER}} .lnc-pbc__chip:hover' => 'border-color:{{VALUE}};' ] ] );
+		$this->end_controls_tab();
+
 		$this->start_controls_tab( 'chip_active', [ 'label' => esc_html__( 'Active', 'legal-nurse-core' ) ] );
 		$this->add_control( 'chip_color_a', [ 'label' => esc_html__( 'Text', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#93003a', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__chip.is-active' => 'color:{{VALUE}};' ] ] );
 		$this->add_control( 'chip_bg_a', [ 'label' => esc_html__( 'Background', 'legal-nurse-core' ), 'type' => \Elementor\Controls_Manager::COLOR, 'default' => '#f6e7ee', 'selectors' => [ '{{WRAPPER}} .lnc-pbc__chip.is-active' => 'background:{{VALUE}};' ] ] );
