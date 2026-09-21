@@ -55,19 +55,19 @@ class LNC_Featured_Carousel_Widget extends \Elementor\Widget_Base {
 			return $options;
 		}
 
-		$pages = get_posts( [
-			'post_type'              => [ 'page', 'post' ],
-			'post_status'            => 'publish',
-			'posts_per_page'         => -1,
-			'orderby'                => 'title',
-			'order'                  => 'ASC',
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		] );
+		// Lightweight direct query: only ID + title, no object hydration or
+		// meta/term priming. Fetching every page and post as full WP_Post
+		// objects here was slow enough to time out the editor bootstrap.
+		global $wpdb;
+		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			"SELECT ID, post_title FROM {$wpdb->posts}
+			 WHERE post_status = 'publish' AND post_type IN ( 'page', 'post' )
+			 ORDER BY post_title ASC
+			 LIMIT 2000"
+		);
 
-		foreach ( $pages as $p ) {
-			$options[ $p->ID ] = $p->post_title;
+		foreach ( (array) $rows as $r ) {
+			$options[ $r->ID ] = $r->post_title;
 		}
 
 		return $options;

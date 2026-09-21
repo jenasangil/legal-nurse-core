@@ -55,7 +55,16 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 			return $options;
 		}
 
-		$pages = get_pages( [ 'sort_column' => 'menu_order,post_title', 'number' => 500 ] );
+		// Lightweight direct query (ID/parent/title only) — get_pages() builds
+		// full page objects and is slow enough on large sites to stall the
+		// editor bootstrap.
+		global $wpdb;
+		$pages = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			"SELECT ID, post_parent, post_title FROM {$wpdb->posts}
+			 WHERE post_status = 'publish' AND post_type = 'page'
+			 ORDER BY menu_order ASC, post_title ASC
+			 LIMIT 2000"
+		);
 
 		if ( ! is_array( $pages ) ) {
 			return $options;
