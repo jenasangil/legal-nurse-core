@@ -355,7 +355,7 @@ class LNC_Child_Pages_Widget extends \Elementor\Widget_Base {
 
 		$this->add_group_control(
 			\Elementor\Group_Control_Typography::get_type(),
-			[ 'name' => 'title_typography', 'label' => esc_html__( 'Title', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-childpage__title' ]
+			[ 'name' => 'title_typography', 'label' => esc_html__( 'Title', 'legal-nurse-core' ), 'selector' => '{{WRAPPER}} .lnc-childpage__title, {{WRAPPER}} .lnc-childpage__title a' ]
 		);
 
 		$this->add_group_control(
