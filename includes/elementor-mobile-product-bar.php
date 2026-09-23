@@ -179,6 +179,14 @@ class LNC_Mobile_Product_Bar_Widget extends \Elementor\Widget_Base {
 			'selectors'  => [ '{{WRAPPER}} .lnc-mpbar' => 'gap:{{SIZE}}{{UNIT}};' ],
 		] );
 
+		$this->add_responsive_control( 'price_gap', [
+			'label'      => esc_html__( 'Price Details Gap', 'legal-nurse-core' ),
+			'type'       => \Elementor\Controls_Manager::SLIDER,
+			'size_units' => [ 'px' ],
+			'range'      => [ 'px' => [ 'min' => 0, 'max' => 30 ] ],
+			'selectors'  => [ '{{WRAPPER}} .lnc-mpbar__price-wrap' => 'gap:{{SIZE}}{{UNIT}};' ],
+		] );
+
 		$this->end_controls_section();
 
 		// ============ STYLE: CAPTION ============
@@ -209,6 +217,16 @@ class LNC_Mobile_Product_Bar_Widget extends \Elementor\Widget_Base {
 
 		// ============ STYLE: BUTTON ============
 		$this->start_controls_section( 'section_button_style', [ 'label' => esc_html__( 'Button', 'legal-nurse-core' ), 'tab' => \Elementor\Controls_Manager::TAB_STYLE ] );
+
+		$this->add_control( 'button_full_width', [
+			'label'        => esc_html__( 'Full Width', 'legal-nurse-core' ),
+			'type'         => \Elementor\Controls_Manager::SWITCHER,
+			'label_on'     => esc_html__( 'Yes', 'legal-nurse-core' ),
+			'label_off'    => esc_html__( 'No', 'legal-nurse-core' ),
+			'return_value' => 'yes',
+			'default'      => '',
+			'selectors'    => [ '{{WRAPPER}} .lnc-mpbar__btn' => 'width:100%;flex:1 1 auto;' ],
+		] );
 
 		$this->add_group_control( \Elementor\Group_Control_Typography::get_type(), [ 'name' => 'button_typography', 'selector' => '{{WRAPPER}} .lnc-mpbar__btn' ] );
 
