@@ -57,12 +57,17 @@ function lnc_weekly_random_number_shortcode() {
 
 /**
  * [product_details slug="my-product" field="price"]
+ * [product_details slug="my-product" variation="One Year" field="price"]
  *
  * Output a single WooCommerce product field inline.
  *
  * Attributes:
  *   slug     Product slug (post_name). Alternatively use id.
  *   id       Product ID (overrides slug).
+ *   variation  For variable products: target a single variation by its
+ *              variation ID (e.g. 155043), by an attribute value
+ *              (e.g. "One Year" / "Auto Renewal"), or by variation name.
+ *              All fields (price, sku, checkout, …) then use that variation.
  *   field    Which value to return (default: price):
  *              title | price | regular_price | sale_price |
  *              discount (percent, e.g. "30%") | discount_amount |
@@ -80,6 +85,7 @@ function lnc_product_details_shortcode( $atts ) {
 		[
 			'slug'        => '',
 			'id'          => '',
+			'variation'   => '',
 			'field'       => 'price',
 			'default'     => '',
 			'no_decimals' => '',
@@ -110,6 +116,14 @@ function lnc_product_details_shortcode( $atts ) {
 
 	if ( ! $product ) {
 		return esc_html( $atts['default'] );
+	}
+
+	// For variable products, narrow to a specific variation when requested.
+	if ( '' !== $atts['variation'] && $product->is_type( 'variable' ) ) {
+		$variation = lnc_pd_resolve_variation( $product, $atts['variation'] );
+		if ( $variation ) {
+			$product = $variation;
+		}
 	}
 
 	$regular = (float) $product->get_regular_price();
@@ -144,11 +158,8 @@ function lnc_product_details_shortcode( $atts ) {
 			return esc_url( $product->get_permalink() );
 
 		case 'checkout':
-			// Add the product to the cart and go straight to checkout.
-			$checkout = function_exists( 'wc_get_checkout_url' )
-				? add_query_arg( 'add-to-cart', $product->get_id(), wc_get_checkout_url() )
-				: $product->add_to_cart_url();
-			return esc_url( $checkout );
+			// Add the product (or variation) to the cart and go to checkout.
+			return esc_url( lnc_pd_checkout_url( $product ) );
 
 		case 'cart':
 			// Add-to-cart URL (WooCommerce default behavior/redirect).
@@ -165,6 +176,82 @@ function lnc_product_details_shortcode( $atts ) {
 		default:
 			return wp_kses_post( wc_price( $product->get_price(), $price_args ) );
 	}
+}
+
+/**
+ * Resolve a variation of a variable product by ID, attribute value, or name.
+ *
+ * @param WC_Product $product The variable parent product.
+ * @param string     $needle  Variation ID, attribute value (e.g. "One Year"),
+ *                            or a fragment of the variation name.
+ * @return WC_Product|null The matching variation product, or null.
+ */
+function lnc_pd_resolve_variation( $product, $needle ) {
+	$needle      = trim( (string) $needle );
+	$needle_slug = sanitize_title( $needle );
+	$needle_low  = strtolower( $needle );
+
+	foreach ( $product->get_children() as $child_id ) {
+		// Direct variation ID match.
+		if ( (string) $child_id === $needle ) {
+			$byid = wc_get_product( $child_id );
+			if ( $byid ) {
+				return $byid;
+			}
+		}
+
+		$variation = wc_get_product( $child_id );
+		if ( ! $variation ) {
+			continue;
+		}
+
+		// Match against each selected attribute value (handles both taxonomy
+		// slugs like "one-year" and plain custom values like "One Year").
+		foreach ( (array) $variation->get_variation_attributes() as $val ) {
+			if ( '' === $val ) {
+				continue;
+			}
+			if ( sanitize_title( $val ) === $needle_slug || strtolower( $val ) === $needle_low ) {
+				return $variation;
+			}
+		}
+
+		// Fallback: match a fragment of the variation's full name.
+		if ( '' !== $needle_low && false !== strpos( strtolower( $variation->get_name() ), $needle_low ) ) {
+			return $variation;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Build an "add to cart → checkout" URL that also works for variations.
+ *
+ * @param WC_Product $product Simple product or a single variation.
+ * @return string
+ */
+function lnc_pd_checkout_url( $product ) {
+	if ( ! function_exists( 'wc_get_checkout_url' ) ) {
+		return $product->add_to_cart_url();
+	}
+
+	// Variations need the parent id + variation id + chosen attributes, which
+	// WooCommerce already encodes into the variation's add-to-cart URL.
+	if ( $product->is_type( 'variation' ) ) {
+		$query = wp_parse_url( $product->add_to_cart_url(), PHP_URL_QUERY );
+		$args  = [];
+		if ( $query ) {
+			parse_str( $query, $args );
+		}
+		if ( empty( $args['add-to-cart'] ) ) {
+			$args['add-to-cart']  = $product->get_parent_id();
+			$args['variation_id'] = $product->get_id();
+		}
+		return add_query_arg( $args, wc_get_checkout_url() );
+	}
+
+	return add_query_arg( 'add-to-cart', $product->get_id(), wc_get_checkout_url() );
 }
 
 /**
