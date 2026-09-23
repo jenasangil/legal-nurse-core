@@ -6,6 +6,20 @@
 	justify-content: space-between;
 	gap: 16px;
 	font-family: "Wix Madefor Text", "Wix Madefor Display", sans-serif;
+
+	/* Sticky bottom bar, hidden until scrolled past the trigger element. */
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9999;
+	transform: translateY(110%);
+	transition: transform 0.28s ease;
+	box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.12);
+}
+
+.lnc-mpbar.is-visible {
+	transform: translateY(0);
 }
 
 .lnc-mpbar__price-wrap {

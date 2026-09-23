@@ -102,10 +102,10 @@ class LNC_Mobile_Product_Bar_Widget extends \Elementor\Widget_Base {
 		] );
 
 		$this->add_control( 'offset_selector', [
-			'label'       => esc_html__( 'Insert After (CSS selector)', 'legal-nurse-core' ),
+			'label'       => esc_html__( 'Show After Scrolling Past (CSS selector)', 'legal-nurse-core' ),
 			'type'        => \Elementor\Controls_Manager::TEXT,
 			'default'     => '.hero-section',
-			'description' => esc_html__( 'The bar is moved to appear right after this element (e.g. .hero-section). Leave empty to keep it where placed.', 'legal-nurse-core' ),
+			'description' => esc_html__( 'The sticky bar slides in once this element scrolls off the top of the screen (e.g. .hero-section). Leave empty to show after a little scrolling.', 'legal-nurse-core' ),
 		] );
 
 		$this->add_control( 'price_source', [
