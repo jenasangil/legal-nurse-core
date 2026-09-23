@@ -108,6 +108,16 @@ class LNC_Mobile_Product_Bar_Widget extends \Elementor\Widget_Base {
 			'description' => esc_html__( 'The sticky bar slides in once this element scrolls off the top of the screen (e.g. .hero-section). Leave empty to show after a little scrolling.', 'legal-nurse-core' ),
 		] );
 
+		$this->add_control( 'hide_header', [
+			'label'        => esc_html__( 'Hide Header on Scroll', 'legal-nurse-core' ),
+			'type'         => \Elementor\Controls_Manager::SWITCHER,
+			'label_on'     => esc_html__( 'Yes', 'legal-nurse-core' ),
+			'label_off'    => esc_html__( 'No', 'legal-nurse-core' ),
+			'return_value' => 'yes',
+			'default'      => '',
+			'description'  => esc_html__( 'Hide the site header (header / .elementor-location-header) while the bar is showing, on mobile.', 'legal-nurse-core' ),
+		] );
+
 		$this->add_control( 'price_source', [
 			'label'   => esc_html__( 'Price to Show', 'legal-nurse-core' ),
 			'type'    => \Elementor\Controls_Manager::SELECT,
@@ -279,12 +289,13 @@ class LNC_Mobile_Product_Bar_Widget extends \Elementor\Widget_Base {
 			$button_url = $product->add_to_cart_url();
 		}
 
-		$caption = trim( (string) ( $settings['price_caption'] ?? '' ) );
-		$btn_txt = $settings['button_text'] ?? esc_html__( 'Enroll Now', 'legal-nurse-core' );
-		$offset  = trim( (string) ( $settings['offset_selector'] ?? '' ) );
+		$caption     = trim( (string) ( $settings['price_caption'] ?? '' ) );
+		$btn_txt     = $settings['button_text'] ?? esc_html__( 'Enroll Now', 'legal-nurse-core' );
+		$offset      = trim( (string) ( $settings['offset_selector'] ?? '' ) );
+		$hide_header = ( 'yes' === ( $settings['hide_header'] ?? '' ) ) ? '1' : '0';
 
 		?>
-		<div class="lnc-mpbar" data-offset="<?php echo esc_attr( $offset ); ?>">
+		<div class="lnc-mpbar" data-offset="<?php echo esc_attr( $offset ); ?>" data-hide-header="<?php echo esc_attr( $hide_header ); ?>">
 			<div class="lnc-mpbar__price-wrap">
 				<?php if ( '' !== $caption ) : ?>
 					<span class="lnc-mpbar__caption"><?php echo esc_html( $caption ); ?></span>

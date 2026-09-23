@@ -75,9 +75,25 @@
 	border-radius: 6px;
 }
 
+/* Hide the site header while the bar is showing (mobile only). */
+@media (max-width: 767px) {
+	body.lnc-mpbar-hide-header header,
+	body.lnc-mpbar-hide-header .elementor-location-header {
+		transform: translateY(-100%);
+		transition: transform 0.28s ease;
+		pointer-events: none;
+	}
+}
+
 /* Mobile only: hide on tablet and up. */
 @media (min-width: 768px) {
 	.lnc-mpbar {
 		display: none !important;
+	}
+
+	/* Never affect the header on tablet/desktop. */
+	body.lnc-mpbar-hide-header header,
+	body.lnc-mpbar-hide-header .elementor-location-header {
+		transform: none;
 	}
 }

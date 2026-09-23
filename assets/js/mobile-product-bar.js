@@ -15,6 +15,8 @@
 			}
 		}
 
+		var hideHeader = bar.getAttribute( 'data-hide-header' ) === '1';
+
 		function update() {
 			var show;
 			if ( trigger ) {
@@ -25,6 +27,9 @@
 				show = ( window.pageYOffset || document.documentElement.scrollTop || 0 ) > 300;
 			}
 			bar.classList.toggle( 'is-visible', show );
+			if ( hideHeader ) {
+				document.body.classList.toggle( 'lnc-mpbar-hide-header', show );
+			}
 		}
 
 		var ticking = false;
