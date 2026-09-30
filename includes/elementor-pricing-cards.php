@@ -883,7 +883,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 						}
 						echo '</span> ';
 					}
-					echo wp_kses_post( $feature );
+					echo '<span class="lnc-pcard__feature-text">' . wp_kses_post( $feature ) . '</span>';
 					echo '</li>';
 				}
 				echo '</ul>';

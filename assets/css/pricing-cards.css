@@ -75,6 +75,13 @@
 	align-items: center;
 }
 
+/* Keep the feature text as one flex item so inline tags (e.g. <i>)
+   flow normally instead of becoming separate gap-spaced flex items. */
+.lnc-pcard__feature-text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
 .lnc-pcard__check svg {
 	width: 1em;
 	height: 1em;
