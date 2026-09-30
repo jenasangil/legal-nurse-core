@@ -845,7 +845,7 @@ class LNC_Pricing_Cards_Widget extends \Elementor\Widget_Base {
 			// Title.
 			if ( '' !== $card['title'] ) {
 				printf(
-					'<h3 class="lnc-pcard__title" style="color:%s">%s</h3>',
+					'<span class="lnc-pcard__title" style="color:%s">%s</span>',
 					esc_attr( $t_col ),
 					esc_html( $card['title'] )
 				);

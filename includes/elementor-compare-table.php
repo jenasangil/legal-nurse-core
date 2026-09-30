@@ -342,7 +342,7 @@ class LNC_Compare_Table_Widget extends \Elementor\Widget_Base {
 			? ' data-sticky-top="' . esc_attr( $sticky_top ) . '" data-sticky-top-mobile="' . esc_attr( $sticky_top_mb ) . '"'
 			: '';
 
-		echo '<div class="lnc-ct-scroll">';
+		echo '<div class="lnc-ct-scroll" tabindex="0" role="region" aria-label="' . esc_attr( $settings['first_col_label'] ) . '">';
 		echo '<div class="' . esc_attr( $root_class ) . '" style="' . esc_attr( $root_style ) . '"' . $sticky_attrs . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		// Header row.
