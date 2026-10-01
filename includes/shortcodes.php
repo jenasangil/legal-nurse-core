@@ -28,13 +28,13 @@ function lnc_weekly_random_number_shortcode() {
 	$day_of_week = (int) current_time( 'w' );
 
 	$ranges = [
-		0 => [ 20, 29 ],   // Sunday.
-		1 => [ 30, 45 ],   // Monday.
-		2 => [ 46, 55 ],   // Tuesday.
-		3 => [ 56, 75 ],   // Wednesday.
-		4 => [ 76, 80 ],   // Thursday.
-		5 => [ 80, 100 ],  // Friday.
-		6 => [ 101, 150 ], // Saturday.
+		0 => [ 100, 111 ],   // Sunday.
+		1 => [ 112, 123 ],   // Monday.
+		2 => [ 124, 134 ],   // Tuesday.
+		3 => [ 135, 146 ],   // Wednesday.
+		4 => [ 147, 157 ],   // Thursday.
+		5 => [ 158, 169 ],   // Friday.
+		6 => [ 170, 180 ],   // Saturday.
 	];
 
 	if ( ! isset( $ranges[ $day_of_week ] ) ) {
