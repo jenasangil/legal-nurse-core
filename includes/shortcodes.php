@@ -16,6 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_shortcode( 'site_var', 'lnc_site_var_shortcode' );
 add_shortcode( 'product_details', 'lnc_product_details_shortcode' );
 add_shortcode( 'weekly_random_number', 'lnc_weekly_random_number_shortcode' );
+add_shortcode( 'current_year', 'lnc_current_year_shortcode' );
+
+/**
+ * Output the current year (site timezone). Usage: [current_year]
+ *
+ * @return string
+ */
+function lnc_current_year_shortcode() {
+	return esc_html( current_time( 'Y' ) );
+}
 
 /**
  * Output a daily-consistent random number whose range changes by day of week.
