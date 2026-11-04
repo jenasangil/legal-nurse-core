@@ -267,10 +267,9 @@
         data.conversion_point = "form_submit";
         data.timestamp = new Date().toISOString();
 
-        // SMS consent checkbox (Gravity field 55, choice .1). The Creatio field
-        // is DoNotUseSMS, i.e. the inverse: checked (permission given) → false.
-        var smsConsentEl = document.getElementById("choice_" + FORM_ID + "_55_1");
-        data.doNotUseSMS = smsConsentEl && smsConsentEl.checked ? "false" : "true";
+        // TEMP TEST: force a static value to confirm Creatio reflects a boolean.
+        // (Not read from the Gravity Forms checkbox for now — revert after testing.)
+        data.doNotUseSMS = "true";
 
         pendingCreatioSubmission = data;
         try {
