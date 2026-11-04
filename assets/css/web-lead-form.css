@@ -137,3 +137,10 @@
 .lnc-web-lead-form .gfield--type-address .gform-grid-col {
 	width: 100%;
 }
+
+.lnc-web-lead-form .gfield_checkbox label {
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 20px;
+}
