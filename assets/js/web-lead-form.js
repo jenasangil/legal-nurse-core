@@ -399,8 +399,9 @@
             },
             customFields: {},
             contactFields: {
-                // Test: also write the SMS flag to the Contact object.
-                DoNotUseSMS: "#creatio_doNotUseSMS"
+                // Contact column code is DoNotUseSms (different casing from the
+                // Lead column DoNotUseSMS); both read the same proxy input.
+                DoNotUseSms: "#creatio_doNotUseSMS"
             },
             landingId: CREATIO_LANDING_ID,
             serviceUrl: CREATIO_SERVICE_URL,
