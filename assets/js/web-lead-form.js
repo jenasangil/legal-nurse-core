@@ -392,10 +392,14 @@
                 LN1form_id: "#creatio_form_id",
                 LN1conversion_point: "#creatio_conversion_point",
                 LN1geo: "#creatio_geo",
-                LN1click_path: "#creatio_click_path",
+                LN1click_path: "#creatio_click_path"
+            },
+            customFields: {
+                // Custom Creatio columns go here (not in `fields`, which only
+                // accepts Creatio's predefined columns). DoNotUseSMS is boolean:
+                // "true"/"false" string from the hidden proxy input.
                 DoNotUseSMS: "#creatio_doNotUseSMS"
             },
-            customFields: {},
             landingId: CREATIO_LANDING_ID,
             serviceUrl: CREATIO_SERVICE_URL,
             redirectUrl: ""
