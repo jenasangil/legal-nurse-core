@@ -395,6 +395,10 @@
                 DoNotUseSMS: "#creatio_doNotUseSMS"
             },
             customFields: {},
+            contactFields: {
+                // Test: also write the SMS flag to the Contact object.
+                DoNotUseSMS: "#creatio_doNotUseSMS"
+            },
             landingId: CREATIO_LANDING_ID,
             serviceUrl: CREATIO_SERVICE_URL,
             redirectUrl: ""
