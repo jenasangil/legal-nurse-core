@@ -267,6 +267,10 @@
         data.conversion_point = "form_submit";
         data.timestamp = new Date().toISOString();
 
+        // SMS consent checkbox (Gravity field 55, choice .1) → "true"/"false".
+        var smsConsentEl = document.getElementById("choice_" + FORM_ID + "_55_1");
+        data.smsConsent = smsConsentEl && smsConsentEl.checked ? "true" : "false";
+
         pendingCreatioSubmission = data;
         try {
             sessionStorage.setItem(SUBMISSION_CACHE_KEY, JSON.stringify(data));
@@ -387,7 +391,8 @@
                 LN1form_id: "#creatio_form_id",
                 LN1conversion_point: "#creatio_conversion_point",
                 LN1geo: "#creatio_geo",
-                LN1click_path: "#creatio_click_path"
+                LN1click_path: "#creatio_click_path",
+                LN1SMSConsent: "#creatio_smsConsent"
             },
             customFields: {},
             landingId: CREATIO_LANDING_ID,
