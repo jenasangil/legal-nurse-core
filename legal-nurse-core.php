@@ -211,15 +211,17 @@ function lnc_register_memorable_cases_assets() {
 add_action( 'wp_enqueue_scripts', 'lnc_register_web_lead_form_assets' );
 add_action( 'elementor/preview/enqueue_styles', 'lnc_register_web_lead_form_assets' );
 function lnc_register_web_lead_form_assets() {
-	wp_register_style( 'lnc-web-lead-form', LNC_PLUGIN_URL . 'assets/css/web-lead-form.css', [], LNC_VERSION );
+	$css = LNC_PLUGIN_DIR . 'assets/css/web-lead-form.css';
+	wp_register_style( 'lnc-web-lead-form', LNC_PLUGIN_URL . 'assets/css/web-lead-form.css', [], file_exists( $css ) ? filemtime( $css ) : LNC_VERSION );
 
 	wp_register_script( 'creatio-track-cookies', 'https://webtracking-v01.creatio.com/JS/track-cookies.js', [], null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 	wp_register_script( 'creatio-create-object', 'https://webtracking-v01.creatio.com/JS/create-object.js', [], null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	$js = LNC_PLUGIN_DIR . 'assets/js/web-lead-form.js';
 	wp_register_script(
 		'lnc-web-lead-form',
 		LNC_PLUGIN_URL . 'assets/js/web-lead-form.js',
 		[ 'creatio-track-cookies', 'creatio-create-object' ],
-		LNC_VERSION,
+		file_exists( $js ) ? filemtime( $js ) : LNC_VERSION,
 		true
 	);
 }
